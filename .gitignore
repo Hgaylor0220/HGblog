@@ -21,3 +21,10 @@ docroot/sites/simpletest/
 .sass-cache/
 .DS_Store
 Thumbs.db
+
+/vendor/
+/docroot/core/
+/docroot/modules/contrib/
+/docroot/themes/contrib/
+/docroot/profiles/contrib/
+/docroot/libraries/
