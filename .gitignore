@@ -1,0 +1,23 @@
+# --- Environment & Secret Files ---
+.env
+.ddev/
+.idea/
+.vscode/
+*.sql
+*.gz
+*.zip
+
+# --- Drupal Specifics ---
+# Ignore the files directory (Acquia manages this in a separate persistent storage)
+docroot/sites/*/files/
+docroot/sites/*/settings.local.php
+
+# Ignore private files and simpletest
+docroot/sites/*/private/
+docroot/sites/simpletest/
+
+# --- Temporary Files ---
+/node_modules/
+.sass-cache/
+.DS_Store
+Thumbs.db
