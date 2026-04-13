@@ -775,7 +775,7 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  */
  $settings['trusted_host_patterns'] = [
   '^www\.HaileyGaylorBlog\.com$',
-  '^HaileyGaylorBlog\.com$',
+  '^HaileyGaylorBlogddev acli auth:login --key=a2ca7e10-4c8a-407b-8a27-cee2f03085d5 --secret=5Wb9HqYPVBoQzdJ/SxckjGjgWzirmw8hur3vsPBLdN8=\.com$',
 ];
 
 /**
@@ -903,3 +903,7 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
 }
+$settings['trusted_host_patterns'] = [
+  '^.*\.acquia-sites\.com$',
+  '^.*\.acquia-test\.com$',
+];
