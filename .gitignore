@@ -22,7 +22,7 @@ docroot/sites/simpletest/
 .DS_Store
 Thumbs.db
 
-/vendor/
+# /vendor/
 /docroot/core/
 /docroot/modules/contrib/
 /docroot/themes/contrib/

@@ -1,6 +1,6 @@
 name: HaileyGaylorBlog
 type: drupal11
-docroot: web
+docroot: docroot
 php_version: "8.4"
 webserver_type: nginx-fpm
 xdebug_enabled: false
