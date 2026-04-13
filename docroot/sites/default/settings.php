@@ -903,10 +903,11 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
 }
-$settings['trusted_host_patterns'] = [
-  '^.*\eehaileygaylordev.prod.acquia-sites\.com$',
-  '^.*\eehaileygaylordev.prod.acquia-test\.com$',
-];
+// $settings['trusted_host_patterns'] = [
+//   '^www\.HaileyGaylorBlog\.com$',
+//   '^.*\eehaileygaylordev.prod.acquia-sites\.com$',
+//   '^.*\eehaileygaylordev.prod.acquia-test\.com$',
+// ];
 
 if (file_exists('/var/www/site-php/')) {
   require('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc');
