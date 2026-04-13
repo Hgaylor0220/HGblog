@@ -17,10 +17,13 @@
     "require": {
         "composer/installers": "^2.3",
         "drupal/acquia_connector": "^4.1",
+        "drupal/acquia_search": "^3.1",
         "drupal/core-composer-scaffold": "^11.3",
         "drupal/core-project-message": "^11.3",
         "drupal/core-recipe-unpack": "^11.3",
         "drupal/core-recommended": "^11.3",
+        "drupal/search_api": "^1.40",
+        "drupal/search_api_solr": "^4.3",
         "drush/drush": "^13.7"
     },
     "conflict": {
@@ -44,7 +47,7 @@
     "extra": {
         "drupal-scaffold": {
             "locations": {
-                "web-root": "docroot/"
+                "docroot": "docroot/"
             }
         },
         "installer-paths": {
