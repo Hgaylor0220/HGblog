@@ -20,5 +20,3 @@ $response = $kernel->handle($request);
 $response->send();
 
 $kernel->terminate($request, $response);
-
-$autoloader = require_once realpath(__DIR__ . '/../vendor/autoload.php');

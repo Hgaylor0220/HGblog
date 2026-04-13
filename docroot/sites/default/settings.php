@@ -773,10 +773,10 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  *
  * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
-//  $settings['trusted_host_patterns'] = [
-//   '^www\.HaileyGaylorBlog\.com$',
-//   '^HaileyGaylorBlogddev acli auth:login --key=a2ca7e10-4c8a-407b-8a27-cee2f03085d5 --secret=5Wb9HqYPVBoQzdJ/SxckjGjgWzirmw8hur3vsPBLdN8=\.com$',
-// ];
+ $settings['trusted_host_patterns'] = [
+  '^www\.HaileyGaylorBlog\.com$',
+  '^HaileyGaylorBlogddev acli auth:login --key=a2ca7e10-4c8a-407b-8a27-cee2f03085d5 --secret=5Wb9HqYPVBoQzdJ/SxckjGjgWzirmw8hur3vsPBLdN8=\.com$',
+];
 
 /**
  * The default list of directories that will be ignored by Drupal's file API.
@@ -904,10 +904,10 @@ if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
 }
 $settings['trusted_host_patterns'] = [
-  '^.*\.acquia-sites\.com$',
-  '^.*\.acquia-test\.com$',
+  '^.*\eehaileygaylordev.prod.acquia-sites\.com$',
+  '^.*\eehaileygaylordev.prod.acquia-test\.com$',
 ];
 
 if (file_exists('/var/www/site-php/')) {
-  require('/var/www/site-php/' . $_ENV['eehaileygaylor'] . '/' . $_ENV['eehaileygaylor'] . '-settings.inc');
+  require('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc');
 }
