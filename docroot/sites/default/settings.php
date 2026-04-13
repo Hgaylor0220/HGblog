@@ -907,3 +907,7 @@ $settings['trusted_host_patterns'] = [
   '^.*\.acquia-sites\.com$',
   '^.*\.acquia-test\.com$',
 ];
+
+if (file_exists('/var/www/site-php/')) {
+  require('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc');
+}
