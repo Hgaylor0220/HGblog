@@ -773,7 +773,10 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  *
  * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
-# $settings['trusted_host_patterns'] = [];
+ $settings['trusted_host_patterns'] = [
+  '^www\.HaileyGaylorBlog\.com$',
+  '^HaileyGaylorBlog\.com$',
+];
 
 /**
  * The default list of directories that will be ignored by Drupal's file API.
@@ -897,3 +900,6 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
+if (file_exists('/var/www/site-php')) {
+  require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
+}
