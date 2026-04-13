@@ -114,7 +114,7 @@ AddType image/webp .webp
   #
   # If your site is running in a VirtualDocumentRoot at http://example.com/,
   # uncomment the following line:
-   RewriteBase /
+  # RewriteBase /
 
   # Redirect common PHP files to their new locations.
   RewriteCond %{REQUEST_URI} ^(.*)?/(install\.php) [OR]
