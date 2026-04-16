@@ -1,0 +1,31 @@
+{# Simplified Page Template: page.html.twig #}
+<div class="site-wrapper">
+  
+  <header class="site-header">
+    <div class="container">
+      <div class="site-branding">
+        <a href="{{ front_page }}" rel="home" class="site-logo">
+          {{ site_name|upper }}
+        </a>
+      </div>
+      
+      <nav class="site-navigation">
+        {{ page.primary_menu }}
+      </nav>
+    </div>
+  </header>
+
+  <main role="main" class="main-content">
+    <section class="content-container">
+      {{ page.content }}
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; {{ "now"|date("Y") }} {{ site_name }}. Built with elegance.</p>
+      {{ page.footer }}
+    </div>
+  </footer>
+
+</div>

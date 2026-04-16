@@ -22,8 +22,12 @@
         "drupal/core-project-message": "^11.3",
         "drupal/core-recipe-unpack": "^11.3",
         "drupal/core-recommended": "^11.3",
+        "drupal/devel": "^5.5",
+        "drupal/key": "^1.22",
         "drupal/search_api": "^1.40",
         "drupal/search_api_solr": "^4.3",
+        "drupal/searchstax": "^1.11",
+        "drupal/slick": "^3.0",
         "drush/drush": "^13.7"
     },
     "conflict": {

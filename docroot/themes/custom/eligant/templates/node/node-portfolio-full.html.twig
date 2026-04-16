@@ -1,0 +1,33 @@
+{# Portfolio Node Template: node--portfolio--full.html.twig #}
+<article{{ attributes.addClass('portfolio-article') }}>
+
+  {# Main Hero Image #}
+  {% if content.field_main_image %}
+    <div class="portfolio-hero">
+      {{ content.field_main_image }}
+    </div>
+  {% endif %}
+
+  <div class="portfolio-details">
+    <header class="portfolio-header">
+      <h1 class="portfolio-title">{{ label }}</h1>
+      <div class="portfolio-meta">
+        <span class="date">{{ node.createdtime|format_date('custom', 'M Y') }}</span>
+        <span class="divider">/</span>
+        <span class="category">{{ content.field_category }}</span>
+      </div>
+    </header>
+
+    <div class="portfolio-description">
+      {{ content.body }}
+    </div>
+    
+    {# Gallery Grid #}
+    {% if content.field_gallery %}
+      <div class="portfolio-grid">
+        {{ content.field_gallery }}
+      </div>
+    {% endif %}
+  </div>
+
+</article>
