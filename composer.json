@@ -25,6 +25,7 @@
         "drupal/devel": "^5.5",
         "drupal/key": "^1.22",
         "drupal/search_api": "^1.40",
+        "drupal/search_api_attachments": "^10.0",
         "drupal/search_api_solr": "^4.3",
         "drupal/searchstax": "^1.11",
         "drupal/slick": "^3.0",
