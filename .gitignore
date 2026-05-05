@@ -22,8 +22,8 @@ docroot/sites/simpletest/
 .DS_Store
 Thumbs.db
 
-# /vendor/
-# /docroot/core/
+/vendor/
+/docroot/core/
 /docroot/modules/contrib/
 /docroot/themes/contrib/
 /docroot/profiles/contrib/

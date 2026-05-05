@@ -1,7 +1,6 @@
 _core:
   default_config_hash: vIX7037UoUdExde2svENmyhihnwVmMOFJgkKYCoterY
 analytics_url: 'https://app.searchstax.com'
-configure_via_searchstudio: true
 discard_parameters:
   - highlight
   - keys
@@ -16,6 +15,6 @@ flood_protection:
   update_limit: 50
   update_window: 60
 js_version: '3'
+key_id: searchstax_analytics_credentials
 searches_via_searchstudio: false
 untracked_roles: {  }
-key_id: searchstax_analytics_credentials
