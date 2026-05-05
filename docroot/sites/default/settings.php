@@ -929,15 +929,18 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-if (file_exists('/var/www/site-php')) {
-  require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
-}
+// if (file_exists('/var/www/site-php')) {
+//   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
+// }
 // $settings['trusted_host_patterns'] = [
 //   '^www\.HaileyGaylorBlog\.com$',
 //   '^.*\eehaileygaylordev.prod.acquia-sites\.com$',
 //   '^.*\eehaileygaylordev.prod.acquia-test\.com$',
 // ];
 
-if (file_exists('/var/www/site-php/')) {
-  require('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc');
+// if (file_exists('/var/www/site-php/')) {
+//   require('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc');
+// }
+if (file_exists('/var/www/site-php')) {
+  require('/var/www/site-php/eehaileygaylordev/eehaileygaylordev-settings.inc');
 }
