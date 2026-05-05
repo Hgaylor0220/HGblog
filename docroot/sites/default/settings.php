@@ -902,7 +902,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $config['search_api.server.searchstax']['backend_config']['read_only'] = FALSE;
       
       // Override the Key value with the Admin/Write token
-      $config['key.key.searchstax_solr_connector_credentials']['key_provider_settings']['key_value'] = 'YOUR_PRODUCTION_ADMIN_TOKEN';
+      $config['key.key.searchstax_solr_connector_credentials']['key_provider_settings']['key_value'] = 'd1fcd2e8aaa4c6cc580ea28242a5c60a87ddbfb3';
       break;
   }
 } else {
@@ -941,5 +941,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
 }
+
 
 $settings['config_sync_directory'] = '../config/default';
