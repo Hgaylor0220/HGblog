@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://searchcloud-2-us-east-1.searchstax.com/12345/searchstax-test/emselect?omitHeader=false&TZ=Australia%2FSydney&language=en&model=experiment1&defType=lucene&wt=json&json.nl=flat&q=%2A%3A%2A&start=0&rows=10&fl=ss_search_api_id%2Css_search_api_language%2Cscore&sort=ss_search_api_id+asc&fq=%2Bindex_id%3Aserver_prefixsearchstax_index+%2Bhash%3A123456&fq=ss_search_api_language%3A%28%22en%22+%22und%22%29&hl=true&hl.fl=%2A&hl.requireFieldMatch=false&hl.snippets=3&hl.fragsize=0&hl.mergeContiguous=false&hl.simple.pre=%5BHIGHLIGHT%5D&hl.simple.post=%5B%2FHIGHLIGHT%5D&facet.field=%7B%21key%3Dss_category%7Dss_category&f.ss_category.facet.missing=false&facet=true&facet.sort=count&facet.limit=10&facet.mincount=1&facet.missing=false&spellcheck=true&spellcheck.dictionary=und",
+    "auth_header": "Token 0123456789abcdef0123456789abcdef01234567"
+}

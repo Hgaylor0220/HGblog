@@ -1,0 +1,5 @@
+solr_to_searchstax_ss_migration.overview:
+  title: Migrate from Solr to SearchStax Site Search
+  description: 'Assists you in migrating search configuration from Solr to SearchStax Site Search.'
+  route_name: solr_to_searchstax_ss_migration.overview
+  parent: system.admin_config_search

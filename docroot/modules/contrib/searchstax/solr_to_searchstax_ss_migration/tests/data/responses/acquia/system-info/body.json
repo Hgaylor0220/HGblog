@@ -1,0 +1,14 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 17
+    },
+    "core": {
+        "schema": "drupal-4.3.0-solr-9.x-0"
+    },
+    "mode": "std",
+    "lucene": {
+        "solr-spec-version": "9.2.1",
+        "lucene-spec-version": "9.4.2"
+    }
+}

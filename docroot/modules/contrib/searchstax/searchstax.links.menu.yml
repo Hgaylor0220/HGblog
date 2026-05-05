@@ -1,0 +1,5 @@
+searchstax.admin_settings:
+  title: SearchStax settings
+  description: 'Set up SearchStax to start analyzing your visitors’ searches.'
+  route_name: searchstax.admin_settings
+  parent: system.admin_config_search

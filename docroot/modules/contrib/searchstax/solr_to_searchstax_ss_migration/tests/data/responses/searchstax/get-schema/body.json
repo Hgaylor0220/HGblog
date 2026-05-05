@@ -1,0 +1,15 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 6
+    },
+    "schema": {
+        "name": "drupal-4.3.0-solr-9.x-0",
+        "version": 1.6,
+        "uniqueKey": "id",
+        "fieldTypes": [],
+        "fields": [],
+        "dynamicFields": [],
+        "copyFields": []
+    }
+}

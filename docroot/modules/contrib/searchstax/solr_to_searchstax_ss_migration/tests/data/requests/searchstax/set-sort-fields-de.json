@@ -1,0 +1,30 @@
+{
+    "method": "POST",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v1/apps/search/sort/fields?account=AccountWithTokenSupport&appId=100&language=de",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32",
+    "content_type": "application/json",
+    "body": {
+        "fields": [
+            {
+                "name": "sort_X3b_de_name",
+                "order": "asc",
+                "label": "Name (Up)"
+            },
+            {
+                "name": "sort_X3b_de_name",
+                "order": "desc",
+                "label": "Name (Down)"
+            },
+            {
+                "name": "ds_created",
+                "order": "asc",
+                "label": "Creation date (Up)"
+            },
+            {
+                "name": "ds_created",
+                "order": "desc",
+                "label": "Creation date (Down)"
+            }
+        ]
+    }
+}

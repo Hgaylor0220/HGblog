@@ -1,0 +1,209 @@
+{
+    "data": [
+        {
+            "name": "English",
+            "language_code": "en",
+            "enabled": true
+        },
+        {
+            "name": "Spanish",
+            "language_code": "es",
+            "enabled": true
+        },
+        {
+            "name": "French",
+            "language_code": "fr",
+            "enabled": true
+        },
+        {
+            "name": "German",
+            "language_code": "de",
+            "enabled": true
+        },
+        {
+            "name": "Italian",
+            "language_code": "it",
+            "enabled": true
+        },
+        {
+            "name": "Japanese",
+            "language_code": "ja",
+            "enabled": true
+        },
+        {
+            "name": "Dutch",
+            "language_code": "nl",
+            "enabled": true
+        },
+        {
+            "name": "Portuguese",
+            "language_code": "pt",
+            "enabled": true
+        },
+        {
+            "name": "Turkish",
+            "language_code": "tr",
+            "enabled": true
+        },
+        {
+            "name": "Polish",
+            "language_code": "pl",
+            "enabled": true
+        },
+        {
+            "name": "Bulgarian",
+            "language_code": "bg",
+            "enabled": true
+        },
+        {
+            "name": "Czech",
+            "language_code": "cs",
+            "enabled": true
+        },
+        {
+            "name": "Danish",
+            "language_code": "da",
+            "enabled": true
+        },
+        {
+            "name": "Greek",
+            "language_code": "el",
+            "enabled": true
+        },
+        {
+            "name": "Estonian",
+            "language_code": "et",
+            "enabled": true
+        },
+        {
+            "name": "Finnish",
+            "language_code": "fi",
+            "enabled": true
+        },
+        {
+            "name": "Irish",
+            "language_code": "ga",
+            "enabled": true
+        },
+        {
+            "name": "Croatian",
+            "language_code": "hr",
+            "enabled": true
+        },
+        {
+            "name": "Hungarian",
+            "language_code": "hu",
+            "enabled": true
+        },
+        {
+            "name": "Latvian",
+            "language_code": "lv",
+            "enabled": true
+        },
+        {
+            "name": "Romanian",
+            "language_code": "ro",
+            "enabled": true
+        },
+        {
+            "name": "Slovak",
+            "language_code": "sk",
+            "enabled": true
+        },
+        {
+            "name": "Swedish",
+            "language_code": "sv",
+            "enabled": true
+        },
+        {
+            "name": "Russian",
+            "language_code": "ru",
+            "enabled": true
+        },
+        {
+            "name": "Arabic",
+            "language_code": "ar",
+            "enabled": true
+        },
+        {
+            "name": "Korean",
+            "language_code": "ko",
+            "enabled": true
+        },
+        {
+            "name": "Ukrainian",
+            "language_code": "uk",
+            "enabled": true
+        },
+        {
+            "name": "Vietnamese",
+            "language_code": "vi",
+            "enabled": true
+        },
+        {
+            "name": "Traditional Chinese",
+            "language_code": "zh",
+            "enabled": true
+        },
+        {
+            "name": "Simplified Chinese",
+            "language_code": "zh_cn",
+            "enabled": true
+        },
+        {
+            "name": "Catalan",
+            "language_code": "ca",
+            "enabled": true
+        },
+        {
+            "name": "Hindi",
+            "language_code": "hi",
+            "enabled": true
+        },
+        {
+            "name": "Indonesian",
+            "language_code": "id",
+            "enabled": true
+        },
+        {
+            "name": "Norwegian",
+            "language_code": "no",
+            "enabled": true
+        },
+        {
+            "name": "Thai",
+            "language_code": "th",
+            "enabled": true
+        },
+        {
+            "name": "English - Canada",
+            "language_code": "en_ca",
+            "enabled": true
+        },
+        {
+            "name": "English - Hong Kong",
+            "language_code": "en_hk",
+            "enabled": true
+        },
+        {
+            "name": "English - United Kingdom",
+            "language_code": "en_gb",
+            "enabled": true
+        },
+        {
+            "name": "French - Canada",
+            "language_code": "fr_ca",
+            "enabled": true
+        },
+        {
+            "name": "Spanish - Latin America",
+            "language_code": "es_419",
+            "enabled": true
+        },
+        {
+            "name": "Persian",
+            "language_code": "fa",
+            "enabled": true
+        }
+    ]
+}

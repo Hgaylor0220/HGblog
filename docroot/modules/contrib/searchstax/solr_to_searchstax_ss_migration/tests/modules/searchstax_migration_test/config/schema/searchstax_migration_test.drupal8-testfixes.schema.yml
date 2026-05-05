@@ -1,0 +1,5 @@
+# Earlier versions of the Solr module did not have a correct config schema for
+# the third party settings. To avoid a test error in earlier versions, we add a
+# dummy schema here.
+search_api.index.*.third_party.search_api_solr:
+  type: ignore

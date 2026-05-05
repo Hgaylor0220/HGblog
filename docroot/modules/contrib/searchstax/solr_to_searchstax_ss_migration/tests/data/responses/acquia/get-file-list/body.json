@@ -1,0 +1,77 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 7
+    },
+    "files": {
+        "protwords_und.txt": {
+            "size": 17
+        },
+        "solrcore.properties": {
+            "size": 19
+        },
+        "stopwords_de.txt": {
+            "size": 16
+        },
+        "accents_en.txt": {
+            "size": 14
+        },
+        "stopwords_und.txt": {
+            "size": 17
+        },
+        "accents_de.txt": {
+            "size": 14
+        },
+        "schema_extra_fields.xml": {
+            "size": 23
+        },
+        "stopwords_en.txt": {
+            "size": 16
+        },
+        "nouns_de.txt": {
+            "size": 12
+        },
+        "schema_extra_types.xml": {
+            "size": 22
+        },
+        "synonyms_de.txt": {
+            "size": 15
+        },
+        "solrconfig.xml": {
+            "size": 14
+        },
+        "solrconfig_requestdispatcher.xml": {
+            "size": 32
+        },
+        "solrconfig_extra.xml": {
+            "size": 20
+        },
+        "elevate.xml": {
+            "size": 11
+        },
+        "solrconfig_query.xml": {
+            "size": 20
+        },
+        "synonyms_und.txt": {
+            "size": 16
+        },
+        "schema.xml": {
+            "size": 10
+        },
+        "protwords_en.txt": {
+            "size": 16
+        },
+        "synonyms_en.txt": {
+            "size": 15
+        },
+        "protwords_de.txt": {
+            "size": 16
+        },
+        "accents_und.txt": {
+            "size": 15
+        },
+        "solrconfig_index.xml": {
+            "size": 20
+        }
+    }
+}

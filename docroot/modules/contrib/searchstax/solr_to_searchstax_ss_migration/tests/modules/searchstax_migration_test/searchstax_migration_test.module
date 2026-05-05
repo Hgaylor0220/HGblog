@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the SearchStax Migration Test module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Circumvents acquia_connector_modules_installed() and
+ * acquia_connector_modules_uninstalled() in Drupal 8 since those break the
+ * tests.
+ */
+#[LegacyModuleImplementsAlter]
+function searchstax_migration_test_module_implements_alter(&$implementations, $hook) {
+  if (version_compare(\Drupal::VERSION, '9.0', '>=')) {
+    return;
+  }
+  if (in_array($hook, ['modules_installed', 'modules_uninstalled'])) {
+    unset($implementations['acquia_connector']);
+  }
+}

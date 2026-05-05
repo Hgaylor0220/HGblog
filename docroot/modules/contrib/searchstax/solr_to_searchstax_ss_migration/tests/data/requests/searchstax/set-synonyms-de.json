@@ -1,0 +1,19 @@
+{
+    "method": "POST",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v1/apps/synonyms?account=AccountWithTokenSupport&appId=100&language=de",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32",
+    "content_type": "application/json",
+    "body": {
+        "synonyms": [
+            "drupal, durpal",
+            "glas, gl\u00e4ser",
+            "k\u00fcche, k\u00fcchen",
+            "loch, l\u00f6cher",
+            "plan, pl\u00e4ne",
+            "plane, planen",
+            "schloss, schl\u00f6sser",
+            "schrank, schr\u00e4nke",
+            "schranke, schranken"
+        ]
+    }
+}

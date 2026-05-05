@@ -1,0 +1,40 @@
+id: searchstax_server_token_auth
+name: 'SearchStax server (Token Auth)'
+description: 'A server used for testing.'
+status: true
+langcode: en
+backend: search_api_solr
+backend_config:
+  site_hash: true
+  retrieve_data: true
+  highlight_data: true
+  domain: generic
+  server_prefix: 'server_prefix'
+  index_single_documents_fallback_count: 0
+  connector: searchstax
+  connector_config:
+    scheme: https
+    host: searchcloud-2-us-east-1.searchstax.com
+    port: 443
+    path: /
+    core: drupal-1234
+    update_endpoint: 'https://searchcloud-2-us-east-1.searchstax.com/12345/drupal-1234/update'
+    update_token: 1234567890abcdef1234567890abcdef12345678
+    autosuggest_endpoint: 'https://searchcloud-5-us-east-1.searchstax.com/12345/test-1234_suggester/emsuggest'
+    context: '12345'
+    timeout: 5
+    index_timeout: 5
+    optimize_timeout: 10
+    finalize_timeout: 30
+    skip_schema_check: false
+    solr_version: ''
+    http_method: GET
+    commit_within: 1000
+    jmx: false
+    jts: false
+    solr_install_dir: ''
+  optimize: false
+  fallback_multiple: true
+dependencies:
+  module:
+    - search_api_solr

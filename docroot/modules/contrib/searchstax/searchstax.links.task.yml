@@ -1,0 +1,14 @@
+searchstax.admin_settings:
+  route_name: searchstax.admin_settings
+  base_route: searchstax.admin_settings
+  title: 'Settings'
+
+searchstax.advanced_settings:
+  route_name: searchstax.advanced_settings
+  base_route: searchstax.admin_settings
+  title: 'Advanced Settings'
+
+searchstax.version_check:
+  route_name: searchstax.version_check
+  base_route: searchstax.admin_settings
+  title: 'Version check'

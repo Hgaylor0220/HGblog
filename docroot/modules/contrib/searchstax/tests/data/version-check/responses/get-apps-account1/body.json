@@ -1,0 +1,12 @@
+[
+    {
+        "name": "AppA",
+        "id": 100,
+        "update_endpoint": "https://searchcloud.example.searchstax.com/4455/firstapp-100/update"
+    },
+    {
+        "name": "AppB",
+        "id": 101,
+        "update_endpoint": "https://searchcloud-2-us-east-1.searchstax.com/12345/searchstax-test/update"
+    }
+]

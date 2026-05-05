@@ -1,0 +1,111 @@
+services:
+
+  logger.channel.searchstax:
+    parent: logger.channel_base
+    arguments: [ 'searchstax' ]
+
+  searchstax.api:
+    class: Drupal\searchstax\Service\Api
+    arguments:
+      - '@http_client'
+      - '@keyvalue.expirable'
+      - '@cache.default'
+      - '@cache_tags.invalidator'
+      - '@language_manager'
+      - '@datetime.time'
+
+  searchstax.flood_subscriber:
+    class: Drupal\searchstax\EventSubscriber\FloodSubscriber
+    arguments:
+      - '@config.factory'
+      - '@flood'
+    tags:
+      - { name: event_subscriber }
+
+  searchstax.migrate_to_keys:
+    class: Drupal\searchstax\Contrib\MigrateToKeys
+    arguments:
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@messenger'
+      - '@logger.channel.searchstax'
+      - '@string_translation'
+  Drupal\searchstax\Contrib\MigrateToKeysInterface:
+    alias: searchstax.migrate_to_keys
+
+  searchstax.solr_error_detection_subscriber:
+    class: Drupal\searchstax\EventSubscriber\SolrErrorDetectionSubscriber
+    arguments: [ '@searchstax.utility' ]
+    tags:
+      - { name: event_subscriber }
+
+  searchstax.solr_event_subscriber:
+    class: Drupal\searchstax\EventSubscriber\SearchSubscriber
+    arguments: [ '@searchstax.utility' ]
+    tags:
+      - { name: event_subscriber }
+
+  searchstax.solr_request_event_subscriber:
+    class: Drupal\searchstax\EventSubscriber\SolrRequestBypassSubscriber
+    arguments: [ '@searchstax.utility' ]
+    tags:
+      - { name: event_subscriber }
+
+  searchstax.utility:
+    class:  Drupal\searchstax\Service\SearchStax
+    arguments:
+      - '@config.factory'
+      - '@current_user'
+      - '@language_manager'
+      - '@request_stack'
+      - '@plugin.manager.search_api.parse_mode'
+      - '@?key.repository'
+      - '@module_handler'
+
+  searchstax.version_check:
+    class: Drupal\searchstax\Service\VersionCheck
+    arguments:
+      - '@searchstax.api'
+      - '@searchstax.utility'
+      - '@state'
+      - '@cache.data'
+      - '@datetime.time'
+      - '@?key.repository'
+
+  Drupal\searchstax\Hook\AttachmentsExtractorSchema:
+    class: Drupal\searchstax\Hook\AttachmentsExtractorSchema
+
+  Drupal\searchstax\Hook\AutocompleteSuggesters:
+    class: Drupal\searchstax\Hook\AutocompleteSuggesters
+    arguments:
+      - '@searchstax.utility'
+      - '@config.factory'
+      - '@string_translation'
+
+  Drupal\searchstax\Hook\Requirements:
+    class: Drupal\searchstax\Hook\Requirements
+    arguments:
+      - '@searchstax.utility'
+      - '@searchstax.version_check'
+      - '@module_handler'
+      - '@config.factory'
+      - '@entity_type.manager'
+      - '@renderer'
+      - '@string_translation'
+
+  Drupal\searchstax\Hook\ServerEditForm:
+    class: Drupal\searchstax\Hook\ServerEditForm
+    arguments:
+      - '@searchstax.utility'
+      - '@module_handler'
+      - '@string_translation'
+
+  Drupal\searchstax\Hook\ViewsSelectRelevanceModel:
+    class: Drupal\searchstax\Hook\ViewsSelectRelevanceModel
+    arguments:
+      - '@searchstax.api'
+      - '@searchstax.utility'
+      - '@searchstax.version_check'
+      - '@messenger'
+      - '@string_translation'
+      - '@language_manager'

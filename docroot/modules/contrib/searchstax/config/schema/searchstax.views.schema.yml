@@ -1,0 +1,22 @@
+views.view.*.third_party.searchstax:
+  type: mapping
+  label: SearchStax settings
+  mapping:
+    relevance_models:
+      type: sequence
+      label: 'The relevance models to use for different languages'
+      orderby: key
+      sequence:
+        type: string
+        label: The relevance model to use
+    relevance_model_overrides:
+      type: sequence
+      label: 'Overridden relevance models by display'
+      orderby: key
+      sequence:
+        type: sequence
+        label: 'The relevance models to use for different languages for this display'
+        orderby: key
+        sequence:
+          type: string
+          label: The relevance model to use

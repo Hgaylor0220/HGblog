@@ -1,0 +1,38 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 4
+    },
+    "response": {
+        "numFound": 4,
+        "start": 0,
+        "maxScore": 1.0,
+        "numFoundExact": true,
+        "docs": [
+            {
+                "ss_search_api_id": "entity:entity_test_mulrev_changed/2:en",
+                "hash": "12rxq3",
+                "ss_search_api_language": "en",
+                "score": 1.0
+            },
+            {
+                "ss_search_api_id": "entity:entity_test_mulrev_changed/4:en",
+                "hash": "12rxq3",
+                "ss_search_api_language": "en",
+                "score": 0.8
+            },
+            {
+                "ss_search_api_id": "entity:entity_test_mulrev_changed/1:en",
+                "hash": "12rxq3",
+                "ss_search_api_language": "en",
+                "score": 0.6
+            },
+            {
+                "ss_search_api_id": "entity:entity_test_mulrev_changed/3:en",
+                "hash": "12rxq3",
+                "ss_search_api_language": "en",
+                "score": 0.4
+            }
+        ]
+    }
+}

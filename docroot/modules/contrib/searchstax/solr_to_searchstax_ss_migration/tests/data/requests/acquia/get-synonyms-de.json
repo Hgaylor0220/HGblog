@@ -1,0 +1,4 @@
+{
+    "method": "GET",
+    "uri": "https://example.prod.acquia.com/solr/abc-12345.prod.example/admin/file?file=synonyms_de.txt&wt=json&json.nl=flat"
+}

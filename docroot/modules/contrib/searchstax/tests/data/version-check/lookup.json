@@ -1,0 +1,9 @@
+{
+    "19e0994d8396516b85758e809c3d8f61": "list-accounts",
+    "1ff5ee978284c8939faca796105011e5": "obtain-auth-token",
+    "27c5ce759ef7adc550e99784404a04ee": "get-apps-account2",
+    "3aea553a5bada9ac749b4b552e15fc83": "get-apps-account1",
+    "83b8d4ba9043919592eaaa690704ad6e": "upgrade-for-drupal-10",
+    "cd0b605d9c0ddab8bf9b538cd7f4a104": "check-compatibility-drupal-9",
+    "e583637c1aee0a7c5f873a97ae185a90": "check-compatibility-drupal-10"
+}

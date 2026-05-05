@@ -1,0 +1,11 @@
+analytics_url: https://app.searchstax.com
+autosuggest_core: drupal-1234_suggester
+configure_via_searchstudio: true
+discard_parameters:
+  - highlight
+  - keys
+  - sort
+  - spellcheck
+js_version: '3'
+searches_via_searchstudio: false
+untracked_roles: []

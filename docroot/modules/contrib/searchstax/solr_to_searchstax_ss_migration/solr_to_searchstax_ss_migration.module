@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the Solr to SearchStax Site Search Migration module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for type "search_api_server".
+ */
+function solr_to_searchstax_ss_migration_search_api_server_delete(EntityInterface $entity): void {
+  \Drupal::getContainer()->get('solr_to_searchstax_ss_migration.utility')
+    ->onServerDelete($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for type "search_api_index".
+ */
+function solr_to_searchstax_ss_migration_search_api_index_delete(EntityInterface $entity): void {
+  \Drupal::getContainer()->get('solr_to_searchstax_ss_migration.utility')
+    ->onIndexDelete($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for type "view".
+ */
+function solr_to_searchstax_ss_migration_view_delete(EntityInterface $entity): void {
+  \Drupal::getContainer()->get('solr_to_searchstax_ss_migration.utility')
+    ->onViewDelete($entity);
+}

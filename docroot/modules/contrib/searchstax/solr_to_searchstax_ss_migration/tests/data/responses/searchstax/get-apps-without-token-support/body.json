@@ -1,0 +1,16 @@
+[
+    {
+        "name": "FirstApp",
+        "id": 200,
+        "update_endpoint": "https://searchcloud.example.searchstax.com/2345/firstapp-200/update",
+        "engine_username": "app200-admin",
+        "index_write_token": "59cb8318eb45fcb8893f12a698b439f0767ac770"
+    },
+    {
+        "name": "SecondApp",
+        "id": 201,
+        "update_endpoint": "https://searchcloud.example.searchstax.com/2345/secondapp-201/update",
+        "engine_username": "app201-admin",
+        "index_write_token": "a208695cee8ef8153918d605350154e761fd0cae"
+    }
+]

@@ -1,0 +1,12 @@
+{
+    "response": {
+        "numFound": 0,
+        "start": 0,
+        "maxScore": 0,
+        "numFoundExact": true,
+        "docs": []
+    },
+    "facets": {
+        "count": 0
+    }
+}

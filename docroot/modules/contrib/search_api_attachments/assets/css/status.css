@@ -1,0 +1,10 @@
+.ok {
+  padding: 5px;
+  border: 5px solid green;
+  border-radius: 5px;
+}
+.error {
+  padding: 5px;
+  border: 5px solid red;
+  border-radius: 5px;
+}

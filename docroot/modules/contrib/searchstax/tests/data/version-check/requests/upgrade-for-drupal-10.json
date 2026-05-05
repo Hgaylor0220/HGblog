@@ -1,0 +1,9 @@
+{
+    "method": "POST",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v2/apps/upgrade/?account=Account2&appId=200",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32",
+    "content_type": "application/json",
+    "body": {
+        "version": 10
+    }
+}

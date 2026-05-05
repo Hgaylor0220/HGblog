@@ -1,0 +1,22 @@
+{
+    "name": "drupal/searchstax",
+    "description": "Integrates with SearchStax and SearchStudio.",
+    "type": "drupal-module",
+    "homepage": "https://www.drupal.org/project/searchstax",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "ext-libxml": "*",
+        "drupal/search_api": "^1"
+    },
+    "require-dev": {
+        "drupal/acquia_search": "3.1.x-dev||3.1.11",
+        "drupal/eu_cookie_compliance": "1.x-dev",
+        "drupal/facets": "3.0.x-dev||1.x-dev",
+        "drupal/key": "1.20.0||1.x-dev||2.x-dev",
+        "drupal/search_api_attachments": ">=10||1.0.0-beta19",
+        "drupal/search_api_autocomplete": "1.x-dev||1.6.0",
+        "drupal/search_api_page": "1.x-dev||1.0.0-beta3",
+        "drupal/search_api_solr": "4.x-dev||4.2.1",
+        "phpcompatibility/php-compatibility": "^9.3"
+    }
+}

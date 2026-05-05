@@ -1,0 +1,9 @@
+{
+    "method": "POST",
+    "uri": "https://app.searchstax.com/api/rest/v2/obtain-auth-token/",
+    "content_type": "application/json",
+    "body": {
+        "password": "password123",
+        "username": "user@example.com"
+    }
+}

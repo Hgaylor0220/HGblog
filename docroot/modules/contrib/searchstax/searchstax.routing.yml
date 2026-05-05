@@ -1,0 +1,23 @@
+searchstax.admin_settings:
+  path: '/admin/config/search/searchstax'
+  defaults:
+    _form: '\Drupal\searchstax\Form\SettingsForm'
+    _title: 'SearchStax settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+searchstax.advanced_settings:
+  path: '/admin/config/search/searchstax/advanced-settings'
+  defaults:
+    _form: '\Drupal\searchstax\Form\AdvancedSettingsForm'
+    _title: 'Advanced SearchStax settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+searchstax.version_check:
+  path: '/admin/config/search/searchstax/version-check'
+  defaults:
+    _form: '\Drupal\searchstax\Form\VersionCheckForm'
+    _title: 'Check version compatibility'
+  requirements:
+    _permission: 'administer site configuration'

@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://searchcloud-2-us-east-1.searchstax.com/12345/searchstax-test/admin/system?wt=json&json.nl=flat",
+    "auth_header": "Token 0123456789abcdef0123456789abcdef01234567"
+}

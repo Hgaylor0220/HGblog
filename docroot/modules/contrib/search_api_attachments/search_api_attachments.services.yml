@@ -1,0 +1,34 @@
+services:
+  _defaults:
+    autowire: true
+  plugin.manager.search_api_attachments.text_extractor:
+    class: Drupal\search_api_attachments\TextExtractorPluginManager
+    parent: default_plugin_manager
+  search_api_attachments.cache:
+    class: Drupal\search_api_attachments\Cache\AttachmentsCacheInterface
+    factory: ['@search_api_attachments.cache_factory', get]
+  Drupal\search_api_attachments\Cache\AttachmentsCacheInterface: '@search_api_attachments.cache'
+  search_api_attachments.cache_factory:
+    class: Drupal\search_api_attachments\Cache\AttachmentsCacheFactory
+    tags:
+      - { name: service_collector, tag: search_api_attachments_cache, call: addCacheBackend }
+  Drupal\search_api_attachments\Cache\AttachmentsCacheFactory: '@search_api_attachments.cache_factory'
+  search_api_attachments.cache_files:
+    class: Drupal\search_api_attachments\Cache\Files
+    tags:
+      - { name: search_api_attachments_cache }
+  search_api_attachments.cache_keyvalue:
+    class: Drupal\search_api_attachments\Cache\KeyValue
+    arguments: ['@keyvalue']
+    tags:
+      - { name: search_api_attachments_cache }
+  search_api_attachments.extract_file_validator:
+    class: Drupal\search_api_attachments\ExtractFileValidator
+    arguments: ['@file.mime_type.guesser']
+  logger.channel.search_api_attachments:
+    parent: logger.channel_base
+    arguments: ['search_api_attachments']
+  search_api_attachments.config_subscriber:
+    class: Drupal\search_api_attachments\EventSubscriber\ConfigEventsSubscriber
+    tags:
+      - { name: 'event_subscriber' }

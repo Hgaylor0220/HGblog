@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v1/apps/models?account=Account1&appId=101&language=fr",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32"
+}

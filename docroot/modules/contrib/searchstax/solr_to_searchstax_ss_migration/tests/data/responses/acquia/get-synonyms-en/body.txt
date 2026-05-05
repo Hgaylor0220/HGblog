@@ -1,0 +1,13 @@
+# Common typo
+drupal, durpal
+
+# UK/US spellings
+accessorize, accessorise
+accessorized, accessorised
+accessorized, accessorised
+accessorizes, accessorises
+accessorizing, accessorising
+
+# Optional e
+aging, ageing
+agings, ageings

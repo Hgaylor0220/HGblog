@@ -1,0 +1,11 @@
+search_api.server.*.third_party.searchstax:
+  type: mapping
+  label: 'SearchStax server settings'
+  mapping:
+    autosuggest_core:
+      type: string
+      label: 'Auto-suggest core'
+      deprecated: "The 'autosuggest_core' setting is deprecated in searchstax:1.11.0 and is removed from searchstax:2.0.0. Use the 'autosuggest_endpoint' setting instead. See https://www.drupal.org/node/3582959."
+    autosuggest_endpoint:
+      type: string
+      label: 'Auto-suggest endpoint'

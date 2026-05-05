@@ -1,0 +1,76 @@
+include:
+  ################
+  # DrupalCI includes:
+  # As long as you include this, any future includes added by the Drupal Association will be accessible to your pipelines automatically.
+  # View these include files at https://git.drupalcode.org/project/gitlab_templates/
+  ################
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.main.yml'
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+################
+# Pipeline configuration variables
+#
+# These are the variables provided to the Run Pipeline form that a user may want to override.
+#
+# Docs at https://git.drupalcode.org/project/gitlab_templates/-/blob/1.0.x/includes/include.drupalci.variables.yml
+################
+variables:
+  # Ignore text in test config files and in the test HTTP requests/responses.
+  _CSPELL_IGNORE_PATHS: 'solr_to_searchstax_ss_migration/tests/modules/searchstax_migration_test/config/install,solr_to_searchstax_ss_migration/tests/data,tests/data'
+  # Execute tests in parallel
+  _PHPUNIT_CONCURRENT: 1
+  # Uncomment to broaden test coverage:
+  OPT_IN_TEST_CURRENT: 1
+#  OPT_IN_TEST_MAX_PHP: 1
+#  OPT_IN_TEST_PREVIOUS_MAJOR: 1
+#  OPT_IN_TEST_PREVIOUS_MINOR: 1
+#  OPT_IN_TEST_NEXT_MINOR: 1
+#  OPT_IN_TEST_NEXT_MAJOR: 0
+  OPT_IN_TEST_DRUPAL8: 1
+
+phpunit:
+  variables:
+    SYMFONY_DEPRECATIONS_HELPER: "ignoreFile=$CI_PROJECT_DIR/.ignored-deprecations.txt"
+
+# Add support for running tests against Drupal 8.
+.opt-in-drupal8-rule: &opt-in-drupal8-rule
+  if: '$OPT_IN_TEST_DRUPAL8 != "1"'
+  when: never
+
+composer (drupal 8):
+  extends: .composer-base
+  rules:
+    - *opt-in-drupal8-rule
+    - when: always
+  variables:
+    PHP_VERSION: 7.4
+    DRUPAL_CORE: ^8.8
+    _TARGET_PHP_IMAGE_VARIANT: "apache"
+
+composer (previous major):
+  after_script:
+    # Acquia Search 3.1.11 is not actually compatible with the current 4.x-dev
+    # version of Search API Solr. To make tests pass against Drupal 10, we need
+    # to manually update that module.
+    - composer require --dev drupal/acquia_search:3.1.14
+
+phpunit (drupal 8):
+  extends: phpunit
+  services:
+    - !reference [ .with-database ]
+    - !reference [ .with-chrome-legacy ]
+  rules:
+    - *opt-in-drupal8-rule
+    - !reference [ .skip-phpunit-rule ]
+    - !reference [ .phpunit-tests-exist-rule ]
+    - when: on_success
+  needs:
+    - "composer (drupal 8)"
+  variables:
+    MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_WEBDRIVER_LEGACY
+    SYMFONY_DEPRECATIONS_HELPER: "disabled"
+    _TARGET_PHP_IMAGE_VARIANT: "apache"

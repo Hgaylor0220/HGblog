@@ -1,0 +1,14 @@
+solr_to_searchstax_ss_migration.overview:
+  path: '/admin/config/search/solr-to-searchstax-ss-migration'
+  defaults:
+    _controller: '\Drupal\solr_to_searchstax_ss_migration\SolrToSearchStaxMigrationController::overview'
+    _title: 'Migrate from Solr to SearchStax Site Search'
+  requirements:
+    _permission: 'administer search_api'
+
+solr_to_searchstax_ss_migration.migrate_server_form:
+  path: '/admin/config/search/solr-to-searchstax-ss-migration/migrate-server/{server_id}'
+  defaults:
+    _form: '\Drupal\solr_to_searchstax_ss_migration\Form\MigrateServerForm'
+  requirements:
+    _permission: 'administer search_api'

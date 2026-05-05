@@ -1,0 +1,13 @@
+name: 'SearchStax Test Mock HTTP'
+type: module
+description: 'Provides a mock HTTP client for SearchStax tests.'
+package: Testing
+dependencies:
+  - search_api_solr:search_api_solr
+  - searchstax:searchstax
+hidden: true
+
+# Information added by Drupal.org packaging script on 2026-05-01
+version: '1.11.2'
+project: 'searchstax'
+datestamp: 1777657736

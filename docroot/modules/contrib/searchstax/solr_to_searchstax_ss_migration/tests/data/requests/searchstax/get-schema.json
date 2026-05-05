@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://searchcloud.example.searchstax.com/1234/firstapp-100/schema?wt=json&json.nl=flat",
+    "auth_header": "Token 9232215801aa9e201c1afa76270eb8065aa6964a"
+}

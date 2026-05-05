@@ -1,0 +1,16 @@
+{
+    "name": "drupal/search_api_attachments",
+    "description": "Search API Attachments.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "homepage": "https://drupal.org/project/search_api_attachments",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/search_api_attachments",
+        "source": "https://git.drupalcode.org/project/search_api_attachments"
+    },
+    "require": {
+        "drupal/core": "^10.3 || ^11",
+        "drupal/search_api": "^1"
+    }
+}

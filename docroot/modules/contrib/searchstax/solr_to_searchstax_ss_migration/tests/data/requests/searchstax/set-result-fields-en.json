@@ -1,0 +1,22 @@
+{
+    "method": "POST",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v1/apps/search/results/fields?account=AccountWithTokenSupport&appId=100&language=en",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32",
+    "content_type": "application/json",
+    "body": {
+        "fields": [
+            {
+                "name": "tm_X3b_en_name",
+                "title": "Name"
+            },
+            {
+                "name": "ss_type",
+                "title": "The Type"
+            },
+            {
+                "name": "sm_keywords",
+                "title": "Tags"
+            }
+        ]
+    }
+}

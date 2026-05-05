@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for the search_api_attachments module.
+ */
+
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+
+/**
+ * Implements hook_uninstall().
+ */
+function search_api_attachments_uninstall() {
+  $attachments_cache = \Drupal::service('search_api_attachments.cache');
+  // Clear all cached data.
+  $attachments_cache->clearAll();
+}
+
+/**
+ * Add path configuration for pdftotext_extractor.
+ */
+function search_api_attachments_update_8001() {
+  \Drupal::configFactory()
+    ->getEditable('search_api_attachments.admin_config')
+    ->set('pdftotext_extractor_configuration.pdftotext_path', 'pdftotext')
+    ->save();
+}
+
+/**
+ * Add configuration for tika_server_extractor.
+ */
+function search_api_attachments_update_8002() {
+  \Drupal::configFactory()
+    ->getEditable('search_api_attachments.admin_config')
+    ->set('tika_server_extractor_configuration.scheme', 'http')
+    ->set('tika_server_extractor_configuration.host', 'localhost')
+    ->set('tika_server_extractor_configuration.port', '9998')
+    ->set('tika_server_extractor_configuration.timeout', '5')
+    ->save();
+}
+
+/**
+ * Set default caching method.
+ */
+function search_api_attachments_update_8003() {
+  $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE);
+  $scheme = isset($scheme_options['private']) ? 'private' : 'public';
+  \Drupal::configFactory()
+    ->getEditable('search_api_attachments.admin_config')
+    ->set('cache_backend', 'search_api_attachments.cache_keyvalue')
+    ->set('cache_file_scheme', $scheme)
+    ->save();
+}
+
+/**
+ * Fix default cache_file_scheme if private scheme does not exist.
+ */
+function search_api_attachments_update_8004() {
+  $config = \Drupal::configFactory()
+    ->getEditable('search_api_attachments.admin_config');
+  $scheme_options = \Drupal::service('stream_wrapper_manager')
+    ->getNames(StreamWrapperInterface::WRITE);
+
+  // search_api_attachments_update_8003 originally set the default value as
+  // private without first checking that it exists. If the scheme does not
+  // exist, and the config value is private, change it to public.
+  if (!isset($scheme_options['private']) && $config->get('cache_file_scheme') === 'private') {
+    $config->set('cache_file_scheme', 'public')->save();
+  }
+}
+
+/**
+ * Add tika_config_path setting to existing Tika extractor configuration.
+ */
+function search_api_attachments_update_8005() {
+  $config = \Drupal::configFactory()
+    ->getEditable('search_api_attachments.admin_config');
+  if ($config->get('tika_extractor_configuration.tika_config_path') === NULL) {
+    $config->set('tika_extractor_configuration.tika_config_path', '')
+      ->save();
+  }
+}

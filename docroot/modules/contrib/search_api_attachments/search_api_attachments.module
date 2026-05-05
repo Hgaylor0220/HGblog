@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * @file
+ * Implement hooks and help functions to delete extracted files cache content.
+ */
+
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\Entity\File;
+use Drupal\search_api\Entity\Index;
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function search_api_attachments_file_update(File $file) {
+  _search_api_attachments_delete_cache($file);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function search_api_attachments_file_delete(File $file) {
+  _search_api_attachments_delete_cache($file);
+}
+
+/**
+ * Implements hook_cache_flush().
+ */
+function search_api_attachments_cache_flush() {
+  $config = \Drupal::config('search_api_attachments.admin_config');
+  $preserve_cache = $config->get('preserve_cache');
+  if (!$preserve_cache) {
+    // Clear all cached data.
+    $attachments_cache = \Drupal::service('search_api_attachments.cache');
+    $attachments_cache->clearAll();
+  }
+}
+
+/**
+ * Helper function to delete a file extracted data cache.
+ *
+ * @param \Drupal\file\Entity\File $file
+ *   The file object.
+ */
+function _search_api_attachments_delete_cache(File $file) {
+  $collection = 'search_api_attachments';
+  $key = $collection . ':' . $file->id();
+  \Drupal::keyValue($collection)->delete($key);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function search_api_attachments_theme() {
+  return [
+    'saa' => [
+      'variables' => [
+        'message' => NULL,
+        'type' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_help().
+ */
+function search_api_attachments_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.search_api_attachments':
+      $text = file_get_contents(dirname(__FILE__) . '/README.md');
+      if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
+        return '<pre>' . $text . '</pre>';
+      }
+      else {
+        // Use the Markdown filter to render the README.
+        $filter_manager = \Drupal::service('plugin.manager.filter');
+        $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        $config = ['settings' => $settings];
+        $filter = $filter_manager->createInstance('markdown', $config);
+        return $filter->process($text, 'en');
+      }
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function search_api_attachments_entity_extra_field_info() {
+  $extra = [];
+
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
+  $bundle_info = \Drupal::getContainer()->get('entity_type.bundle.info');
+  foreach ($entity_types as $entity_type_id => $entity_type) {
+    if ($entity_type instanceof ContentEntityType) {
+      $bundles = $bundle_info->getBundleInfo($entity_type_id);
+      foreach ($bundles as $bundle => $data) {
+        $extra[$entity_type_id][$bundle]['display']['search_api_attachments'] = [
+          'label' => t('Search api attachments'),
+          'description' => t('An attachments field.'),
+          'weight' => 100,
+          'visible' => FALSE,
+        ];
+      }
+    }
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function search_api_attachments_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $attachments_component = $display->getComponent('search_api_attachments');
+  if ($attachments_component !== NULL) {
+    $indexes = Index::loadMultiple();
+    foreach ($indexes as $index) {
+      $index_fields = array_keys($index->getFields());
+
+      $fields = array_filter($index_fields, fn($element) =>
+        str_starts_with($element, 'saa_')
+        ? $element : NULL);
+
+      if ($fields) {
+        foreach ($fields as $field) {
+          ($query = \Drupal::entityTypeManager()
+            ->getStorage('search_api_index')
+            ->load($index->id())
+            ->query()
+          )
+            ->addCondition('nid', $entity->id());
+
+          $items = $query->execute()->getResultItems();
+
+          $item = reset($items);
+          $content = $item->getField($field)->getValues()[0];
+
+          $build[$field] = [
+            '#plain_text' => $content->getText(),
+          ];
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function search_api_attachments_views_data_alter(&$data) {
+  // Add the filter for each Search API's index.
+  foreach (Index::loadMultiple() as $index) {
+    if (!$index->hasValidTracker() || !$index->status()) {
+      continue;
+    }
+    $key = 'search_api_index_' . $index->id();
+    $data[$key]['saa_exclude_attachments'] = [
+      'title' => t('Search api attachments filter'),
+      'filter' => [
+        'title' => t('Exclude search in attachments'),
+        'help' => 'Excludes searching in attachments',
+        'id' => 'search_api_attachments_include_search_in_attachments',
+      ],
+    ];
+  }
+}

@@ -1,0 +1,5 @@
+{
+    "tfa_token_required": [
+        "User has Two Factor authentication enabled. Please also pass the tfa_token"
+    ]
+}

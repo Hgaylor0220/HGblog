@@ -1,0 +1,26 @@
+[
+    {
+        "id": 3001,
+        "name": "défaut",
+        "default": true,
+        "status": "published"
+    },
+    {
+        "id": 3002,
+        "name": "Premier test",
+        "default": false,
+        "status": "published"
+    },
+    {
+        "id": 3003,
+        "name": "Deuxième test",
+        "default": false,
+        "status": "draft"
+    },
+    {
+        "id": 3004,
+        "name": "Troisième test",
+        "default": false,
+        "status": "published"
+    }
+]

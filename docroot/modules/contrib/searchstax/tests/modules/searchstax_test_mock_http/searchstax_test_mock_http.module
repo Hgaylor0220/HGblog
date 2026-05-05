@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the SearchStax Test Mock HTTP module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\searchstax_test_mock_http\Plugin\SolrConnector\SearchStaxMockHttpSolrConnector;
+
+/**
+ * Implements hook_search_api_solr_connector_info_alter().
+ */
+function searchstax_test_mock_http_search_api_solr_connector_info_alter(array &$definitions): void {
+  $definitions['searchstax']['class'] = SearchStaxMockHttpSolrConnector::class;
+}

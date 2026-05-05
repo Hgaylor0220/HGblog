@@ -1,0 +1,16 @@
+[
+    {
+        "id": 4683,
+        "name": "default",
+        "created": "2024-12-28T13:56:59Z",
+        "deleted": null,
+        "updated": "2024-12-28T17:19:58Z",
+        "updated_by": "user@example.com",
+        "ranking_enabled": false,
+        "filtering_enabled": true,
+        "semantic_reranker_enabled": false,
+        "default": true,
+        "status": "published",
+        "date_published": "2024-12-28T17:20:16Z"
+    }
+]

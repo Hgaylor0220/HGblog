@@ -1,0 +1,17 @@
+{
+    "method": "PUT",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v1/apps/lang?account=AccountWithTokenSupport&appId=100",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32",
+    "content_type": "application/json",
+    "body": [
+        {
+            "name": "English",
+            "language_code": "en",
+            "default": true
+        },
+        {
+            "name": "German",
+            "language_code": "de"
+        }
+    ]
+}

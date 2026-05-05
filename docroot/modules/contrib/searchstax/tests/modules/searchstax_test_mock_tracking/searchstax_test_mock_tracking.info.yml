@@ -1,0 +1,12 @@
+name: 'SearchStax Test Mock Tracking'
+type: module
+description: 'Provides a mock tracking script for SearchStax tests.'
+package: Testing
+dependencies:
+  - searchstax:searchstax
+hidden: true
+
+# Information added by Drupal.org packaging script on 2026-05-01
+version: '1.11.2'
+project: 'searchstax'
+datestamp: 1777657736

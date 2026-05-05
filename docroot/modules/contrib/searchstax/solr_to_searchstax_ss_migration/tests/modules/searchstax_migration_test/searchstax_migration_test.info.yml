@@ -1,0 +1,17 @@
+name: 'SearchStax Migration Test'
+type: module
+description: 'Support module for Solr to SearchStax Site Search Migration tests'
+package: Testing
+dependencies:
+  - acquia_search:acquia_search
+  - facets:facets
+  - drupal:views
+  - search_api:search_api_test_example_content
+  - searchstax:solr_to_searchstax_ss_migration
+  - searchstax:searchstax_test_mock_http
+hidden: true
+
+# Information added by Drupal.org packaging script on 2026-05-01
+version: '1.11.2'
+project: 'searchstax'
+datestamp: 1777657736

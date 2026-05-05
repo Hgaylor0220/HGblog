@@ -1,0 +1,8 @@
+{
+    "success": true,
+    "languages": [
+        "de",
+        "en"
+    ],
+    "message": "Languages successfully updated"
+}

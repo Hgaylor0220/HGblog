@@ -1,0 +1,126 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+includes:
+  - phar://phpstan.phar/conf/bleedingEdge.neon
+
+parameters:
+  level: 1
+
+  fileExtensions:
+    - sh
+
+  paths:
+    - .
+
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static\\(\\)\\.#"
+
+    - # Tests in Drupal 10 still use PHPUnit 9 which does not support
+      # attributes.
+      # @todo Remove once we depend on Drupal 11.0+.
+      message: "#^Attribute class PHPUnit\\\\Framework\\\\Attributes\\\\RunTestsInSeparateProcesses does not exist\\.$#"
+      reportUnmatched: false
+
+    - # OOP hooks were only introduced in Drupal 11.1, so those attributes will
+      # be reported as missing for all earlier versions. (This is no problem,
+      # though, since PHP just ignores missing attributes.)
+      # @todo Remove once we depend on Drupal 11.1+.
+      message: "#^Attribute class Drupal\\\\Core\\\\Hook\\\\Attribute\\\\\\w+ does not exist\\.$#"
+      reportUnmatched: false
+
+    - # The RequirementSeverity enum was introduced in Drupal 11.2.
+      # @todo Remove once we depend on Drupal 11.2+.
+      message: "#^Access to constant \\w+ on an unknown class Drupal\\\\Core\\\\Extension\\\\Requirement\\\\RequirementSeverity\\.$#"
+      path: src/Hook/Requirements.php
+      reportUnmatched: false
+
+    - # This error is reported frequently for the flavor of dependency injection
+      # we're using, since we often have something like this in getters:
+      # return $this->logger ?? \Drupal::logger('searchstax');
+      # Also, in one case, the code in question is in a static method, which
+      # also precludes the use of dependency injection.
+      message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead#"
+      paths:
+        - src/EventSubscriber/SearchSubscriber.php
+        - src/Form/AdvancedSettingsForm.php
+        - src/Form/SettingsForm.php
+        - src/Plugin/search_api_autocomplete/suggester/SearchstaxSuggester.php
+
+    - # Since we still support Drupal 8 and 9, we cannot uniformly use
+      # Error::logException() for logging exceptions.
+      # @todo Remove once we depend on Drupal 10.1+.
+      message: "#^Function watchdog_exception not found\\.#"
+      paths:
+        - solr_to_searchstax_ss_migration/src/Form/MigrateServerForm.php
+        - src/Form/AdvancedSettingsForm.php
+        - src/Form/SettingsForm.php
+        - src/Plugin/search_api_autocomplete/suggester/SearchstaxSuggester.php
+      # Will only be reported for Drupal 11+, so don't report if this error
+      # doesn't occur.
+      reportUnmatched: false
+
+    - # Since we still support Drupal 8 and 9, we cannot uniformly use
+      # Error::logException() for logging exceptions. We also cannot use the
+      # DeprecationHelper class since that was not introduced until
+      # Drupal 10.1.3.
+      # @todo Remove once we depend on Drupal 10.1+.
+      message: "#^Call to deprecated function watchdog_exception\\(\\)#"
+      paths:
+        - solr_to_searchstax_ss_migration/src/Form/MigrateServerForm.php
+        - src/Form/SettingsForm.php
+        - src/Plugin/search_api_autocomplete/suggester/SearchstaxSuggester.php
+      # Will only be reported for Drupal 11+, so don't report if this error
+      # doesn't occur.
+      reportUnmatched: false
+
+    - # Needed for backwards compatibility with Drupal versions before 10.3.
+      # @todo Remove once we depend on Drupal 10.3+.
+      message: "#^Call to deprecated method renderPlain\\(\\) of interface Drupal\\\\Core\\\\Render\\\\RendererInterface#"
+      path: src/Hook/Requirements.php
+      reportUnmatched: false
+
+    - # Needed since we do not depend on the search_api_autocomplete module
+      # version that introduced the attribute.
+      # @todo Remove once we depend on search_api_autocomplete 1.11+.
+      message: "#^Attribute class Drupal\\\\Core\\\\Hook\\\\Attribute\\\\\\w+ does not exist\\.$#"
+      path: src/Plugin/search_api_autocomplete/suggester/SearchstaxSuggester.php
+      reportUnmatched: false
+
+    - # Apparently, PHPStan does not understand class aliases, but since we need
+      # to use that class to also support earlier Drupal versions, we need to
+      # ignore this warning here.
+      # @todo Fix once we depend on Drupal 11.0+.
+      message: "#^Call to static method decode\\(\\) on an unknown class Drupal\\\\Core\\\\Serialization\\\\Yaml\\.#"
+      path: tests/fixtures/update/helpers.inc
+      reportUnmatched: false
+
+    - # Unfortunately needed since AcquiaGuzzle extends that class.
+      message: "#^Class Drupal\\\\searchstax_test_mock_http\\\\Mock\\\\MockHttpClient extends @final class GuzzleHttp\\\\Client\\.#"
+      path: tests/modules/searchstax_test_mock_http/src/Mock/MockHttpClient.php
+
+    - # The call is deprecated in PHP 8.5 but needed in PHP versions before 8.1.
+      # @todo Fix and remove once we depend on PHP 8.1.
+      message: "#^Call to deprecated method setAccessible\\(\\) of class ReflectionProperty\\.#"
+      path: tests/src
+      reportUnmatched: false
+
+    - # The GoutteDriver class isn't present in later versions of Drupal, but
+      # needed for Drupal 8 support.
+      message: "#^Class Behat\\\\Mink\\\\Driver\\\\GoutteDriver not found\\.#"
+      path: tests/src/FunctionalJavascript
+      # Will only be reported for Drupal 10+, so don't report if this error
+      # doesn't occur.
+      # @todo Remove once we depend on Drupal 10+.
+      reportUnmatched: false
+
+    - # Called for the sake of testing backwards compatibility.
+      message: "#^Call to deprecated method getAutosuggestCore\\(\\) of class Drupal\\\\searchstax\\\\Service\\\\SearchStax#"
+      path: tests/src/Functional/Update/SearchStaxUpdate8103Test.php
+
+    - # The class exists in all versions where needed but was removed in newer
+      # versions of the Search API Solr module.
+      # @todo Remove once we depend on Drupal 9.1+.
+      message: "#^Instantiated class Drupal\\\\search_api_solr\\\\Solarium\\\\EventDispatcher\\\\Psr14Bridge not found\\.#"
+      path: tests/src/Kernel/SolrErrorDetectionTest.php
+      reportUnmatched: false

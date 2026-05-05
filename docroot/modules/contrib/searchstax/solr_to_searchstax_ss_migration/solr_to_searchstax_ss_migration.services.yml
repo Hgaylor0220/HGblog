@@ -1,0 +1,9 @@
+services:
+  logger.channel.solr_to_searchstax_ss_migration:
+    parent: logger.channel_base
+    arguments: [ 'solr_to_searchstax_ss_migration' ]
+  solr_to_searchstax_ss_migration.utility:
+    class: Drupal\solr_to_searchstax_ss_migration\UtilityService
+    arguments:
+      - '@searchstax.utility'
+      - '@keyvalue'

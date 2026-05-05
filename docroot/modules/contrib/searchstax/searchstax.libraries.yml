@@ -1,0 +1,7 @@
+searchstax.tracking:
+  version: VERSION
+  js:
+    js/searchstax.tracking.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery

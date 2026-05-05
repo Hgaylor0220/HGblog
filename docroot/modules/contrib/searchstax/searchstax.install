@@ -1,0 +1,336 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the SearchStax module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\searchstax\Hook\Requirements;
+use Drupal\searchstax\Service\SearchStax;
+
+/**
+ * Implements hook_requirements().
+ */
+#[LegacyRequirementsHook]
+function searchstax_requirements($phase): array {
+  if ($phase === 'runtime') {
+    return \Drupal::getContainer()->get(Requirements::class)->runtimeRequirements();
+  }
+  return [];
+}
+
+/**
+ * Implements hook_install().
+ */
+function searchstax_install($is_syncing): void {
+  // If the Key module is installed (and we are not in a config sync), move our
+  // sensitive settings to the default Key object.
+  if (!$is_syncing && \Drupal::moduleHandler()->moduleExists('key')) {
+    $config = \Drupal::configFactory()->getEditable('searchstax.settings');
+    $config->set('key_id', 'searchstax_analytics_credentials');
+    if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+      $config->save(TRUE);
+    }
+    else {
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Adds a default value for the "discard_parameters" setting.
+ */
+function searchstax_update_8101(): void {
+  $config = \Drupal::configFactory()->getEditable('searchstax.settings');
+  if ($config->get('discard_parameters') === NULL) {
+    $discarded_parameters = [
+      'highlight',
+      'keys',
+      'sort',
+      'spellcheck',
+    ];
+    if ($config->get('configure_facets_via_searchstudio')) {
+      array_unshift($discarded_parameters, 'facets');
+    }
+    $config->set('discard_parameters', $discarded_parameters);
+  }
+  $config->clear('configure_facets_via_searchstudio');
+  if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+    $config->save(TRUE);
+  }
+  else {
+    $config->save();
+  }
+}
+
+/**
+ * Adds default values for the new "analytics_url" and "js_version" settings.
+ */
+function searchstax_update_8102(): void {
+  $config = \Drupal::configFactory()->getEditable('searchstax.settings');
+  if ($config->get('analytics_url') === NULL) {
+    $config->set('analytics_url', 'https://app.searchstax.com');
+  }
+  if ($config->get('js_version') === NULL) {
+    $config->set('js_version', '3');
+  }
+  $config->clear('configure_facets_via_searchstudio');
+  if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+    $config->save(TRUE);
+  }
+  else {
+    $config->save();
+  }
+}
+
+/**
+ * Moves the global "autosuggest_core" setting to its server.
+ */
+function searchstax_update_8103(): void {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('searchstax.settings');
+  $autosuggest_core = $config->get('autosuggest_core');
+  if (!$autosuggest_core) {
+    return;
+  }
+
+  $utility = \Drupal::getContainer()->get('searchstax.utility');
+  $non_matching_searchstax_servers = FALSE;
+  $matching_server_found = FALSE;
+  foreach ($config_factory->listAll('search_api.server.') as $server_id) {
+    $server = $config_factory->getEditable($server_id);
+    $backend_config = $server->get('backend_config');
+    if (
+      $server->get('backend') !== 'search_api_solr'
+      || !$utility->isSearchStaxSolr($backend_config)
+    ) {
+      continue;
+    }
+    /* @noinspection PhpStrFunctionsInspection */
+    if (strpos($autosuggest_core, $backend_config['connector_config']['core']) !== 0) {
+      $non_matching_searchstax_servers = TRUE;
+      continue;
+    }
+    $matching_server_found = TRUE;
+    // Depending on the connector plugin used, the "autosuggest_core" setting is
+    // either part of the connector config (for our own connector plugin) or
+    // stored as a third-party setting.
+    // In either case, if there already is a setting there, leave it alone, and
+    // only remove the global setting if it matched.
+    if (($backend_config['connector'] ?? '') === 'searchstax') {
+      $data = &$backend_config['connector_config'];
+      if (!empty($data['autosuggest_core'])) {
+        $non_matching_searchstax_servers |= $data['autosuggest_core'] !== $autosuggest_core;
+        break;
+      }
+      $data['autosuggest_core'] = $autosuggest_core;
+      $server->set('backend_config', $backend_config);
+    }
+    else {
+      $third_party_settings = $server->get('third_party_settings');
+      $data = &$third_party_settings['searchstax'];
+      if (!empty($data['autosuggest_core'])) {
+        $non_matching_searchstax_servers |= $data['autosuggest_core'] !== $autosuggest_core;
+        break;
+      }
+      $data['autosuggest_core'] = $autosuggest_core;
+      $server->set('third_party_settings', $third_party_settings);
+    }
+    if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+      $server->save(TRUE);
+    }
+    else {
+      $server->save();
+    }
+  }
+
+  // Remove the global setting if it only affected the server(s) to which it was
+  // transferred. Otherwise, keep it as a reminder for the user to set the
+  // setting for the other servers manually.
+  if ($matching_server_found && !$non_matching_searchstax_servers) {
+    $config->clear('autosuggest_core');
+    if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+      $config->save(TRUE);
+    }
+    else {
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Does nothing.
+ *
+ * This used to automatically migrate sensitive SearchStax settings to use the
+ * Key module, if available. However, it is now recommended to do this manually.
+ */
+function searchstax_update_8104(): void {
+}
+
+/**
+ * Enables the integration with the EU Cookie Compliance module.
+ */
+function searchstax_update_8105(): ?TranslatableMarkup {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('searchstax.settings');
+  if ($config->get('eu_cookie_compliance.enabled') === NULL) {
+    $config->set('eu_cookie_compliance.enabled', TRUE);
+    if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+      $config->save(TRUE);
+    }
+    else {
+      $config->save();
+    }
+    $cookie_config = $config_factory->get('eu_cookie_compliance.settings');
+    if (
+      $cookie_config->get('method') === 'categories'
+      && $config->get('eu_cookie_compliance.category') === NULL
+    ) {
+      return t('The integration with the EU Cookie Compliance module was enabled. Please visit the <a href=":url">settings form</a> to set the appropriate category to use for SearchStax tracking.', [
+        ':url' => Url::fromRoute('searchstax.admin_settings')->toString(),
+      ]);
+    }
+    return t('The integration with the EU Cookie Compliance module was enabled.');
+  }
+  return NULL;
+}
+
+/**
+ * Set default values for the new "Flood protection" settings.
+ */
+function searchstax_update_8106(): void {
+  $config = \Drupal::configFactory()->getEditable('searchstax.settings');
+  if ($config->get('flood_protection') === NULL) {
+    $config->set('flood_protection', [
+      'enabled' => FALSE,
+      'search_limit' => 15,
+      'search_window' => 10,
+      'update_limit' => 50,
+      'update_window' => 60,
+    ]);
+    if (version_compare(\Drupal::VERSION, '11.3.99', '<=')) {
+      $config->save(TRUE);
+    }
+    else {
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Move "autosuggest_core" settings to the new "autosuggest_endpoint" setting.
+ */
+function searchstax_update_8107(): ?FormattableMarkup {
+  $servers_using_key = [];
+  $servers_updated = [];
+  $servers_failed = [];
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('search_api.server.') as $config_name) {
+    $server = $config_factory->getEditable($config_name);
+    if ($server->get('backend') !== 'search_api_solr') {
+      continue;
+    }
+    $server_id = $server->get('id');
+    $backend_config = $server->get('backend_config');
+    $connector_config = $backend_config['connector_config'] ?? [];
+    if ($backend_config['connector'] === 'searchstax') {
+      if (!empty($connector_config['autosuggest_endpoint'])) {
+        continue;
+      }
+      if (!empty($connector_config['key_id'])) {
+        $servers_using_key[] = $server_id;
+      }
+      if (empty($connector_config['autosuggest_core'])) {
+        continue;
+      }
+      $endpoint = SearchStax::createAutosuggestEndpointFromCore($connector_config);
+      if ($endpoint !== NULL) {
+        unset($connector_config['autosuggest_core']);
+        $connector_config['autosuggest_endpoint'] = $endpoint;
+        $server->set('backend_config.connector_config', $connector_config)->save();
+        $servers_updated[] = $server_id;
+      }
+      else {
+        $servers_failed[] = $server_id;
+      }
+    }
+    elseif (
+      preg_match('#\.searchstax\.com?$#', $connector_config['host'] ?? '')
+      && !$server->get('third_party_settings.searchstax.autosuggest_endpoint')
+    ) {
+      $autosuggest_core = $server->get('third_party_settings.searchstax.autosuggest_core');
+      if (!$autosuggest_core) {
+        continue;
+      }
+      $connector_config['autosuggest_core'] = $autosuggest_core;
+      $endpoint = SearchStax::createAutosuggestEndpointFromCore($connector_config);
+      if ($endpoint !== NULL) {
+        $server->clear('third_party_settings.searchstax.autosuggest_core')
+          ->set('third_party_settings.searchstax.autosuggest_endpoint', $endpoint)
+          ->save();
+        $servers_updated[] = $server_id;
+      }
+      else {
+        $servers_failed[] = $server_id;
+      }
+    }
+  }
+
+  $messages = [];
+  if ($servers_updated) {
+    $messages[] = t('Successfully moved auto-suggest settings for the following @count server(s): @servers.', [
+      '@count' => count($servers_updated),
+      '@servers' => implode(', ', $servers_updated),
+    ]);
+  }
+  if ($servers_failed) {
+    $messages[] = t('Failed to move auto-suggest settings for the following @count server(s): @servers.', [
+      '@count' => count($servers_failed),
+      '@servers' => implode(', ', $servers_failed),
+    ]);
+  }
+  if ($servers_using_key) {
+    $messages[] = t('The following @count server(s) are using the Key module for their configuration: @servers. Move any "autosuggest_core" settings in those keys to the new "autosuggest_endpoint" setting.', [
+      '@count' => count($servers_using_key),
+      '@servers' => implode(', ', $servers_using_key),
+    ]);
+  }
+  if (!$messages) {
+    return NULL;
+  }
+  if (count($messages) === 1) {
+    return reset($messages);
+  }
+  $string = '';
+  $args = [];
+  foreach ($messages as $i => $message) {
+    $key = "@message_$i";
+    $string .= "<li>$key</li>";
+    $args[$key] = $message;
+  }
+  return new FormattableMarkup("<ul>$string</ul>", $args);
+}
+
+/**
+ * Remove unused settings.
+ */
+function searchstax_update_8108(): void {
+  $config = \Drupal::configFactory()->getEditable('searchstax.settings');
+  // If "discard_parameters" had no effect before but would have an effect after
+  // this update, clear all its values to make sure the effective behavior of
+  // the site stays the same.
+  if (
+    $config->get('searches_via_searchstudio')
+    && !$config->get('configure_via_searchstudio')
+  ) {
+    $config->set('discard_parameters', []);
+  }
+  $config->clear('configure_via_searchstudio');
+  $config->save();
+}

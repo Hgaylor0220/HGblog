@@ -1,0 +1,11 @@
+{
+    "method": "POST",
+    "uri": "https://extractor-us.searchstax.co/api/v1/1234/extract",
+    "auth_header": "Token 0123456789abcdef0123456789abcdef01234567",
+    "multipart": [
+        {
+            "name": "file",
+            "contents": "7be011d181922897ba7d25252b69260c"
+        }
+    ]
+}

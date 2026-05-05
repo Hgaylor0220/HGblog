@@ -1,0 +1,22 @@
+type: module
+name: 'SearchStax'
+description: 'Integrates with SearchStax and SearchStudio.'
+package: Search
+core_version_requirement: ^8.8 || ^9 || ^10 || ^11
+configure: searchstax.admin_settings
+dependencies:
+  - search_api:search_api
+test_dependencies:
+  - acquia_search:acquia_search
+  - eu_cookie_compliance:eu_cookie_compliance
+  - facets:facets
+  - key:key
+  - search_api_attachments:search_api_attachments
+  - search_api_autocomplete:search_api_autocomplete
+  - search_api_page:search_api_page
+  - search_api_solr:search_api_solr
+
+# Information added by Drupal.org packaging script on 2026-05-01
+version: '1.11.2'
+project: 'searchstax'
+datestamp: 1777657736

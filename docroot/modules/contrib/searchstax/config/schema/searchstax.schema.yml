@@ -1,0 +1,84 @@
+searchstax.settings:
+  type: config_object
+  label: 'SearchStax settings'
+  mapping:
+    analytics_key:
+      type: string
+      label: 'Global SearchStax analytics key'
+    analytics_url:
+      type: string
+      label: 'SearchStax analytics URL'
+    autocomplete:
+      type: mapping
+      label: 'Autocomplete settings'
+      mapping:
+        override_supported_suggesters:
+          type: sequence
+          label: 'Override supported Autocomplete suggesters'
+          orderby: value
+          sequence:
+            type: string
+            label: 'The plugin ID of a suggester that should be considered supported although it normally is not'
+    autosuggest_core:
+      deprecated: "The site-wide 'autosuggest_core' SearchStax setting is deprecated in searchstax:1.9.0 and is removed from searchstax:2.0.0. Use the configuration value on the suggester plugin instead. See https://www.drupal.org/node/3555831."
+      type: string
+      label: 'The site-wide default autosuggest core (deprecated)'
+    discard_parameters:
+      type: sequence
+      label: 'Which search parameters from Drupal to discard if "searches_via_searchstudio" is enabled'
+      orderby: value
+      sequence:
+        type: string
+        label: 'A component for which Drupal settings will be ignored'
+    eu_cookie_compliance:
+      type: mapping
+      label: 'EU Cookie Compliance settings'
+      mapping:
+        category:
+          type: string
+          label: 'If EU Cookie Compliance is set to "Opt-in with categories" mode, the category in which SearchStax tracking should be included'
+        enabled:
+          type: boolean
+          label: 'Whether to enable integration with the EU Cookie Compliance module'
+    flood_protection:
+      type: mapping
+      label: 'Flood Protection settings'
+      mapping:
+        enabled:
+          type: boolean
+          label: 'Whether to enable Flood Protection'
+        search_limit:
+          type: integer
+          label: 'How many search requests a single IP address can invoke'
+        search_window:
+          type: integer
+          label: 'Within how many seconds the Search Limit cannot be exceeded by a single IP address'
+        update_limit:
+          type: integer
+          label: 'How many update requests a single IP can invoke'
+        update_window:
+          type: integer
+          label: 'Within how many seconds the Update Limit cannot be exceeded by a single IP address'
+    js_version:
+      type: string
+      label: 'The version of the SearchStax Studio JS file to load'
+    key_id:
+      type: string
+      label: 'The key ID, in case the Key module is used'
+    search_specific_analytics_keys:
+      type: sequence
+      label: 'Search-specific analytics keys'
+      orderby: key
+      sequence:
+        type: string
+        label: 'SearchStax analytics key for this search'
+    searches_via_searchstudio:
+      type: boolean
+      label: 'Whether to re-route search requests to SearchStudio'
+    untracked_roles:
+      type: sequence
+      label: 'Roles that will not be tracked'
+      orderby: value
+      sequence:
+        type: string
+        label: 'A role that will not be tracked'

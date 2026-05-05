@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1001,
+        "name": "default",
+        "default": true,
+        "status": "published"
+    },
+    {
+        "id": 1002,
+        "name": "experiment1",
+        "default": false,
+        "status": "published"
+    },
+    {
+        "id": 1003,
+        "name": "experiment2",
+        "default": false,
+        "status": "draft"
+    },
+    {
+        "id": 1004,
+        "name": "experiment3",
+        "default": false,
+        "status": "published"
+    }
+]

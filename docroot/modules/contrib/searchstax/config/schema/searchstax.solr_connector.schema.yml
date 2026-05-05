@@ -1,0 +1,23 @@
+plugin.plugin_configuration.search_api_solr_connector.searchstax:
+  type: plugin.plugin_configuration.search_api_solr_connector.standard
+  label: 'SearchStax connector settings'
+  mapping:
+    update_endpoint:
+      type: string
+      label: 'Update endpoint'
+    update_token:
+      type: string
+      label: 'Update endpoint authorization token'
+    autosuggest_core:
+      type: string
+      label: 'Auto-suggest core'
+      deprecated: "The 'autosuggest_core' setting is deprecated in searchstax:1.11.0 and is removed from searchstax:2.0.0. Use the 'autosuggest_endpoint' setting instead. See https://www.drupal.org/node/3582959."
+    autosuggest_endpoint:
+      type: string
+      label: 'Auto-suggest endpoint'
+    context:
+      type: string
+      label: 'The context ID from the update endpoint'
+    key_id:
+      type: string
+      label: 'The key ID, in case the Key module is used'

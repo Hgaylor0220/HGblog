@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v2/apps/check-version-compatibility/?account=Account2&appId=200&version=9",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32"
+}

@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://searchcloud.example.searchstax.com/1234/firstapp-100/select?omitHeader=true&wt=json&json.nl=flat&q=%2A%3A%2A&start=0&rows=1&fl=ss_search_api_id%2Css_search_api_language%2Cscore&json.facet=%7B%22maxVersion%22%3A%22max%28_version_%29%22%7D",
+    "auth_header": "Token 9232215801aa9e201c1afa76270eb8065aa6964a"
+}

@@ -1,0 +1,13 @@
+type: module
+name: 'Search API Attachments'
+description: 'Extract and index file fields content.'
+core_version_requirement: ^10.3 || ^11
+package: Search
+configure: search_api_attachments.admin_form
+dependencies:
+  - search_api:search_api
+
+# Information added by Drupal.org packaging script on 2026-03-27
+version: '10.0.8'
+project: 'search_api_attachments'
+datestamp: 1774619110

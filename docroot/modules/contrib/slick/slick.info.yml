@@ -1,0 +1,12 @@
+name: Slick
+type: module
+description: "Slick carousel, the last carousel you'll ever need."
+core_version_requirement: '>=9.4'
+package: Slick
+dependencies:
+  - blazy:blazy (>= 3.x)
+
+# Information added by Drupal.org packaging script on 2026-01-10
+version: '3.0.7'
+project: 'slick'
+datestamp: 1768037032

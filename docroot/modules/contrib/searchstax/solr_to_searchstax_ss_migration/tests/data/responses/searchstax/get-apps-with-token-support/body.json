@@ -1,0 +1,23 @@
+[
+    {
+        "name": "FirstApp",
+        "id": 100,
+        "update_endpoint": "https://searchcloud.example.searchstax.com/1234/firstapp-100/update",
+        "engine_username": "app100-admin",
+        "index_write_token": "9232215801aa9e201c1afa76270eb8065aa6964a"
+    },
+    {
+        "name": "SecondApp",
+        "id": 101,
+        "update_endpoint": "https://searchcloud.example.searchstax.com/1234/secondapp-101/update",
+        "engine_username": "app101-admin",
+        "index_write_token": "c60eb62bfb1fc9fb1aa8f4f963526559dbf50b36"
+    },
+    {
+        "name": "ThirdApp",
+        "id": 102,
+        "update_endpoint": "https://searchcloud.example.searchstax.com/1234/thirdapp-102/update",
+        "engine_username": "app102-admin",
+        "index_write_token": "c4d831c6c358f836e4b09c53a377b1bb23caefd5"
+    }
+]

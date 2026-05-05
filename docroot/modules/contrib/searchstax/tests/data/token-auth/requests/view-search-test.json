@@ -1,0 +1,5 @@
+{
+    "method": "GET",
+    "uri": "https://searchcloud.example.searchstax.com/1234/firstapp-100/select?omitHeader=false&TZ=Europe%2FVienna&wt=json&json.nl=flat&q=%28tm_X3b_en_body%3A%28%2B%22test%22%29%5E1+tm_X3b_und_body%3A%28%2B%22test%22%29%5E1+tm_X3b_en_name%3A%28%2B%22test%22%29%5E5+tm_X3b_und_name%3A%28%2B%22test%22%29%5E5%29&start=0&rows=10&fl=ss_search_api_id%2Css_search_api_language%2Cscore%2Chash&sort=ss_search_api_id+asc&fq=%2Bindex_id%3Asearchstax_index&fq=ss_search_api_language%3A%28%22en%22+%22und%22%29",
+    "auth_header": "Token 9232215801aa9e201c1afa76270eb8065aa6964a"
+}

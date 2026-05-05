@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the SearchStax Test Mock Tracking module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function searchstax_test_mock_tracking_library_info_alter(&$libraries, $extension): void {
+  if ($extension !== 'searchstax') {
+    return;
+  }
+  assert(!empty($libraries['searchstax.tracking']['js']));
+  $libraries['searchstax.tracking']['js']['tests/modules/searchstax_test_mock_tracking/js/searchstax_test_mock_tracking.js'] = [];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function searchstax_test_mock_tracking_page_attachments(array &$page) {
+  // Adds the following <meta> tag to prevent loading of the actual SearchStax
+  // tracking JS code:
+  // <meta http-equiv="Content-Security-Policy" content="script-src 'self'" />.
+  $content_policy = [
+    '#tag' => 'meta',
+    '#attributes' => [
+      'http-equiv' => 'Content-Security-Policy',
+      'content' => "script-src 'self'",
+    ],
+  ];
+  $page['#attached']['html_head'][] = [$content_policy, 'Content-Security-Policy'];
+
+  // Custom config to enable/disable certain track events.
+  $page['#attached']['drupalSettings']['searchstax_test_mock_tracking'] = [
+    'reject' => \Drupal::keyValue('searchstax_test_mock_tracking')->get('reject', []),
+  ];
+}

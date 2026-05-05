@@ -1,0 +1,16 @@
+name: 'SearchStax Test'
+type: module
+description: 'Support module for SearchStax tests'
+package: Testing
+dependencies:
+  - drupal:views
+  - search_api:search_api_test_example_content
+  - search_api_page:search_api_page
+  - search_api_solr:search_api_solr
+  - searchstax:searchstax
+hidden: true
+
+# Information added by Drupal.org packaging script on 2026-05-01
+version: '1.11.2'
+project: 'searchstax'
+datestamp: 1777657736

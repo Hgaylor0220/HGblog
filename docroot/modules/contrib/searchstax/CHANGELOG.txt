@@ -1,0 +1,219 @@
+SearchStax 1.11.2 (2026-05-01):
+-------------------------------
+- fix: #3586335 Fixed the searchstax_update_8108() update hook.
+
+SearchStax 1.11.1 (2026-04-28):
+-------------------------------
+- feat: #3584740 Removed unsupported Autocomplete suggesters from the UI.
+- feat: #3586335 Cleaned up the Settings page.
+- fix: #3545168 Fixed handling of accounts without apps.
+
+SearchStax 1.11.0 (2026-04-11):
+-------------------------------
+- feat: #3581963 Added support for Auto-Suggest endpoints on different hosts.
+- ci: #3582051 Fixed failing pipelines.
+- ci: #3581057 Fixed missing test dependencies.
+
+SearchStax 1.10.0 (2026-03-12):
+-------------------------------
+- fix: #3555309 Fixed confusing error message returned for More Like This
+  searches.
+- ci: #3578125 Fixed failing pipelines.
+- fix: #3577349 Fixed analytics click data not tracked for individual languages.
+- feat: #3544493 Added configurable rate limiting in the module.
+- feat: #3569651 Added integration with the EU Cookie Compliance module.
+- ci: #3574016 Fixed broken pipelines.
+
+SearchStax 1.9.3 (2026-02-10):
+------------------------------
+- fix: #3572035 Fixed missing "model" property in tracking events.
+- fix: #3568022 Fixed SearchStax-configured spellcheck for keywords containing
+  uppercase characters.
+
+SearchStax 1.9.2 (2026-01-14):
+------------------------------
+- fix: #3567051 Fixed per-view “Relevance model” option to send model names,
+  not IDs.
+- fix: #3561257 Follow-up to fix functionality for single-display views.
+- fix: #3561257 Fixed handling of overridden displays for Views “Relevance
+  model” configuration.
+
+SearchStax 1.9.1 (2025-12-22):
+------------------------------
+- fix: #3544968 Fixed a few UI issues of the new Key integration.
+- fix: #3544968 Removed automatic migration to Key-based storage.
+- ci: #3564137 Fixed failing tests against Drupal 11.3 and PHP 8.5.
+
+SearchStax 1.9.0 (2025-12-11):
+------------------------------
+- feat: #3560891 Added support for other file types to the “SearchStax PDF
+  Extraction” plugin.
+- feat: #3544968 Added integration with the Key module.
+- fix: #3559329 Fixed failing pipelines.
+- feat: #3551333 Moved auto-suggest URL from global settings to server config.
+
+SearchStax 1.8.3 (2025-12-10):
+------------------------------
+- fix: #3561562 Fixed spellcheck functionality for some setups.
+
+SearchStax 1.8.2 (2025-11-23):
+------------------------------
+- [#3553864] fix: Fixed highlighting of stopwords in excerpt when using the
+  "/emselect" handler.
+- [#3232023] feat: Improved discoverability of the auto-suggest feature.
+- [#3550754] fix: Fixed handling of facets when switching a search view to a
+  different index.
+
+SearchStax 1.8.1 (2025-09-30):
+------------------------------
+- [#3545520] fix: Fixed error in Migrate Server form for users with a single
+  SearchStax account.
+- [#3549148] fix: Fixed failing pipelines.
+
+SearchStax 1.8.0 (2025-09-16):
+------------------------------
+- [#3545484] fix: Fixed deprecation warnings in PHP 8.4 and Drupal 11.3.
+- [#3545986] feat: Added support for extracting PDF text via the SearchStax API.
+
+SearchStax 1.7.3 (2025-09-09):
+------------------------------
+- [#3545145] fix: Fixed detection of error responses from SearchStax Solr
+  servers.
+
+SearchStax 1.7.2 (2025-09-06):
+------------------------------
+- [#3544797] fix: Fixed a bug in the indexing fallback and added test coverage.
+- [#3544797] fix: Adapted indexing speed fix to also work for requests that time
+  out.
+- [#3539413] fix: Fixed poor indexing performance with larger batch sizes.
+- [#3540319] fix: Fixed error when migrating server and selecting "None" as
+  search view.
+- [#3541711] ci: Fixed failing pipelines.
+- [#3528779] fix: Fixed missing warning on settings page when module settings
+  are overridden.
+- [#3530133] fix: Fixed mismatched buttons in "Copy indexes" and "Switch views"
+  forms.
+- [#3541703] fix: Fixed error handling in Relevance Models form.
+- [#3534826] fix: Fixed incorrect Solr version reported for SearchStax servers.
+- [#3539475] fix: Fixed performance issue in Migration module for users with
+  many accounts.
+
+SearchStax 1.7.1 (2025-08-01):
+------------------------------
+- #3536743 by drunken monkey, kaunaj: Fixed missing "language" parameter in
+  requests to the /emselect and /emsuggest endpoints.
+- #3537377 by drunken monkey: Added some improvements for the “Relevance
+  model” option in SearchStax Solr views.
+- #3537195 by drunken monkey: Fixed spellcheck functionality when using
+  SearchStax Solr.
+- #3530953 by drunken monkey: Fixed fatal error on admin pages with earlier
+  versions of the Solr module.
+- #3523946 by drunken monkey: Added the “relevance model” option to
+  SearchStax search views.
+- #3528995 by drunken monkey: Fixed exception/fatal error in
+  SearchStaxConnector::getFile().
+
+SearchStax 1.7.0 (2025-06-05):
+------------------------------
+- #3523944 by drunken monkey: Fixed warnings in logs due to Solr requests to
+  blocked SearchStax endpoints.
+- #3523940 by drunken monkey: Added the SearchStax app config version
+  compatibility check.
+- #3523939 by drunken monkey: Fixed Migrate Server functionality to copy all
+  server settings.
+
+SearchStax 1.6.3 (2025-04-29):
+------------------------------
+- #3513252 by drunken monkey: Added some improvements for the Migrate Server
+  form.
+- #3515197 by drunken monkey: Fixed auto-suggest bug caused by new /emsuggest
+  response structure.
+
+SearchStax 1.6.2 (2025-03-14):
+------------------------------
+- #3512534 by drunken monkey: Fixed two bugs in the Solr Migration sub-module.
+- #3503034 by malcomio, drunken monkey: Fixed TypeError in
+  searchstax_preprocess_views_view().
+
+SearchStax 1.6.1 (2025-02-07):
+------------------------------
+- #3232019 by drunken monkey: Added latency to analytics for Solr searches.
+
+SearchStax 1.6.0 (2025-02-05):
+------------------------------
+- #3500857 by drunken monkey: Address several smaller problems with recent
+  changes
+- #3500904 by drunken monkey: Fixed failings tests against Drupal 10.4.
+- #3498173 by drunken monkey: Added support for Token Authentication to this
+  module.
+- #3494280 by drunken monkey: Added a sub-module for migrating from other Solr
+  hosts.
+- #3482093 by drunken monkey: Fixed wrong cache metadata for untracked searches.
+
+SearchStax 1.5.0 (2024-12-06):
+------------------------------
+- #3485420 by drunken monkey: Added an integration test covering all of the
+  module’s functionality.
+- #3482415 by rajeshreeputra, drunken monkey: Refactored SearchStax module to
+  use a service instead of helper functions.
+- #3480820 by drunken monkey: Fixed PHPStan and ESLint warnings.
+- #3485180 by drunken monkey: Re-added compatibility with Drupal 8 and Drupal 9.
+- #3480770 by rajeshreeputra, drunken monkey: Added some test coverage.
+- #3480823 by rajeshreeputra, drunken monkey: Fixed cspell warnings.
+- #3480818 by rajeshreeputra, drunken monkey: Fixed PHPCS warnings.
+- #3481005 by rajeshreeputra, drunken monkey: Added Search API SearchStax as a
+  suggested module.
+- #3480814 by rajeshreeputra, drunken monkey: Added a composer.json file.
+- #3481216 by drunken monkey, mikemadison: Fixed DivisionByZeroError when
+  searching.
+- #3465771 by drunken monkey: Cleaned up code for new Drupal version.
+
+SearchStax 1.4.0 (2024-03-29):
+------------------------------
+- #3434415 by Project Update Bot, drunken monkey: Added compatibility with
+  Drupal 11.
+
+SearchStax 1.3.4 (2023-11-22):
+------------------------------
+- #3393447 by drunken monkey, neclimdul: Fixed compatibility with Search API
+  Solr 4.3+.
+
+SearchStax 1.3.3 (2023-06-22):
+------------------------------
+- #3366585 by drunken monkey: Fixed trailing slashes in analytics base URL.
+
+SearchStax 1.3.2 (2023-03-02):
+------------------------------
+- #3341854 by drunken monkey: Added options for tracking URL and JS version.
+- #3340793 by drunken monkey: Added a config setting to determine which Drupal
+  settings should be ignored in search requests.
+
+SearchStax 1.3.0 (2022-10-30):
+------------------------------
+- Declared compatibility with Drupal 10.
+
+SearchStax 1.3.0 (2022-10-24):
+------------------------------
+- #3315527 by drunken monkey: Fixed incompatibility with shared SearchStax
+  indexes.
+
+SearchStax 1.2.0 (2021-05-04):
+------------------------------
+- #3212151 by drunken monkey: Added an option for ignoring most Drupal search
+  settings.
+
+SearchStax 1.1.0 (2021-05-02):
+------------------------------
+- #3210449 by drunken monkey: Added option to disable tracking for certain user
+  roles.
+- #3211201 by drunken monkey: Removed StudioJS support.
+- #3211194 by drunken monkey: Fixed Solr request rerouting for
+  "*.searchstax.co" hosts.
+
+SearchStax 1.0.0 (2021-03-12):
+------------------------------
+This initial stable release supports the following features:
+- Tracking searches and clicks in search views and pages.
+- Routing all Solr search requests through the SearchStax /emselect handler.
+- Provide a new search page using the SearchStax StudioJS app.
+- Enable autocomplete for a search with the SearchStax /emsuggest handler.

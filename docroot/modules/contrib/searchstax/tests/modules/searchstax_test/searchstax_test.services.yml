@@ -1,0 +1,5 @@
+services:
+  searchstax_test.service:
+    class: Drupal\searchstax_test\SearchStaxTestService
+    tags:
+      - { name: event_subscriber }

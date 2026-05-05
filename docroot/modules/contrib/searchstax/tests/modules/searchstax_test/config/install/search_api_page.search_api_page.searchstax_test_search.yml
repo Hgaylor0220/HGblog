@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.searchstax_index
+id: searchstax_test_search
+label: Test search page
+path: test-search-page
+clean_url: true
+show_all_when_no_keys: true
+index: searchstax_index
+limit: 10
+searched_fields:
+  name: name
+  body: body
+style: view_modes
+view_mode_configuration: {  }
+show_search_form: true

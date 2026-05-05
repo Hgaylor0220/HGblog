@@ -1,0 +1,228 @@
+<?php
+
+/**
+ * @file
+ * Integrates with SearchStax and SearchStudio.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\search_api\Entity\Server;
+use Drupal\search_api\Plugin\views\query\SearchApiQuery;
+use Drupal\search_api\Query\QueryInterface;
+use Drupal\search_api\Query\ResultSet;
+use Drupal\search_api_page\SearchApiPageInterface;
+use Drupal\search_api_solr\Event\SearchApiSolrEvents;
+use Drupal\searchstax\Hook\AttachmentsExtractorSchema;
+use Drupal\searchstax\Hook\AutocompleteSuggesters;
+use Drupal\searchstax\Hook\ServerEditForm;
+use Drupal\searchstax\Hook\ViewsSelectRelevanceModel;
+use Solarium\Core\Query\QueryInterface as SolariumQueryInterface;
+
+/**
+ * Implements hook_preprocess_HOOK() for the "views_view" template.
+ */
+function searchstax_preprocess_views_view(&$variables): void {
+  // Don't track any requests on admin pages. (In particular, this helps avoid
+  // tracking in the Views "live preview".)
+  if (\Drupal::getContainer()->get('router.admin_context')->isAdminRoute()) {
+    return;
+  }
+
+  // Same if tracking is disabled for this role.
+  $utility = \Drupal::getContainer()->get('searchstax.utility');
+  $cache = CacheableMetadata::createFromRenderArray($variables);
+  $is_tracking_disabled = $utility->isTrackingDisabled($cache);
+  $cache->applyTo($variables);
+  if ($is_tracking_disabled) {
+    return;
+  }
+
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'] ?? NULL;
+  // Double-check we have a view object.
+  if (!$view) {
+    return;
+  }
+  // Only look at Search API views.
+  $query_plugin = $view->getQuery();
+  if (!($query_plugin instanceof SearchApiQuery)) {
+    return;
+  }
+
+  // Only process searches with associated search display and fulltext keys.
+  $query = $query_plugin->getSearchApiQuery();
+  if (!$query) {
+    return;
+  }
+  $keys = $utility->getQueryKeys($query);
+  if (!$keys) {
+    return;
+  }
+
+  if ($utility->addTracking($query->getResults(), $variables, $keys)) {
+    $variables['attributes']['data-searchstax-results'] = $query->getSearchId();
+  }
+}
+
+/**
+ * Implements hook_search_api_page_alter().
+ *
+ * Adds the necessary results information to the page to be able to track search
+ * result clicks.
+ */
+function searchstax_search_api_page_alter(array &$build, ?ResultSet $query_result = NULL, ?SearchApiPageInterface $search_api_page = NULL): void {
+  // This alter hook is also called if no search was performed (yet). In this
+  // case, we of course ignore this page.
+  if (!$query_result) {
+    return;
+  }
+
+  // Same if tracking is disabled for this role.
+  $utility = \Drupal::getContainer()->get('searchstax.utility');
+  $cache = CacheableMetadata::createFromRenderArray($build);
+  $is_tracking_disabled = $utility->isTrackingDisabled($cache);
+  $cache->applyTo($build);
+  if ($is_tracking_disabled) {
+    return;
+  }
+
+  // Check whether the query has any keys set.
+  $query = $query_result->getQuery();
+  $keys = $utility->getQueryKeys($query);
+  if (!$keys) {
+    return;
+  }
+
+  // Include results information to be able to track clicks.
+  if ($utility->addTracking($query_result, $build, $keys)) {
+    // Add a wrapper div with "data-searchstax-results" attribute.
+    $search_id = Html::escape($query->getSearchId());
+    $build['#prefix'] = "<div data-searchstax-results=\"$search_id\">";
+    $build['#suffix'] = '</div>';
+  }
+}
+
+/**
+ * Implements hook_search_api_solr_query_alter().
+ *
+ * Present as a fallback to our event subscriber for versions of the Search API
+ * Solr module that do not support events yet.
+ *
+ * @see \Drupal\searchstax\Service\SearchStax::alterSolrQuery()
+ */
+function searchstax_search_api_solr_query_alter(SolariumQueryInterface $solarium_query, QueryInterface $query): void {
+  // In case the event exists, we only act on that and this hook implementation
+  // does nothing. (In versions 4.3+ of the Search API Solr module, this
+  // function will not even be called anymore, as the hook was removed.)
+  if (!class_exists(SearchApiSolrEvents::class)) {
+    $utility = \Drupal::getContainer()->get('searchstax.utility');
+    $utility->alterSolrQuery($solarium_query, $query);
+  }
+}
+
+/**
+ * Implements hook_search_api_solr_config_files_alter().
+ */
+function searchstax_search_api_solr_config_files_alter(array &$files, string $lucene_match_version, string $server_id = ''): void {
+  // Make sure to only handle SearchStax servers.
+  $server = Server::load($server_id);
+  $utility = \Drupal::getContainer()->get('searchstax.utility');
+  if (!$server || !$utility->isSearchstaxSolr($server->getBackendConfig())) {
+    return;
+  }
+
+  $files_to_alter = [
+    'solrconfig.xml' => [
+      'doc_type' => 'config',
+      'insert_after' => '&extra;',
+      'files' => [
+        'solrconfig_studio',
+        'solrconfig_studio_extra',
+        'solrconfig_studio_spellcheck',
+        'solrconfig_studio_suggestors',
+      ],
+    ],
+    'schema.xml' => [
+      'doc_type' => 'schema',
+      'insert_after' => '&extratypes;',
+      'files' => [
+        'searchstudio_schema',
+      ],
+    ],
+  ];
+  foreach ($files_to_alter as $file => $info) {
+    if (empty($files[$file])) {
+      $vars = [
+        '@file' => $file,
+      ];
+      \Drupal::getContainer()->get('logger.channel.searchstax')
+        ->warning('Could not find file "@file" in Solr config files. Includes for SearchStudio handlers will need to be added manually.', $vars);
+      continue;
+    }
+    if (!preg_match("/(<!DOCTYPE {$info['doc_type']}.*?)]>/s", $files[$file], $m)) {
+      $vars = [
+        '@file' => $file,
+      ];
+      \Drupal::getContainer()->get('logger.channel.searchstax')
+        ->warning('File "@file" in Solr config files did not have the expected structure and could not be processed. Includes for SearchStudio handlers will need to be added manually.', $vars);
+      continue;
+    }
+
+    $entity_defs = [];
+    $entities = [];
+    foreach ($info['files'] as $key) {
+      $entity_defs[] = "  <!ENTITY $key SYSTEM \"$key.xml\">\n";
+      $entities[] = "  &$key;\n";
+    }
+    $entity_defs = implode('', $entity_defs);
+    $entities = implode('', $entities);
+    $files[$file] = str_replace($m[1], $m[1] . $entity_defs, $files[$file]);
+    $search = $info['insert_after'];
+    $files[$file] = str_replace($search, $search . "\n\n" . $entities, $files[$file]);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form "views_ui_edit_display_form".
+ */
+#[LegacyHook]
+function searchstax_form_views_ui_edit_display_form_alter(&$form, FormStateInterface $form_state): void {
+  if ($form_state->get('section') !== 'query') {
+    return;
+  }
+  \Drupal::getContainer()->get(ViewsSelectRelevanceModel::class)->alterForm($form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form "search_api_server_edit_form".
+ */
+#[LegacyHook]
+function searchstax_form_search_api_server_edit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  \Drupal::getContainer()->get(ServerEditForm::class)->alterServerEditForm($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for form "search_api_autocomplete_search_edit_form".
+ */
+#[LegacyHook]
+function searchstax_form_search_api_autocomplete_search_form_alter(
+  &$form,
+  FormStateInterface $form_state,
+  string $form_id
+): void {
+  \Drupal::getContainer()->get(AutocompleteSuggesters::class)
+    ->alterSearchEditForm($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+#[LegacyHook]
+function searchstax_config_schema_info_alter(&$definitions): void {
+  \Drupal::getContainer()->get(AttachmentsExtractorSchema::class)->alterSchema($definitions);
+}

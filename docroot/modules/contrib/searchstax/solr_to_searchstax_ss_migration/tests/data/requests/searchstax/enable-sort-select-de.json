@@ -1,0 +1,9 @@
+{
+    "method": "POST",
+    "uri": "https://app.searchstax.com/api/rest/experience-manager/v1/apps/search/sort?account=AccountWithTokenSupport&appId=100&language=de",
+    "auth_header": "Token fc7febfcf268f7166dcdaf6b3179f9a4c98cab32",
+    "content_type": "application/json",
+    "body": {
+        "enabled": true
+    }
+}

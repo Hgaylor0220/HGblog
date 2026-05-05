@@ -1,0 +1,137 @@
+{
+    "responseHeader": {
+        "status": 0,
+        "QTime": 4
+    },
+    "schema": {
+        "name": "drupal-4.3.0-solr-8.x-1",
+        "version": 1.6,
+        "uniqueKey": "id",
+        "fieldTypes": [
+            {
+                "name": "_bbox_coord",
+                "class": "solr.DoublePointField",
+                "stored": false,
+                "docValues": true
+            },
+            {
+                "name": "bbox",
+                "class": "solr.BBoxField",
+                "geo": "true",
+                "numberType": "_bbox_coord",
+                "distanceUnits": "kilometers"
+            },
+            {
+                "name": "binary",
+                "class": "solr.BinaryField"
+            },
+            {
+                "name": "boolean",
+                "class": "solr.BoolField"
+            }
+        ],
+        "fields": [
+            {
+                "name": "_root_",
+                "type": "string",
+                "docValues": false,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "_version_",
+                "type": "plong",
+                "indexed": false,
+                "stored": false
+            },
+            {
+                "name": "boost_document",
+                "type": "pfloat",
+                "docValues": true,
+                "multiValued": false,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "boost_term",
+                "type": "boost_term_payload",
+                "multiValued": true,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "count",
+                "type": "pfloat",
+                "indexed": true,
+                "stored": true
+            },
+            {
+                "name": "hash",
+                "type": "string",
+                "docValues": true,
+                "multiValued": false,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "id",
+                "type": "string",
+                "docValues": true,
+                "multiValued": false,
+                "indexed": true,
+                "required": true,
+                "stored": true
+            },
+            {
+                "name": "index_id",
+                "type": "string",
+                "docValues": true,
+                "multiValued": false,
+                "indexed": true,
+                "stored": false
+            }
+        ],
+        "dynamicFields": [
+            {
+                "name": "its_*",
+                "type": "plong",
+                "docValues": true,
+                "termVectors": true,
+                "multiValued": false,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "itm_*",
+                "type": "plong",
+                "docValues": true,
+                "termVectors": true,
+                "multiValued": true,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "fts_*",
+                "type": "pfloat",
+                "docValues": true,
+                "multiValued": false,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "ftm_*",
+                "type": "pfloat",
+                "docValues": true,
+                "multiValued": true,
+                "indexed": true,
+                "stored": false
+            },
+            {
+                "name": "*",
+                "type": "ignored",
+                "multiValued": true
+            }
+        ],
+        "copyFields": []
+    }
+}

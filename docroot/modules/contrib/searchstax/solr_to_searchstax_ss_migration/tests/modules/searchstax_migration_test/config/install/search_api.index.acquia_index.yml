@@ -1,0 +1,134 @@
+id: acquia_index
+name: 'Acquia test index'
+description: 'An index used for testing'
+read_only: false
+field_settings:
+  body:
+    label: Body
+    type: text
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: body
+  category:
+    label: Category
+    type: string
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: category
+  created:
+    label: Authored on
+    type: date
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: created
+  id:
+    label: ID
+    type: integer
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: id
+  keywords:
+    label: Keywords
+    type: string
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: keywords
+  name:
+    label: Name
+    type: text
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: name
+    boost: 5.0
+  type:
+    label: Type
+    type: string
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: type
+  width:
+    label: Width
+    type: decimal
+    datasource_id: 'entity:entity_test_mulrev_changed'
+    property_path: width
+processor_settings:
+  add_url:
+    weights:
+      preprocess_index: -30
+  aggregated_field:
+    weights:
+      add_properties: 20
+  rendered_item:
+    weights:
+      add_properties: 0
+      pre_index_save: -10
+options:
+  cron_limit: -1
+  index_directly: false
+datasource_settings:
+  'entity:entity_test_mulrev_changed': {  }
+tracker_settings:
+  'default': { }
+server: acquia_search_server
+status: true
+langcode: en
+third_party_settings:
+  acquia_search:
+    use_edismax: false
+  search_api_solr:
+    finalize: false
+    commit_before_finalize: false
+    commit_after_finalize: false
+    debug_finalize: false
+    highlighter:
+      maxAnalyzedChars: 51200
+      fragmenter: gap
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
+      regex:
+        slop: 0.5
+        pattern: blank
+        maxAnalyzedChars: 10000
+      highlight:
+        mergeContiguous: false
+        requireFieldMatch: false
+        snippets: 3
+        fragsize: 0
+    mlt:
+      mintf: 1
+      mindf: 1
+      maxdf: 0
+      maxdfpct: 0
+      minwl: 0
+      maxwl: 0
+      maxqt: 100
+      maxntp: 2000
+      boost: false
+      interestingTerms: none
+    term_modifiers:
+      slop: 3
+      fuzzy: 1
+      fuzzy_analyzer: true
+    advanced:
+      index_prefix: ''
+      collection: ''
+      timezone: ''
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
+      use_language_undefined_as_fallback_language: false
+      specific_languages:
+        en: '0'
+        de: '0'
+      use_universal_collation: false
+dependencies:
+  config:
+    - field.field.entity_test_mulrev_changed.article.body
+    - field.field.entity_test_mulrev_changed.article.keywords
+    - field.field.entity_test_mulrev_changed.article.category
+    - field.field.entity_test_mulrev_changed.article.width
+    - field.field.entity_test_mulrev_changed.item.body
+    - field.field.entity_test_mulrev_changed.item.keywords
+    - field.field.entity_test_mulrev_changed.item.category
+    - field.field.entity_test_mulrev_changed.item.width
+    - field.storage.entity_test_mulrev_changed.body
+    - field.storage.entity_test_mulrev_changed.keywords
+    - field.storage.entity_test_mulrev_changed.category
+    - field.storage.entity_test_mulrev_changed.width
+    - search_api.server.acquia_search_server
+  module:
+    - entity_test

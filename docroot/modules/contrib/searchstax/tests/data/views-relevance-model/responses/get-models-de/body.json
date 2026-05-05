@@ -1,0 +1,26 @@
+[
+    {
+        "id": 2001,
+        "name": "Standard",
+        "default": true,
+        "status": "published"
+    },
+    {
+        "id": 2002,
+        "name": "Erstes Experiment",
+        "default": false,
+        "status": "published"
+    },
+    {
+        "id": 2003,
+        "name": "Zweites Experiment",
+        "default": false,
+        "status": "draft"
+    },
+    {
+        "id": 2004,
+        "name": "Drittes Experiment",
+        "default": false,
+        "status": "published"
+    }
+]
