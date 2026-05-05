@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
-use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\migrate\Exception\RequirementsException;
 
 /**
  * Tests check requirements for profile_field source plugin.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class ProfileFieldCheckRequirementsTest extends MigrateDrupal6TestBase {
 
   /**

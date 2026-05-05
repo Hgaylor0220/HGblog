@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node field filters with translations.
+ *
+ * @group node
  */
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class NodeFieldFilterTest extends NodeTestBase {
 
   /**
@@ -62,12 +60,7 @@ class NodeFieldFilterTest extends NodeTestBase {
     ];
 
     // Create node with translations.
-    $node = $this->drupalCreateNode([
-      'title' => $this->nodeTitles['en'],
-      'langcode' => 'en',
-      'type' => 'page',
-      'body' => [['value' => $this->nodeTitles['en']]],
-    ]);
+    $node = $this->drupalCreateNode(['title' => $this->nodeTitles['en'], 'langcode' => 'en', 'type' => 'page', 'body' => [['value' => $this->nodeTitles['en']]]]);
     foreach (['es', 'fr'] as $langcode) {
       $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode]]);
       $translation->body->value = $this->nodeTitles[$langcode];

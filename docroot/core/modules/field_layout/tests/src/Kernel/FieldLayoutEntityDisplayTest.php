@@ -4,21 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_layout\Kernel;
 
-use Drupal\field_layout\Entity\FieldLayoutEntityDisplayTrait;
 use Drupal\field_layout\Entity\FieldLayoutEntityViewDisplay;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\field_layout\Entity\FieldLayoutEntityDisplayTrait.
+ * @coversDefaultClass \Drupal\field_layout\Entity\FieldLayoutEntityDisplayTrait
+ * @group field_layout
  */
-#[CoversClass(FieldLayoutEntityDisplayTrait::class)]
-#[Group('field_layout')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class FieldLayoutEntityDisplayTest extends KernelTestBase {
 
   /**
@@ -31,17 +23,13 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     'field_layout_test',
     'field_test',
     'system',
-    'user',
   ];
 
   /**
-   * Tests pre save.
-   *
-   * @legacy-covers ::preSave
-   * @legacy-covers ::calculateDependencies
+   * @covers ::preSave
+   * @covers ::calculateDependencies
    */
   public function testPreSave(): void {
-    $this->installSchema('user', ['users_data']);
     // Create an entity display with one hidden and one visible field.
     $entity_display = FieldLayoutEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',

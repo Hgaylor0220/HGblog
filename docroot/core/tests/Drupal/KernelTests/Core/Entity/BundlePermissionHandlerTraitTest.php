@@ -8,26 +8,22 @@ use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\Core\Entity\BundlePermissionHandlerTrait.
+ * @coversDefaultClass \Drupal\Core\Entity\BundlePermissionHandlerTrait
+ *
+ * @group Entity
  */
-#[CoversClass(BundlePermissionHandlerTrait::class)]
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class BundlePermissionHandlerTraitTest extends KernelTestBase {
   use BundlePermissionHandlerTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'user'];
+  protected static $modules = ['entity_test'];
 
   /**
-   * Tests generate permissions.
+   * @covers ::generatePermissions
    */
   public function testGeneratePermissions(): void {
     EntityTestBundle::create([

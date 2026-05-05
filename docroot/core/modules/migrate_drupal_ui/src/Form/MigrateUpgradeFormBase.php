@@ -21,7 +21,7 @@ abstract class MigrateUpgradeFormBase extends FormBase {
   /**
    * Private temporary storage.
    *
-   * @var \Drupal\Core\TempStore\PrivateTempStore
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $store;
 

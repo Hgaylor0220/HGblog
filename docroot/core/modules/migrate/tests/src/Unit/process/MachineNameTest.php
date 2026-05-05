@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\MachineName;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\migrate\MigrateException;
 
 /**
  * Tests the machine name process plugin.
+ *
+ * @group migrate
  */
-#[Group('migrate')]
 class MachineNameTest extends MigrateProcessTestCase {
 
   /**
@@ -47,8 +46,9 @@ class MachineNameTest extends MigrateProcessTestCase {
    *   The plugin configuration.
    * @param string $expected_result
    *   The expected result of the transformation.
+   *
+   * @dataProvider providerTestMachineNames
    */
-  #[DataProvider('providerTestMachineNames')]
   public function testMachineNames(string $human_name, array $configuration, string $expected_result): void {
     // Test for calling transliterate on mock object.
     $this->transliteration

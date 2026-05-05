@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Cache;
 
-use Drupal\Core\Cache\CacheFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Cache\CacheFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Cache\CacheFactory.
+ * @coversDefaultClass \Drupal\Core\Cache\CacheFactory
+ * @group Cache
  */
-#[CoversClass(CacheFactory::class)]
-#[Group('Cache')]
 class CacheFactoryTest extends UnitTestCase {
 
   /**
    * Tests that the cache factory falls back to the built-in default service.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @covers ::__construct
+   * @covers ::get
    */
   public function testCacheFactoryWithDefaultSettings(): void {
     $settings = new Settings([]);
@@ -47,8 +44,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory falls back to customized default service.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @covers ::__construct
+   * @covers ::get
    */
   public function testCacheFactoryWithCustomizedDefaultBackend(): void {
     $settings = new Settings([
@@ -77,8 +74,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory uses the correct default bin backend.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @covers ::__construct
+   * @covers ::get
    */
   public function testCacheFactoryWithDefaultBinBackend(): void {
     // Ensure the default bin backends are used before the configured default.
@@ -113,8 +110,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory picks the correct per-bin service.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @covers ::__construct
+   * @covers ::get
    */
   public function testCacheFactoryWithSpecifiedPerBinBackend(): void {
     // Ensure the per-bin configuration is used before the configured default

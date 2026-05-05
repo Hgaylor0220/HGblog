@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installer with incorrect connection info in settings.php.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class InstallerBrokenDatabaseCredentialsTest extends InstallerTestBase {
 
   /**
@@ -23,7 +21,7 @@ class InstallerBrokenDatabaseCredentialsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Pre-configure database credentials in settings.php.
     $connection_info = Database::getConnectionInfo();
@@ -44,14 +42,14 @@ class InstallerBrokenDatabaseCredentialsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings(): void {
+  protected function setUpSettings() {
     // This form will never be reached.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite(): void {
+  protected function setUpSite() {
     // This form will never be reached.
   }
 

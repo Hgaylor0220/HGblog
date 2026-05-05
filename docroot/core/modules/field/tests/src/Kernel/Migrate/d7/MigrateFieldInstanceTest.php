@@ -6,16 +6,13 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
-use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Migrates Drupal 7 field instances.
+ *
+ * @group field
  */
-#[Group('field')]
-#[RunTestsInSeparateProcesses]
 class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
 
   /**
@@ -79,14 +76,14 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *
    * @param string $id
    *   The entity ID in the form ENTITY_TYPE.BUNDLE.FIELD_NAME.
-   * @param \Drupal\link\LinkTitleVisibility $title_setting
+   * @param int $title_setting
    *   The expected title setting.
    *
    * @internal
    */
-  protected function assertLinkFields(string $id, LinkTitleVisibility $title_setting): void {
+  protected function assertLinkFields(string $id, int $title_setting): void {
     $field = FieldConfig::load($id);
-    $this->assertSame($title_setting->value, $field->getSetting('title'));
+    $this->assertSame($title_setting, $field->getSetting('title'));
   }
 
   /**
@@ -150,9 +147,9 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment.comment_node_a_thirty_two_char.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('user.user.field_file', 'File', 'file', FALSE, FALSE);
 
-    $this->assertLinkFields('node.test_content_type.field_link', LinkTitleVisibility::Optional);
-    $this->assertLinkFields('node.article.field_link', LinkTitleVisibility::Disabled);
-    $this->assertLinkFields('node.blog.field_link', LinkTitleVisibility::Required);
+    $this->assertLinkFields('node.test_content_type.field_link', DRUPAL_OPTIONAL);
+    $this->assertLinkFields('node.article.field_link', DRUPAL_DISABLED);
+    $this->assertLinkFields('node.blog.field_link', DRUPAL_REQUIRED);
 
     $this->assertEntityReferenceFields('node.article.field_tags', ['tags']);
     $this->assertEntityReferenceFields('node.forum.taxonomy_forums', ['sujet_de_discussion']);

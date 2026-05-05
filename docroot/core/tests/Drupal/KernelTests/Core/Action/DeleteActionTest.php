@@ -9,21 +9,12 @@ use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Delete Action.
+ * @group Action
  */
-#[Group('Action')]
-#[RunTestsInSeparateProcesses]
 class DeleteActionTest extends KernelTestBase {
 
-  /**
-   * The test user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
   protected $testUser;
 
   /**
@@ -48,9 +39,7 @@ class DeleteActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests get derivative definitions.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver::getDerivativeDefinitions
+   * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions(): void {
     $deriver = new EntityDeleteActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
@@ -79,9 +68,7 @@ class DeleteActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests delete action.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\DeleteAction::execute
+   * @covers \Drupal\Core\Action\Plugin\Action\DeleteAction::execute
    */
   public function testDeleteAction(): void {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);

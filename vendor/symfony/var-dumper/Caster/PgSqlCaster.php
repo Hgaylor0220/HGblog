@@ -19,8 +19,6 @@ use Symfony\Component\VarDumper\Cloner\Stub;
  * @author Nicolas Grekas <p@tchwork.com>
  *
  * @final
- *
- * @internal since Symfony 7.3
  */
 class PgSqlCaster
 {
@@ -71,14 +69,20 @@ class PgSqlCaster
         'function' => \PGSQL_DIAG_SOURCE_FUNCTION,
     ];
 
-    public static function castLargeObject($lo, array $a, Stub $stub, bool $isNested): array
+    /**
+     * @return array
+     */
+    public static function castLargeObject($lo, array $a, Stub $stub, bool $isNested)
     {
         $a['seek position'] = pg_lo_tell($lo);
 
         return $a;
     }
 
-    public static function castLink($link, array $a, Stub $stub, bool $isNested): array
+    /**
+     * @return array
+     */
+    public static function castLink($link, array $a, Stub $stub, bool $isNested)
     {
         $a['status'] = pg_connection_status($link);
         $a['status'] = new ConstStub(\PGSQL_CONNECTION_OK === $a['status'] ? 'PGSQL_CONNECTION_OK' : 'PGSQL_CONNECTION_BAD', $a['status']);
@@ -110,7 +114,10 @@ class PgSqlCaster
         return $a;
     }
 
-    public static function castResult($result, array $a, Stub $stub, bool $isNested): array
+    /**
+     * @return array
+     */
+    public static function castResult($result, array $a, Stub $stub, bool $isNested)
     {
         $a['num rows'] = pg_num_rows($result);
         $a['status'] = pg_result_status($result);

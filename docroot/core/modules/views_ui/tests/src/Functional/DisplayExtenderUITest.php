@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the display extender UI.
+ *
+ * @group views_ui
  */
-#[Group('views_ui')]
-#[RunTestsInSeparateProcesses]
 class DisplayExtenderUITest extends UITestBase {
 
   /**

@@ -8,14 +8,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views user argument default plugin.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class ArgumentDefaultTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -24,6 +22,7 @@ class ArgumentDefaultTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'node',
     'system',
     'user',
     'user_test_views',

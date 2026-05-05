@@ -9,15 +9,12 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\ThemeNegotiator;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Theme\ThemeNegotiator.
+ * @coversDefaultClass \Drupal\Core\Theme\ThemeNegotiator
+ * @group Theme
  */
-#[CoversClass(ThemeNegotiator::class)]
-#[Group('Theme')]
 class ThemeNegotiatorTest extends UnitTestCase {
 
   /**
@@ -221,9 +218,8 @@ class ThemeNegotiatorTest extends UnitTestCase {
    *   An array of negotiator IDs.
    *
    * @return \Drupal\Core\Theme\ThemeNegotiator
-   *   The theme negotiator.
    */
-  protected function createThemeNegotiator(array $negotiators): ThemeNegotiator {
+  protected function createThemeNegotiator(array $negotiators) {
     $resolver = new ClassResolver($this->container);
     $theme_negotiator = new ThemeNegotiator($this->themeAccessCheck, $resolver, $negotiators);
     return $theme_negotiator;

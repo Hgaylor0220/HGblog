@@ -19,7 +19,7 @@ class FilterController {
    * @return array
    *   A renderable array.
    *
-   * @see \Drupal\filter\FilterThemeHooks::preprocessFilterTips()
+   * @see template_preprocess_filter_tips()
    */
   public function filterTips(?FilterFormatInterface $filter_format = NULL) {
     $tips = $filter_format ? $filter_format->id() : -1;

@@ -8,16 +8,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "EntityTest" content entity type.
+ *
+ * @group jsonapi
  */
-#[Group('jsonapi')]
-#[RunTestsInSeparateProcesses]
 class EntityTestTest extends ResourceTestBase {
 
   /**
@@ -55,7 +52,7 @@ class EntityTestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view test entity']);
@@ -103,17 +100,17 @@ class EntityTestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/entity_test/entity_test/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     $author = User::load(0);
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -154,7 +151,7 @@ class EntityTestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     return [
       'data' => [
         'type' => 'entity_test--entity_test',
@@ -184,7 +181,7 @@ class EntityTestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSparseFieldSets(): array {
+  protected function getSparseFieldSets() {
     // EntityTest's owner field name is `user_id`, not `uid`, which breaks
     // nested sparse fieldset tests.
     return array_diff_key(parent::getSparseFieldSets(), array_flip([
@@ -199,7 +196,7 @@ class EntityTestTest extends ResourceTestBase {
   protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = parent::getExpectedCollectionCacheability($account, $collection, $sparse_fieldset, $filtered);
     if ($filtered) {
-      $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_deny_list']);
+      $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_blacklist']);
     }
     return $cacheability;
   }

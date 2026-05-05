@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
-use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Tests\RequirementsPageTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests install profile config overrides can not add unmet dependencies.
+ *
+ * @group Config
  */
-#[Group('Config')]
-#[RunTestsInSeparateProcesses]
 class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
 
   use RequirementsPageTrait;
@@ -42,7 +40,7 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->copyTestingOverrides();
   }
@@ -50,7 +48,7 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUpSettings(): void {
+  public function setUpSettings() {
     // During set up an UnmetDependenciesException should be thrown, which will
     // be re-thrown by TestHttpClientMiddleware as a standard Exception.
     try {
@@ -64,7 +62,7 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUpSite(): void {
+  public function setUpSite() {
     // This step can no longer be reached.
   }
 
@@ -74,10 +72,10 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
    * So we can change the configuration to include a dependency that can not be
    * met. File API functions are not available yet.
    */
-  protected function copyTestingOverrides(): void {
+  protected function copyTestingOverrides() {
     $dest = $this->siteDirectory . '/profiles/testing_config_overrides';
     mkdir($dest, 0777, TRUE);
-    $source = DRUPAL_ROOT . '/core/profiles/tests/testing_config_overrides';
+    $source = DRUPAL_ROOT . '/core/profiles/testing_config_overrides';
     $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
     foreach ($iterator as $item) {
       if ($item->isDir()) {

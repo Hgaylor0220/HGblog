@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests locale local tasks.
+ *
+ * @group locale
  */
-#[Group('locale')]
 class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -26,8 +25,9 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Checks locale listing local tasks.
+   *
+   * @dataProvider getLocalePageRoutes
    */
-  #[DataProvider('getLocalePageRoutes')]
   public function testLocalePageLocalTasks($route): void {
     $tasks = [
       0 => ['locale.translate_page', 'locale.translate_import', 'locale.translate_export', 'locale.settings'],

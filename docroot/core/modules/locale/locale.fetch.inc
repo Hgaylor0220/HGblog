@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * The API for download and import of translations from remote and local sources.
  */
 
 use Drupal\Core\Batch\BatchBuilder;
@@ -29,8 +30,8 @@ require_once __DIR__ . '/locale.translation.inc';
  */
 function locale_translation_batch_update_build($projects = [], $langcodes = [], $options = []) {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
   $status_options = $options;
   $status_options['finish_feedback'] = FALSE;
 
@@ -65,8 +66,8 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
  *   Batch definition array.
  */
 function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $options = []) {
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
   $batch_builder = (new BatchBuilder())
     ->setTitle(t('Updating translations.'))
@@ -94,7 +95,7 @@ function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $
  * @return array
  *   Array of batch operations.
  */
-function _locale_translation_fetch_operations($projects, $langcodes, $options): array {
+function _locale_translation_fetch_operations($projects, $langcodes, $options) {
   $operations = [];
 
   foreach ($projects as $project) {

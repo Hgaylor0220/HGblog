@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests distribution profile support with a 'langcode' query string.
  *
+ * @group Installer
+ *
  * @see \Drupal\FunctionalTests\Installer\DistributionProfileTranslationTest
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class DistributionProfileTranslationQueryTest extends InstallerTestBase {
 
   /**
@@ -37,7 +35,7 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->info = [
       'type' => 'profile',
@@ -64,18 +62,18 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function visitInstaller() {
     // Pass a different language code than the one set in the distribution
     // profile. This distribution language should still be used.
     // The unrouted URL assembler does not exist at this point, so we build the
     // URL ourselves.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=fr');
+    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php' . '?langcode=fr');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // This step is skipped, because the distribution profile uses a fixed
     // language.
   }
@@ -83,14 +81,14 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
+  protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings(): void {
+  protected function setUpSettings() {
     // The language should have been automatically detected, all following
     // screens should be translated already.
     $this->assertSession()->buttonExists('Save and continue de');
@@ -122,8 +120,7 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    // cspell:ignore deutsch
-    $this->assertSession()->pageTextContains('Deutsch');
+    $this->assertSession()->pageTextContains('German');
     $this->assertSession()->pageTextNotContains('English');
   }
 

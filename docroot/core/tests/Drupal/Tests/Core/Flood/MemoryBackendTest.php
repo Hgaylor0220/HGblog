@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Flood;
 
 use Drupal\Core\Flood\MemoryBackend;
-use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\Medium;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the memory flood implementation.
+ *
+ * @group flood
+ * @coversDefaultClass \Drupal\Core\Flood\MemoryBackend
  */
-#[CoversClass(MemoryBackend::class)]
-#[Group('flood')]
-#[Medium]
 class MemoryBackendTest extends UnitTestCase {
 
   /**
@@ -34,7 +31,6 @@ class MemoryBackendTest extends UnitTestCase {
     $request_mock = $this->getMockBuilder(Request::class)
       ->onlyMethods(['getClientIp'])
       ->getMock();
-    $request_mock->method('getClientIp')->willReturn('127.0.0.1');
     $request->push($request_mock);
     $this->flood = new MemoryBackend($request);
   }
@@ -66,6 +62,8 @@ class MemoryBackendTest extends UnitTestCase {
 
   /**
    * Tests a flood event with expiring, so cron will allow to proceed.
+   *
+   * @medium
    */
   public function testExpiring(): void {
     $threshold = 1;

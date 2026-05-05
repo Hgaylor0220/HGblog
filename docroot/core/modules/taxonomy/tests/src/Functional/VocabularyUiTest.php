@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy vocabulary interface.
+ *
+ * @group taxonomy
  */
-#[Group('taxonomy')]
-#[RunTestsInSeparateProcesses]
 class VocabularyUiTest extends TaxonomyTestBase {
 
   /**
@@ -103,10 +101,9 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $link->click();
 
     // Confirm deletion.
-    $name = Html::escape($edit['name']);
-    $this->assertSession()->responseContains("Are you sure you want to delete the vocabulary <em class=\"placeholder\">$name</em>?");
+    $this->assertSession()->responseContains(new FormattableMarkup('Are you sure you want to delete the vocabulary %name?', ['%name' => $edit['name']]));
     $this->submitForm([], 'Delete');
-    $this->assertSession()->responseContains("Deleted vocabulary <em class=\"placeholder\">$name</em>.");
+    $this->assertSession()->responseContains(new FormattableMarkup('Deleted vocabulary %name.', ['%name' => $edit['name']]));
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($edit['vid']), 'Vocabulary not found.');
   }
@@ -147,7 +144,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   public function testTaxonomyAdminNoVocabularies(): void {
     // Delete all vocabularies.
     $vocabularies = Vocabulary::loadMultiple();
-    foreach ($vocabularies as $vocabulary) {
+    foreach ($vocabularies as $key => $vocabulary) {
       $vocabulary->delete();
     }
     // Confirm that no vocabularies are found in the database.
@@ -187,15 +184,6 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains("Deleted vocabulary {$vocabulary->label()}.");
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($vid), 'Vocabulary not found.');
-  }
-
-  /**
-   * Tests that the overview form is overridable in hook_entity_type_alter().
-   */
-  public function testOverviewOverride(): void {
-    \Drupal::service('module_installer')->install(['taxonomy_overview_override_test']);
-    $this->drupalGet($this->vocabulary->toUrl('overview-form'));
-    $this->assertSession()->pageTextContains('No unicorns here, only llamas');
   }
 
 }

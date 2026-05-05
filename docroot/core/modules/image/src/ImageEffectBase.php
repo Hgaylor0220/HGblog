@@ -3,8 +3,7 @@
 namespace Drupal\image;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\ConfigurablePluginBase;
-use Drupal\Core\Plugin\RemovableDependentPluginReturn;
+use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\image\ImageEffectManager
  * @see plugin_api
  */
-abstract class ImageEffectBase extends ConfigurablePluginBase implements ImageEffectInterface, ContainerFactoryPluginInterface {
+abstract class ImageEffectBase extends PluginBase implements ImageEffectInterface, ContainerFactoryPluginInterface {
 
   /**
    * The image effect ID.
@@ -47,6 +46,7 @@ abstract class ImageEffectBase extends ConfigurablePluginBase implements ImageEf
   public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
+    $this->setConfiguration($configuration);
     $this->logger = $logger;
   }
 
@@ -154,17 +154,15 @@ abstract class ImageEffectBase extends ConfigurablePluginBase implements ImageEf
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
+  public function defaultConfiguration() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onCollectionDependencyRemoval(array $dependencies): RemovableDependentPluginReturn {
-    // If the module that provides the image effect plugin is uninstalled,
-    // the plugin instance should be removed from the collection.
-    return in_array($this->getPluginDefinition()['provider'], $dependencies['module'] ?? []) ? RemovableDependentPluginReturn::Remove : RemovableDependentPluginReturn::Unchanged;
+  public function calculateDependencies() {
+    return [];
   }
 
 }

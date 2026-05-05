@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\system\MenuInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,6 +31,13 @@ final class LinksetController extends ControllerBase {
    *   elements so that they can be serialized into a linkset response.
    */
   public function __construct(protected readonly MenuLinkTreeInterface $menuTree) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('menu.link_tree'));
   }
 
   /**
@@ -122,8 +130,7 @@ final class LinksetController extends ControllerBase {
    * preserved in the final component of the hierarchy value.
    *
    * According to the Linkset specification, each value in the hierarchy array
-   * must be a string. See
-   * https://tools.ietf.org/html/draft-ietf-httpapi-linkset-08#section-4.2.4.3
+   * must be a string. See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-08#section-4.2.4.3
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   A tree of menu elements.

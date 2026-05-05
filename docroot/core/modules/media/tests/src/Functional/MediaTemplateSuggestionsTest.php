@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests media template suggestions.
+ *
+ * @group media
  */
-#[Group('media')]
-#[RunTestsInSeparateProcesses]
 class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
 
   /**
@@ -46,16 +44,7 @@ class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
 
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_media', [$variables]);
-    $this->assertSame(
-      $suggestions,
-      [
-        'media__full',
-        'media__' . $media_type->id(),
-        'media__' . $media_type->id() . '__full',
-        'media__source_' . $media_type->getSource()->getPluginId(),
-      ],
-      'Found expected media suggestions.',
-    );
+    $this->assertSame($suggestions, ['media__full', 'media__' . $media_type->id(), 'media__' . $media_type->id() . '__full', 'media__source_' . $media_type->getSource()->getPluginId()], 'Found expected media suggestions.');
   }
 
 }

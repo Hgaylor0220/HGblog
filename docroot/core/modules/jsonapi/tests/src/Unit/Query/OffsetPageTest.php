@@ -8,19 +8,15 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Tests Drupal\jsonapi\Query\OffsetPage.
+ * @coversDefaultClass \Drupal\jsonapi\Query\OffsetPage
+ * @group jsonapi
  *
  * @internal
  */
-#[CoversClass(OffsetPage::class)]
-#[Group('jsonapi')]
 class OffsetPageTest extends UnitTestCase {
 
   /**
@@ -38,9 +34,9 @@ class OffsetPageTest extends UnitTestCase {
   }
 
   /**
-   * Tests create from query parameter.
+   * @covers ::createFromQueryParameter
+   * @dataProvider parameterProvider
    */
-  #[DataProvider('parameterProvider')]
   public function testCreateFromQueryParameter($original, $expected): void {
     $actual = OffsetPage::createFromQueryParameter($original);
     $this->assertEquals($expected['offset'], $actual->getOffset());
@@ -61,7 +57,7 @@ class OffsetPageTest extends UnitTestCase {
   }
 
   /**
-   * Tests create from query parameter fail.
+   * @covers ::createFromQueryParameter
    */
   public function testCreateFromQueryParameterFail(): void {
     $this->expectException(BadRequestHttpException::class);

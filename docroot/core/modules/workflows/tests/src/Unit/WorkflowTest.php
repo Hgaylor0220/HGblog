@@ -8,19 +8,16 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\Entity\Workflow;
-use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\State;
 use Drupal\workflows\Transition;
 use Drupal\workflows\WorkflowTypeManager;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\workflows\Plugin\WorkflowTypeBase.
+ * @coversDefaultClass \Drupal\workflows\Plugin\WorkflowTypeBase
+ *
+ * @group workflows
  */
-#[CoversClass(WorkflowTypeBase::class)]
-#[Group('workflows')]
 class WorkflowTest extends UnitTestCase {
 
   /**
@@ -38,10 +35,8 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add and has state.
-   *
-   * @legacy-covers ::addState
-   * @legacy-covers ::hasState
+   * @covers ::addState
+   * @covers ::hasState
    */
   public function testAddAndHasState(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -62,7 +57,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add state exception.
+   * @covers ::addState
    */
   public function testAddStateException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -73,7 +68,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add state invalid id exception.
+   * @covers ::addState
    */
   public function testAddStateInvalidIdException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -83,7 +78,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get states.
+   * @covers ::getStates
    */
   public function testGetStates(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -148,7 +143,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get states exception.
+   * @covers ::getStates
    */
   public function testGetStatesException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -158,7 +153,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get state.
+   * @covers ::getState
    */
   public function testGetState(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -171,7 +166,7 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
 
-    // Ensure we're returning state objects and they are set up correctly.
+    // Ensure we're returning state objects and they are set up correctly
     $this->assertInstanceOf(State::class, $workflow->getTypePlugin()->getState('draft'));
     $this->assertEquals('archived', $workflow->getTypePlugin()->getState('archived')->id());
     $this->assertEquals('Archived', $workflow->getTypePlugin()->getState('archived')->label());
@@ -187,7 +182,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get state exception.
+   * @covers ::getState
    */
   public function testGetStateException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -197,7 +192,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set state label.
+   * @covers ::setStateLabel
    */
   public function testSetStateLabel(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -208,7 +203,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set state label exception.
+   * @covers ::setStateLabel
    */
   public function testSetStateLabelException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -218,7 +213,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set state weight.
+   * @covers ::setStateWeight
    */
   public function testSetStateWeight(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -229,7 +224,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set state weight exception.
+   * @covers ::setStateWeight
    */
   public function testSetStateWeightException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -239,7 +234,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set state weight non numeric exception.
+   * @covers ::setStateWeight
    */
   public function testSetStateWeightNonNumericException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -250,7 +245,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete state.
+   * @covers ::deleteState
    */
   public function testDeleteState(): void {
     $workflow_type = new TestType([], '', []);
@@ -272,7 +267,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete state exception.
+   * @covers ::deleteState
    */
   public function testDeleteStateException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -282,9 +277,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete only state exception.
-   *
-   * @legacy-covers ::deleteState
+   * @covers ::deleteState
    */
   public function testDeleteOnlyStateException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -295,10 +288,8 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition.
-   *
-   * @legacy-covers ::addTransition
-   * @legacy-covers ::hasTransition
+   * @covers ::addTransition
+   * @covers ::hasTransition
    */
   public function testAddTransition(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -321,7 +312,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition duplicate exception.
+   * @covers ::addTransition
    */
   public function testAddTransitionDuplicateException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -333,7 +324,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition invalid id exception.
+   * @covers ::addTransition
    */
   public function testAddTransitionInvalidIdException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -344,7 +335,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition missing from exception.
+   * @covers ::addTransition
    */
   public function testAddTransitionMissingFromException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -355,7 +346,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition duplicate transition states exception.
+   * @covers ::addTransition
    */
   public function testAddTransitionDuplicateTransitionStatesException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -370,7 +361,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition consistent after from catch.
+   * @covers ::addTransition
    */
   public function testAddTransitionConsistentAfterFromCatch(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -378,7 +369,7 @@ class WorkflowTest extends UnitTestCase {
     try {
       $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft'], 'published');
     }
-    catch (\InvalidArgumentException) {
+    catch (\InvalidArgumentException $e) {
     }
     // Ensure that the workflow is not left in an inconsistent state after an
     // exception is thrown from Workflow::setTransitionFromStates() whilst
@@ -387,7 +378,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests add transition missing to exception.
+   * @covers ::addTransition
    */
   public function testAddTransitionMissingToException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -398,10 +389,8 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transitions.
-   *
-   * @legacy-covers ::getTransitions
-   * @legacy-covers ::setTransitionWeight
+   * @covers ::getTransitions
+   * @covers ::setTransitionWeight
    */
   public function testGetTransitions(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -445,7 +434,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transition.
+   * @covers ::getTransition
    */
   public function testGetTransition(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -458,7 +447,7 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
 
-    // Ensure we're returning state objects and they are set up correctly.
+    // Ensure we're returning state objects and they are set up correctly
     $this->assertInstanceOf(Transition::class, $workflow->getTypePlugin()->getTransition('create_new_draft'));
     $this->assertEquals('publish', $workflow->getTypePlugin()->getTransition('publish')->id());
     $this->assertEquals('Publish', $workflow->getTypePlugin()->getTransition('publish')->label());
@@ -469,7 +458,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transition exception.
+   * @covers ::getTransition
    */
   public function testGetTransitionException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -479,7 +468,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transitions for state.
+   * @covers ::getTransitionsForState
    */
   public function testGetTransitionsForState(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -502,10 +491,8 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transition from state to state.
-   *
-   * @legacy-covers ::getTransitionFromStateToState
-   * @legacy-covers ::hasTransitionFromStateToState
+   * @covers ::getTransitionFromStateToState
+   * @covers ::hasTransitionFromStateToState
    */
   public function testGetTransitionFromStateToState(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -526,7 +513,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transition from state to state exception.
+   * @covers ::getTransitionFromStateToState
    */
   public function testGetTransitionFromStateToStateException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -546,7 +533,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition label.
+   * @covers ::setTransitionLabel
    */
   public function testSetTransitionLabel(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -561,7 +548,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition label exception.
+   * @covers ::setTransitionLabel
    */
   public function testSetTransitionLabelException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -572,7 +559,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition weight.
+   * @covers ::setTransitionWeight
    */
   public function testSetTransitionWeight(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -587,7 +574,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition weight exception.
+   * @covers ::setTransitionWeight
    */
   public function testSetTransitionWeightException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -598,7 +585,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition weight non numeric exception.
+   * @covers ::setTransitionWeight
    */
   public function testSetTransitionWeightNonNumericException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -610,7 +597,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition from states.
+   * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStates(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
@@ -635,7 +622,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition from states missing transition.
+   * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStatesMissingTransition(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -652,7 +639,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition from states missing state.
+   * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStatesMissingState(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -668,7 +655,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests set transition from states already exists.
+   * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStatesAlreadyExists(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -686,7 +673,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete transition.
+   * @covers ::deleteTransition
    */
   public function testDeleteTransition(): void {
     $workflow_type = new TestType([], '', []);
@@ -702,7 +689,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete transition exception.
+   * @covers ::deleteTransition
    */
   public function testDeleteTransitionException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -713,9 +700,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests status.
-   *
-   * @legacy-covers \Drupal\workflows\Entity\Workflow::status
+   * @covers \Drupal\workflows\Entity\Workflow::status
    */
   public function testStatus(): void {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');

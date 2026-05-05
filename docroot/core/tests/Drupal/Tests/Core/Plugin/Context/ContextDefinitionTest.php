@@ -8,23 +8,20 @@ use Drupal\Component\Plugin\Context\ContextDefinitionInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\UsesClass;
 
 /**
  * Tests the ContextDefinition class.
+ *
+ * @group Plugin
+ *
+ * @coversDefaultClass \Drupal\Core\Plugin\Context\ContextDefinition
  */
-#[CoversClass(ContextDefinition::class)]
-#[Group('Plugin')]
-#[UsesClass(\Drupal::class)]
 class ContextDefinitionTest extends UnitTestCase {
 
   /**
    * Very simple data provider.
    */
-  public static function providerGetDataDefinition(): array {
+  public static function providerGetDataDefinition() {
     return [
       [TRUE],
       [FALSE],
@@ -32,9 +29,10 @@ class ContextDefinitionTest extends UnitTestCase {
   }
 
   /**
-   * Tests get data definition.
+   * @dataProvider providerGetDataDefinition
+   * @covers ::getDataDefinition
+   * @uses \Drupal
    */
-  #[DataProvider('providerGetDataDefinition')]
   public function testGetDataDefinition($is_multiple): void {
     $data_type = 'valid';
     $mock_data_definition = $this->createMock(ContextDefinitionInterface::class);
@@ -104,9 +102,10 @@ class ContextDefinitionTest extends UnitTestCase {
   }
 
   /**
-   * Tests get data definition invalid type.
+   * @dataProvider providerGetDataDefinition
+   * @covers ::getDataDefinition
+   * @uses \Drupal
    */
-  #[DataProvider('providerGetDataDefinition')]
   public function testGetDataDefinitionInvalidType($is_multiple): void {
     // Since we're trying to make getDataDefinition() throw an exception in
     // isolation, we use a data type which is not valid.
@@ -155,7 +154,7 @@ class ContextDefinitionTest extends UnitTestCase {
   /**
    * Data provider for testGetConstraint.
    */
-  public static function providerGetConstraint(): array {
+  public static function providerGetConstraint() {
     return [
       [NULL, [], 'nonexistent_constraint_name'],
       [
@@ -169,9 +168,10 @@ class ContextDefinitionTest extends UnitTestCase {
   }
 
   /**
-   * Tests get constraint.
+   * @dataProvider providerGetConstraint
+   * @covers ::getConstraint
+   * @uses \Drupal
    */
-  #[DataProvider('providerGetConstraint')]
   public function testGetConstraint($expected, $constraint_array, $constraint): void {
     $mock_context_definition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinition')
       ->disableOriginalConstructor()
@@ -187,10 +187,8 @@ class ContextDefinitionTest extends UnitTestCase {
   }
 
   /**
-   * Tests default value.
-   *
-   * @legacy-covers ::getDefaultValue
-   * @legacy-covers ::setDefaultValue
+   * @covers ::getDefaultValue
+   * @covers ::setDefaultValue
    */
   public function testDefaultValue(): void {
     $context_definition = new ContextDefinition();

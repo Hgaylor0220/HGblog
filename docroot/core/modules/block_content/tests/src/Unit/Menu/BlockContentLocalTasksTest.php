@@ -6,14 +6,13 @@ namespace Drupal\Tests\block_content\Unit\Menu;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests existence of block_content local tasks.
+ *
+ * @group block_content
  */
-#[Group('block_content')]
 class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -66,8 +65,9 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Checks block_content listing local tasks.
+   *
+   * @dataProvider getBlockContentListingRoutes
    */
-  #[DataProvider('getBlockContentListingRoutes')]
   public function testBlockContentListLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => [

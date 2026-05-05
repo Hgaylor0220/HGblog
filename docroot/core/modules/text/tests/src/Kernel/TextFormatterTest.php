@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\text\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the text formatters functionality.
+ *
+ * @group text
  */
-#[Group('text')]
-#[RunTestsInSeparateProcesses]
 class TextFormatterTest extends EntityKernelTestBase {
 
   /**

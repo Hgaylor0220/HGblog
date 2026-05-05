@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests View Json Anon.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class ViewJsonAnonTest extends ViewResourceTestBase {
 
   use AnonResourceTestTrait;

@@ -9,14 +9,12 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for \Drupal\navigation\Plugin\Block\NavigationShortcutsBlock.
+ *
+ * @group navigation
  */
-#[Group('navigation')]
-#[RunTestsInSeparateProcesses]
 class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
@@ -43,15 +41,14 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
 
     // Ensure that without enabling the shortcuts-in-page-title-link feature
     // in the theme, the shortcut_list cache tag is not added to the page.
-    $admin_user = $this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'access navigation',
       'administer shortcuts',
       'access shortcuts',
-    ]);
-    $this->drupalLogin($admin_user);
+    ]));
     $this->drupalGet('admin/config/system/cron');
-    $expected_cache_tags = array_merge([
+    $expected_cache_tags = [
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'block_view',
       'config:block.block.title',
@@ -61,10 +58,9 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
       'config:shortcut.set.default',
       'config:system.menu.admin',
       'config:system.menu.content',
-      'config:system.menu.navigation-user-links',
       'http_response',
       'rendered',
-    ], $admin_user->getCacheTags());
+    ];
     $this->assertCacheTags($expected_cache_tags);
 
     \Drupal::configFactory()
@@ -94,6 +90,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     ]));
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->pageTextNotContains('Shortcuts');
     $this->assertSession()->linkNotExists('Cron');
 
     // Create a role with access to shortcuts as well as the necessary
@@ -117,13 +114,13 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $this->drupalLogin($site_configuration_user1);
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format', 'session', 'route']);
+    $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format', 'session']);
     $this->assertSession()->pageTextContains('Shortcuts');
     $this->assertSession()->linkExists('Cron');
 
     $this->drupalLogin($site_configuration_user2);
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format', 'session', 'route']);
+    $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format', 'session']);
     $this->assertSession()->pageTextContains('Shortcuts');
     $this->assertSession()->linkExists('Cron');
 

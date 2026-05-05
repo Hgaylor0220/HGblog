@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
- * Tests Drupal\KernelTests\KernelTestBase.
+ * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
+ *
+ * @group PHPUnit
+ * @group Test
+ * @group KernelTests
  */
-#[CoversClass(KernelTestBase::class)]
-#[Group('PHPUnit')]
-#[Group('Test')]
-#[Group('KernelTests')]
-#[RunTestsInSeparateProcesses]
 class KernelTestBaseShutdownTest extends KernelTestBase {
 
   /**
@@ -42,9 +37,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
   }
 
   /**
-   * Tests shutdown function.
-   *
-   * @legacy-covers ::assertPostConditions
+   * @covers ::assertPostConditions
    */
   public function testShutdownFunction(): void {
     $this->expectedShutdownCalled = ['shutdownFunction', 'shutdownFunction2'];
@@ -52,9 +45,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
   }
 
   /**
-   * Tests no shutdown function.
-   *
-   * @legacy-covers ::assertPostConditions
+   * @covers ::assertPostConditions
    */
   public function testNoShutdownFunction(): void {
     $this->expectedShutdownCalled = [];
@@ -63,7 +54,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
   /**
    * Registers that this shutdown function has been called.
    */
-  public function shutdownFunction(): void {
+  public function shutdownFunction() {
     self::$shutdownCalled[] = 'shutdownFunction';
     drupal_register_shutdown_function([$this, 'shutdownFunction2']);
   }
@@ -71,7 +62,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
   /**
    * Registers that this shutdown function has been called.
    */
-  public function shutdownFunction2(): void {
+  public function shutdownFunction2() {
     self::$shutdownCalled[] = 'shutdownFunction2';
   }
 

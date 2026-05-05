@@ -14,18 +14,17 @@ use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipRowException;
-use Drupal\migrate\Plugin\migrate\process\MenuLinkParent;
 use Drupal\migrate\Plugin\MigrationInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\migrate\Plugin\migrate\process\MenuLinkParent;
 
 // cspell:ignore plid
+
 /**
  * Tests the menu link parent process plugin.
+ *
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MenuLinkParent
+ * @group migrate
  */
-#[CoversClass(MenuLinkParent::class)]
-#[Group('migrate')]
 class MenuLinkParentTest extends MigrateProcessTestCase {
 
   /**
@@ -87,8 +86,9 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *   The plugin configuration being tested.
    * @param bool $is_valid
    *   TRUE if the configuration is valid, FALSE if not.
+   *
+   * @dataProvider providerConstructorException
    */
-  #[DataProvider('providerConstructorException')]
   public function testConstructorException(array $configuration, bool $is_valid): void {
     if (!$is_valid) {
       $this->expectException('TypeError');
@@ -137,8 +137,9 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\migrate\MigrateException
    * @throws \Drupal\migrate\MigrateSkipRowException
+   *
+   * @dataProvider providerTransformException
    */
-  #[DataProvider('providerTransformException')]
   public function testTransformException(array $source_value): void {
     [$parent_id, $menu_name] = $source_value;
     $this->migrateLookup->lookup(NULL, [1])->willReturn([]);
@@ -183,8 +184,9 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\migrate\MigrateException
    * @throws \Drupal\migrate\MigrateSkipRowException
+   *
+   * @dataProvider providerMenuLinkParent
    */
-  #[DataProvider('providerMenuLinkParent')]
   public function testMenuLinkParent(array $source_value, $lookup_result, $plugin_id, $route_name, $expected_result): void {
     [$parent_id, $menu_name, $parent_link_path] = $source_value;
     $this->migrateLookup->lookup(NULL, [$parent_id])
@@ -281,8 +283,9 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *   The plugin configuration being tested.
    * @param string $expected_result
    *   The expected value(s) of the migration process plugin.
+   *
+   * @dataProvider providerLookupMigrations
    */
-  #[DataProvider('providerLookupMigrations')]
   public function testLookupMigrations(int $plid, array $configuration, string $expected_result): void {
     $source_value = [$plid, 'some_menu', 'https://www.example.com'];
 

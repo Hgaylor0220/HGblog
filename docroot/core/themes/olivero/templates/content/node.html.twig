@@ -22,6 +22,7 @@
  *   of a given child element.
  * - author_picture: The node author user entity, rendered using the "compact"
  *   view mode.
+ * - metadata: Metadata for this node.
  * - date: (optional) Themed creation date field.
  * - author_name: (optional) Themed author name field.
  * - url: Direct URL of the current node.
@@ -54,8 +55,9 @@
  *   displayed after the main title tag that appears in the template.
  * - view_mode: View mode; for example, "teaser" or "full".
  * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
  *
- * @see \Drupal\node\Hook\NodeThemeHooks::preprocessNode()
+ * @see template_preprocess_node()
  */
 #}
 
@@ -75,7 +77,7 @@
 <article{{ attributes.addClass(classes) }}>
   <header class="{{ layout }}">
     {{ title_prefix }}
-      {% if label and view_mode != "full" %}
+      {% if label and not page %}
       <h2{{ title_attributes.addClass('node__title') }}>
         <a href="{{ url }}" rel="bookmark">{{ label }}</a>
       </h2>
@@ -89,7 +91,7 @@
         </div>
       {% endif %}
         <span{{ author_attributes }}>
-          {{ 'By'|t }} <span class="node__author">{{- author_name -}}</span>, {{ date }}
+          {{ 'By'|t }} {% apply spaceless %}{{ author_name }}{% endapply %}, {{ date }}
         </span>
         {{ metadata }}
       </div>

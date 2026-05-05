@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Date handler.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class SortDateTest extends ViewsKernelTestBase {
 
   /**
@@ -23,10 +22,7 @@ class SortDateTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  /**
-   * Generates an expected result set based on the specified granularity and order.
-   */
-  protected function expectedResultSet($granularity, $reverse = TRUE): array {
+  protected function expectedResultSet($granularity, $reverse = TRUE) {
     $expected = [];
     if (!$reverse) {
       switch ($granularity) {
@@ -67,16 +63,6 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'Paul'],
             ['name' => 'Meredith'],
             ['name' => 'George'],
-          ];
-          break;
-
-        case 'week':
-          $expected = [
-            ['name' => 'John'],
-            ['name' => 'George'],
-            ['name' => 'Ringo'],
-            ['name' => 'Paul'],
-            ['name' => 'Meredith'],
           ];
           break;
 
@@ -143,16 +129,6 @@ class SortDateTest extends ViewsKernelTestBase {
           ];
           break;
 
-        case 'week':
-          $expected = [
-            ['name' => 'John'],
-            ['name' => 'George'],
-            ['name' => 'Ringo'],
-            ['name' => 'Paul'],
-            ['name' => 'Meredith'],
-          ];
-          break;
-
         case 'month':
           $expected = [
             ['name' => 'John'],
@@ -182,7 +158,7 @@ class SortDateTest extends ViewsKernelTestBase {
    * Tests numeric ordering of the result set.
    */
   public function testDateOrdering(): void {
-    foreach (['second', 'minute', 'hour', 'day', 'week', 'month', 'year'] as $granularity) {
+    foreach (['second', 'minute', 'hour', 'day', 'month', 'year'] as $granularity) {
       foreach ([FALSE, TRUE] as $reverse) {
         $view = Views::getView('test_view');
         $view->setDisplay();
@@ -203,7 +179,7 @@ class SortDateTest extends ViewsKernelTestBase {
           ],
         ]);
 
-        // Change the ordering.
+        // Change the ordering
         $view->displayHandlers->get('default')->overrideOption('sorts', [
           'created' => [
             'id' => 'created',
@@ -228,7 +204,7 @@ class SortDateTest extends ViewsKernelTestBase {
         // Verify the result.
         $this->assertIdenticalResultset($view, $this->expectedResultSet($granularity, $reverse), [
           'views_test_data_name' => 'name',
-        ], sprintf('Result is returned correctly when ordering by granularity %s, %s.', $granularity, $reverse ? 'reverse' : 'forward'));
+        ], new FormattableMarkup('Result is returned correctly when ordering by granularity @granularity, @reverse.', ['@granularity' => $granularity, '@reverse' => $reverse ? 'reverse' : 'forward']));
         $view->destroy();
         unset($view);
       }

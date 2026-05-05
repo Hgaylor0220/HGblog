@@ -12,16 +12,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterPluginManager;
-use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Plugin\Block\FieldBlock;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Argument;
 use Prophecy\Promise\PromiseInterface;
 use Prophecy\Promise\ReturnPromise;
@@ -31,11 +27,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Tests Drupal\layout_builder\Plugin\Block\FieldBlock.
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
+ * @group Field
  */
-#[CoversClass(FieldBlock::class)]
-#[Group('Field')]
-#[RunTestsInSeparateProcesses]
 class FieldBlockTest extends EntityKernelTestBase {
 
   /**
@@ -64,8 +58,10 @@ class FieldBlockTest extends EntityKernelTestBase {
 
   /**
    * Tests entity access.
+   *
+   * @covers ::blockAccess
+   * @dataProvider providerTestBlockAccessNotAllowed
    */
-  #[DataProvider('providerTestBlockAccessNotAllowed')]
   public function testBlockAccessEntityNotAllowed($expected, $entity_access): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
@@ -96,6 +92,8 @@ class FieldBlockTest extends EntityKernelTestBase {
 
   /**
    * Tests unfieldable entity.
+   *
+   * @covers ::blockAccess
    */
   public function testBlockAccessEntityAllowedNotFieldable(): void {
     $entity = $this->prophesize(EntityInterface::class);
@@ -110,6 +108,8 @@ class FieldBlockTest extends EntityKernelTestBase {
 
   /**
    * Tests fieldable entity without a particular field.
+   *
+   * @covers ::blockAccess
    */
   public function testBlockAccessEntityAllowedNoField(): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
@@ -126,8 +126,10 @@ class FieldBlockTest extends EntityKernelTestBase {
 
   /**
    * Tests field access.
+   *
+   * @covers ::blockAccess
+   * @dataProvider providerTestBlockAccessNotAllowed
    */
-  #[DataProvider('providerTestBlockAccessNotAllowed')]
   public function testBlockAccessEntityAllowedFieldNotAllowed($expected, $field_access): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
@@ -148,10 +150,10 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Tests populated vs empty build.
    *
-   * @legacy-covers ::blockAccess
-   * @legacy-covers ::build
+   * @covers ::blockAccess
+   * @covers ::build
+   * @dataProvider providerTestBlockAccessEntityAllowedFieldHasValue
    */
-  #[DataProvider('providerTestBlockAccessEntityAllowedFieldHasValue')]
   public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
@@ -243,9 +245,9 @@ class FieldBlockTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests build.
+   * @covers ::build
+   * @dataProvider providerTestBuild
    */
-  #[DataProvider('providerTestBuild')]
   public function testBuild(PromiseInterface $promise, $expected_markup, $log_message = '', $log_arguments = []): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $field = $this->prophesize(FieldItemListInterface::class);
@@ -296,7 +298,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests build exception.
+   * @covers ::build
    */
   public function testBuildException(): void {
     // In PHP 7.4 ReflectionClass cannot be serialized so this cannot be part of

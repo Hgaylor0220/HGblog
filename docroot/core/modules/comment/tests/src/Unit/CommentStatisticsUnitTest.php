@@ -8,14 +8,11 @@ use Drupal\comment\CommentStatistics;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\comment\CommentStatistics.
+ * @coversDefaultClass \Drupal\comment\CommentStatistics
+ * @group comment
  */
-#[CoversClass(CommentStatistics::class)]
-#[Group('comment')]
 class CommentStatisticsUnitTest extends UnitTestCase {
 
   /**
@@ -98,9 +95,10 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    * Tests the read method.
    *
    * @see \Drupal\comment\CommentStatistics::read()
+   *
+   * @group Drupal
+   * @group Comment
    */
-  #[Group('Drupal')]
-  #[Group('Comment')]
   public function testRead(): void {
     $this->callsToFetch = 0;
     $results = $this->commentStatistics->read(['1' => 'boo', '2' => 'foo'], 'snafus');

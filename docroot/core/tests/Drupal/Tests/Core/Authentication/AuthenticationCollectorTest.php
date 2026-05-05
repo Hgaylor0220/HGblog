@@ -7,24 +7,21 @@ namespace Drupal\Tests\Core\Authentication;
 use Drupal\Core\Authentication\AuthenticationCollector;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\Core\Authentication\AuthenticationCollector.
+ * @coversDefaultClass \Drupal\Core\Authentication\AuthenticationCollector
+ * @group Authentication
  */
-#[CoversClass(AuthenticationCollector::class)]
-#[Group('Authentication')]
 class AuthenticationCollectorTest extends UnitTestCase {
 
   /**
    * Tests adding, getting, and order of priorities.
    *
-   * @legacy-covers ::addProvider
-   * @legacy-covers ::getSortedProviders
-   * @legacy-covers ::getProvider
-   * @legacy-covers ::isGlobal
+   * @covers ::addProvider
+   * @covers ::getSortedProviders
+   * @covers ::getProvider
+   * @covers ::isGlobal
    */
   public function testAuthenticationCollector(): void {
     $providers = [];
@@ -78,14 +75,14 @@ class TestAuthenticationProvider implements AuthenticationProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request): bool {
+  public function applies(Request $request) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function authenticate(Request $request): NULL {
+  public function authenticate(Request $request) {
     return NULL;
   }
 

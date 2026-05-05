@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
-use Drupal\block\Entity\Block;
-use Drupal\block_test\Plugin\Block\TestHtmlBlock;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\block_test\Plugin\Block\TestHtmlBlock;
+use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests the storage of blocks.
+ *
+ * @group block
  */
-#[Group('block')]
-#[RunTestsInSeparateProcesses]
 class BlockStorageUnitTest extends KernelTestBase {
 
   /**
@@ -58,7 +56,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the creation of blocks.
    */
-  protected function createTests(): void {
+  protected function createTests() {
     // Attempt to create a block without a plugin.
     try {
       $entity = $this->controller->create([]);
@@ -93,7 +91,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       'id' => 'test_block',
       'theme' => 'stark',
       'region' => 'content',
-      'weight' => 0,
+      'weight' => NULL,
       'provider' => NULL,
       'plugin' => 'test_html',
       'settings' => [
@@ -113,7 +111,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the loading of blocks.
    */
-  protected function loadTests(): void {
+  protected function loadTests() {
     $entity = $this->controller->load('test_block');
 
     $this->assertInstanceOf(Block::class, $entity);
@@ -128,7 +126,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the deleting of blocks.
    */
-  protected function deleteTests(): void {
+  protected function deleteTests() {
     $entity = $this->controller->load('test_block');
 
     // Ensure that the storage isn't currently empty.
@@ -155,7 +153,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     // Install the block_test.module, so that its default config is installed.
     $this->installConfig(['block_test']);
 
-    $entities = Block::loadMultiple();
+    $entities = $this->controller->loadMultiple();
     $entity = reset($entities);
     $this->assertEquals('test_block', $entity->id(), 'The default test block was loaded.');
   }

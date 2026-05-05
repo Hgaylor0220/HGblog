@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Entity Form Mode Json Anon.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class EntityFormModeJsonAnonTest extends EntityFormModeResourceTestBase {
 
   use AnonResourceTestTrait;

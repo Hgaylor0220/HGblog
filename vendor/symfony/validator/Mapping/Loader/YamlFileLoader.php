@@ -24,7 +24,12 @@ use Symfony\Component\Yaml\Yaml;
  */
 class YamlFileLoader extends FileLoader
 {
-    protected array $classes;
+    /**
+     * An array of YAML class descriptions.
+     *
+     * @var array
+     */
+    protected $classes;
 
     public function __construct(string $file)
     {
@@ -56,7 +61,7 @@ class YamlFileLoader extends FileLoader
     /**
      * Return the names of the classes mapped in this file.
      *
-     * @return class-string[]
+     * @return string[]
      */
     public function getMappedClasses(): array
     {
@@ -87,14 +92,12 @@ class YamlFileLoader extends FileLoader
                 }
 
                 if (null !== $options && (!\is_array($options) || array_is_list($options))) {
-                    trigger_deprecation('symfony/validator', '7.4', 'Not using a YAML mapping of constraint option names to their values to configure the "%s" constraint is deprecated.', key($childNodes));
-
                     $options = [
                         'value' => $options,
                     ];
                 }
 
-                $values[] = $this->newConstraint(key($childNodes), $options, true);
+                $values[] = $this->newConstraint(key($childNodes), $options);
             } else {
                 if (\is_array($childNodes)) {
                     $childNodes = $this->parseNodes($childNodes);

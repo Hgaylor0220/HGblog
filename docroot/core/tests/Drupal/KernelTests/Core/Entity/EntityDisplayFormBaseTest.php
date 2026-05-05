@@ -6,19 +6,14 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\field_ui\Form\EntityDisplayFormBase;
 use Drupal\field_ui\Form\EntityViewDisplayEditForm;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\field_ui\Form\EntityDisplayFormBase.
+ * @coversDefaultClass \Drupal\field_ui\Form\EntityDisplayFormBase
+ *
+ * @group Entity
  */
-#[CoversClass(EntityDisplayFormBase::class)]
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityDisplayFormBaseTest extends KernelTestBase {
 
   /**
@@ -27,7 +22,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
   protected static $modules = ['entity_test'];
 
   /**
-   * Tests copy form values to entity.
+   * @covers ::copyFormValuesToEntity
    */
   public function testCopyFormValuesToEntity(): void {
     $field_values = [];
@@ -44,7 +39,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
       'region' => 'hidden',
     ];
     $entity->removeComponent('new_field_mismatch_type_visible')
-      ->will(function (array $args) use ($entity): void {
+      ->will(function (array $args) use ($entity) {
         // On subsequent calls, getComponent() will return an empty array.
         $entity->getComponent($args[0])->willReturn([]);
       })
@@ -83,7 +78,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
       'region' => 'hidden',
     ];
     $entity->removeComponent('field_start_visible_change_region')
-      ->will(function (array $args) use ($entity): void {
+      ->will(function (array $args) use ($entity) {
         // On subsequent calls, getComponent() will return an empty array.
         $entity->getComponent($args[0])->willReturn([]);
       })
@@ -112,7 +107,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
         'type' => 'textfield',
         'region' => 'content',
       ])
-      ->will(function (array $args) use ($entity): void {
+      ->will(function (array $args) use ($entity) {
         // On subsequent calls, getComponent() will return the newly set values.
         $entity->getComponent($args[0])->willReturn($args[1]);
         $args[1] += [

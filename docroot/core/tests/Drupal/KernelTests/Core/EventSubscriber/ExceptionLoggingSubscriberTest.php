@@ -7,17 +7,14 @@ namespace Drupal\KernelTests\Core\EventSubscriber;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests that HTTP exceptions are logged correctly.
+ *
+ * @group system
  */
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   /**
@@ -34,8 +31,9 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   /**
    * Tests \Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber::onException().
+   *
+   * @dataProvider exceptionDataProvider
    */
-  #[DataProvider('exceptionDataProvider')]
   public function testExceptionLogging(int $error_code, string $channel, int $log_level, string $exception = ''): void {
     $http_kernel = \Drupal::service('http_kernel');
 
@@ -63,9 +61,6 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     }
   }
 
-  /**
-   * Returns data for testing exception logging.
-   */
   public static function exceptionDataProvider(): array {
     return [
       [400, 'client error', RfcLogLevel::WARNING],
@@ -86,7 +81,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     $container
       ->register($this->testLogServiceName, BufferingLogger::class)

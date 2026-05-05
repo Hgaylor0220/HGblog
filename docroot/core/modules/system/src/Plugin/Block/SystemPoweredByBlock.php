@@ -19,7 +19,7 @@ class SystemPoweredByBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['label_display' => '0'];
+    return ['label_display' => FALSE];
   }
 
   /**

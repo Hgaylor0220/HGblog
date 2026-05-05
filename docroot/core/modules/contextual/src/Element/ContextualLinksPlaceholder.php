@@ -3,7 +3,6 @@
 namespace Drupal\contextual\Element;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Attribute\RenderElement;
@@ -20,9 +19,10 @@ class ContextualLinksPlaceholder extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#pre_render' => [
-        [static::class, 'preRenderPlaceholder'],
+        [$class, 'preRenderPlaceholder'],
       ],
       '#id' => NULL,
     ];
@@ -52,10 +52,6 @@ class ContextualLinksPlaceholder extends RenderElementBase {
       'data-drupal-ajax-container' => '',
     ]);
     $element['#markup'] = new FormattableMarkup('<div@attributes></div>', ['@attributes' => $attribute]);
-    $element['#attached']['drupalSettings']['contextual']['theme'] = \Drupal::service('theme.manager')->getActiveTheme()->getName();
-    $cache = CacheableMetadata::createFromRenderArray($element);
-    $cache->addCacheContexts(['theme']);
-    $cache->applyTo($element);
 
     return $element;
   }

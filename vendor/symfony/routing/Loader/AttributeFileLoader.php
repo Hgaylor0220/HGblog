@@ -13,7 +13,7 @@ namespace Symfony\Component\Routing\Loader;
 
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\FileLoader;
-use Symfony\Component\Config\Resource\ReflectionClassResource;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -25,15 +25,17 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class AttributeFileLoader extends FileLoader
 {
-    public function __construct(
-        FileLocatorInterface $locator,
-        protected AttributeClassLoader $loader,
-    ) {
+    protected $loader;
+
+    public function __construct(FileLocatorInterface $locator, AttributeClassLoader $loader)
+    {
         if (!\function_exists('token_get_all')) {
             throw new \LogicException('The Tokenizer extension is required for the routing attribute loader.');
         }
 
         parent::__construct($locator);
+
+        $this->loader = $loader;
     }
 
     /**
@@ -52,7 +54,7 @@ class AttributeFileLoader extends FileLoader
                 return null;
             }
 
-            $collection->addResource(new ReflectionClassResource($refl));
+            $collection->addResource(new FileResource($path));
             $collection->addCollection($this->loader->load($class, $type));
         }
 
@@ -63,7 +65,11 @@ class AttributeFileLoader extends FileLoader
 
     public function supports(mixed $resource, ?string $type = null): bool
     {
-        return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'attribute' === $type);
+        if ('annotation' === $type) {
+            trigger_deprecation('symfony/routing', '6.4', 'The "annotation" route type is deprecated, use the "attribute" route type instead.');
+        }
+
+        return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || \in_array($type, ['annotation', 'attribute'], true));
     }
 
     /**
@@ -79,7 +85,10 @@ class AttributeFileLoader extends FileLoader
             throw new \InvalidArgumentException(\sprintf('The file "%s" does not contain PHP code. Did you forget to add the "<?php" start tag at the beginning of the file?', $file));
         }
 
-        $nsTokens = [\T_NS_SEPARATOR => true, \T_STRING => true, \T_NAME_QUALIFIED => true];
+        $nsTokens = [\T_NS_SEPARATOR => true, \T_STRING => true];
+        if (\defined('T_NAME_QUALIFIED')) {
+            $nsTokens[\T_NAME_QUALIFIED] = true;
+        }
         for ($i = 0; isset($tokens[$i]); ++$i) {
             $token = $tokens[$i];
             if (!isset($token[1])) {
@@ -112,7 +121,7 @@ class AttributeFileLoader extends FileLoader
                     if (\T_DOUBLE_COLON === $tokens[$j][0] || \T_NEW === $tokens[$j][0]) {
                         $skipClassToken = true;
                         break;
-                    } elseif (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT], true)) {
+                    } elseif (!\in_array($tokens[$j][0], [\T_WHITESPACE, \T_DOC_COMMENT, \T_COMMENT])) {
                         break;
                     }
                 }
@@ -129,4 +138,8 @@ class AttributeFileLoader extends FileLoader
 
         return false;
     }
+}
+
+if (!class_exists(AnnotationFileLoader::class, false)) {
+    class_alias(AttributeFileLoader::class, AnnotationFileLoader::class);
 }

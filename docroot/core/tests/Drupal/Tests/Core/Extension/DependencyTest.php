@@ -7,21 +7,17 @@ namespace Drupal\Tests\Core\Extension;
 use Drupal\Component\Version\Constraint;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Extension\Dependency.
+ * @coversDefaultClass \Drupal\Core\Extension\Dependency
+ * @group Extension
  */
-#[CoversClass(Dependency::class)]
-#[Group('Extension')]
 class DependencyTest extends UnitTestCase {
 
   /**
-   * Tests create from string.
+   * @covers ::createFromString
+   * @dataProvider providerCreateFromString
    */
-  #[DataProvider('providerCreateFromString')]
   public function testCreateFromString($string, $expected_name, $expected_project, $expected_constraint): void {
     $dependency = Dependency::createFromString($string);
     $this->assertSame($expected_name, $dependency->getName());
@@ -32,7 +28,7 @@ class DependencyTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromString.
    */
-  public static function providerCreateFromString(): array {
+  public static function providerCreateFromString() {
     $tests = [];
     $tests['module_name_only'] = ['views', 'views', '', ''];
     $tests['module_and_project_names'] = ['drupal:views', 'views', 'drupal', ''];
@@ -42,7 +38,7 @@ class DependencyTest extends UnitTestCase {
   }
 
   /**
-   * Tests is compatible.
+   * @covers ::isCompatible
    */
   public function testIsCompatible(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');
@@ -53,7 +49,7 @@ class DependencyTest extends UnitTestCase {
   /**
    * Ensures that constraint objects are not serialized.
    *
-   * @legacy-covers ::__sleep
+   * @covers ::__sleep
    */
   public function testSerialization(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');

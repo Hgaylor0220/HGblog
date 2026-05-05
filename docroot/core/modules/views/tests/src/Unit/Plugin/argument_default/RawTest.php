@@ -8,16 +8,13 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\argument_default\Raw;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests Drupal\views\Plugin\views\argument_default\Raw.
+ * @coversDefaultClass \Drupal\views\Plugin\views\argument_default\Raw
+ * @group views
  */
-#[CoversClass(Raw::class)]
-#[Group('views')]
 class RawTest extends UnitTestCase {
 
   /**

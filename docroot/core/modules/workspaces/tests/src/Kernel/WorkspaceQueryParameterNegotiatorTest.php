@@ -8,18 +8,13 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
-use Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the query parameter workspace negotiator.
+ *
+ * @coversDefaultClass \Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator
+ * @group workspaces
  */
-#[CoversClass(QueryParameterWorkspaceNegotiator::class)]
-#[Group('workspaces')]
-#[RunTestsInSeparateProcesses]
 class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -41,7 +36,7 @@ class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('workspace');
-    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
+    $this->installSchema('workspaces', ['workspace_association']);
 
     // Create a new workspace for testing.
     Workspace::create(['id' => 'stage', 'label' => 'Stage'])->save();
@@ -54,11 +49,9 @@ class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests workspace query parameter.
-   *
-   * @legacy-covers ::getActiveWorkspaceId
+   * @covers ::getActiveWorkspaceId
+   * @dataProvider providerTestWorkspaceQueryParameter
    */
-  #[DataProvider('providerTestWorkspaceQueryParameter')]
   public function testWorkspaceQueryParameter(?string $workspace, ?string $token, ?string $negotiated_workspace, bool $has_active_workspace): void {
     // We can't access the settings service in the data provider method, so we
     // generate a good token here.

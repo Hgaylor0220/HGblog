@@ -7,17 +7,12 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing.
- *
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+ * @group ckeditor5
  * @internal
  */
-#[CoversClass(SourceEditing::class)]
-#[Group('ckeditor5')]
 class SourceEditingPluginTest extends UnitTestCase {
 
   /**
@@ -208,9 +203,9 @@ class SourceEditingPluginTest extends UnitTestCase {
   }
 
   /**
-   * Tests get dynamic plugin config.
+   * @covers ::getDynamicPluginConfig
+   * @dataProvider providerGetDynamicPluginConfig
    */
-  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     $plugin = new SourceEditing($configuration, 'ckeditor5_sourceEditing', NULL);
     $dynamic_plugin_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)

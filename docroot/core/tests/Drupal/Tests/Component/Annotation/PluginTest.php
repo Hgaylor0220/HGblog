@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Annotation\Plugin.
+ * @coversDefaultClass \Drupal\Component\Annotation\Plugin
+ * @group Annotation
  */
-#[CoversClass(Plugin::class)]
-#[Group('Annotation')]
 class PluginTest extends TestCase {
 
   /**
-   * @legacy-covers ::__construct
-   * @legacy-covers ::parse
-   * @legacy-covers ::get
+   * @covers ::__construct
+   * @covers ::parse
+   * @covers ::get
    */
   public function testGet(): void {
     // Assert all values are accepted through constructor and default value is
@@ -54,7 +51,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * Tests get provider.
+   * @covers ::getProvider
    */
   public function testGetProvider(): void {
     $plugin = new Plugin(['provider' => 'example']);
@@ -62,7 +59,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * Tests set provider.
+   * @covers ::setProvider
    */
   public function testSetProvider(): void {
     $plugin = new Plugin([]);
@@ -71,7 +68,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * Tests get id.
+   * @covers ::getId
    */
   public function testGetId(): void {
     $plugin = new Plugin(['id' => 'example']);
@@ -79,7 +76,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * Tests get class.
+   * @covers ::getClass
    */
   public function testGetClass(): void {
     $plugin = new Plugin(['class' => 'example']);
@@ -87,7 +84,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * Tests set class.
+   * @covers ::setClass
    */
   public function testSetClass(): void {
     $plugin = new Plugin([]);
@@ -100,12 +97,6 @@ class PluginTest extends TestCase {
  * {@inheritdoc}
  */
 class PluginStub extends Plugin {
-
-  /**
-   * A default property for testing.
-   *
-   * @var string
-   */
   protected $defaultProperty = 'test_value';
 
 }

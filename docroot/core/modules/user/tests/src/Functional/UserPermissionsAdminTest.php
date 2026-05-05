@@ -6,14 +6,12 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests adding and removing permissions via the UI.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class UserPermissionsAdminTest extends BrowserTestBase {
 
   /**
@@ -51,8 +49,8 @@ class UserPermissionsAdminTest extends BrowserTestBase {
       'view user email addresses',
     ], $role->getPermissions());
 
-    // Remove the first permission, resulting in a single permission in the
-    // first key of the array.
+    // Remove the first permission, resulting in a single permission in the first
+    // key of the array.
     $this->submitForm([
       'test_role[change own username]' => 0,
     ], 'Save permissions');

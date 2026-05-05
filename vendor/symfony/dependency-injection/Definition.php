@@ -45,7 +45,7 @@ class Definition
     private array $bindings = [];
     private array $errors = [];
 
-    protected array $arguments = [];
+    protected $arguments = [];
 
     /**
      * @internal
@@ -255,6 +255,10 @@ class Definition
             throw new OutOfBoundsException(\sprintf('Cannot replace arguments for class "%s" if none have been configured yet.', $this->class));
         }
 
+        if (\is_int($index) && ($index < 0 || $index > \count($this->arguments) - 1)) {
+            throw new OutOfBoundsException(\sprintf('The index "%d" is not in the range [0, %d] of the arguments of class "%s".', $index, \count($this->arguments) - 1, $this->class));
+        }
+
         if (!\array_key_exists($index, $this->arguments)) {
             throw new OutOfBoundsException(\sprintf('The argument "%s" doesn\'t exist in class "%s".', $index, $this->class));
         }
@@ -326,7 +330,7 @@ class Definition
      */
     public function addMethodCall(string $method, array $arguments = [], bool $returnsClone = false): static
     {
-        if (!$method) {
+        if (empty($method)) {
             throw new InvalidArgumentException('Method name cannot be empty.');
         }
         $this->calls[] = $returnsClone ? [$method, $arguments, true] : [$method, $arguments];
@@ -453,19 +457,6 @@ class Definition
         $this->tags[$name][] = $attributes;
 
         return $this;
-    }
-
-    /**
-     * Adds a "resource" tag to the definition and marks it as excluded.
-     *
-     * These definitions should be processed using {@see ContainerBuilder::findTaggedResourceIds()}
-     *
-     * @return $this
-     */
-    public function addResourceTag(string $name, array $attributes = []): static
-    {
-        return $this->addTag($name, $attributes)
-            ->addTag('container.excluded', ['source' => \sprintf('by tag "%s"', $name)]);
     }
 
     /**
@@ -818,21 +809,5 @@ class Definition
     public function hasErrors(): bool
     {
         return (bool) $this->errors;
-    }
-
-    public function __serialize(): array
-    {
-        $data = [];
-        foreach ((array) $this as $k => $v) {
-            if (false !== $i = strrpos($k, "\0")) {
-                $k = substr($k, 1 + $i);
-            }
-            if (!$v xor 'shared' === $k) {
-                continue;
-            }
-            $data[$k] = $v;
-        }
-
-        return $data;
     }
 }

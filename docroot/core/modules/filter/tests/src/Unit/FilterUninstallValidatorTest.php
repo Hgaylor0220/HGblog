@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\filter\Unit;
 
 use Drupal\filter\FilterProcessResult;
-use Drupal\filter\FilterUninstallValidator;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\filter\FilterUninstallValidator.
+ * @coversDefaultClass \Drupal\filter\FilterUninstallValidator
+ * @group filter
  */
-#[CoversClass(FilterUninstallValidator::class)]
-#[Group('filter')]
 class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
-   * The filter uninstall validator.
-   *
    * @var \Drupal\filter\FilterUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $filterUninstallValidator;
@@ -38,7 +32,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate no plugins.
+   * @covers ::validate
    */
   public function testValidateNoPlugins(): void {
     $this->filterUninstallValidator->expects($this->once())
@@ -54,7 +48,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate no formats.
+   * @covers ::validate
    */
   public function testValidateNoFormats(): void {
     $this->filterUninstallValidator->expects($this->once())
@@ -76,7 +70,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate no matching formats.
+   * @covers ::validate
    */
   public function testValidateNoMatchingFormats(): void {
     $this->filterUninstallValidator->expects($this->once())
@@ -177,9 +171,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
  */
 class FilterBaseTestableClass extends FilterBase {
 
-  /**
-   * {@inheritdoc}
-   */
   public function process($text, $langcode) {
     return new FilterProcessResult();
   }

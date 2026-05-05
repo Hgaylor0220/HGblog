@@ -6,14 +6,12 @@ namespace Drupal\FunctionalJavascriptTests\Core;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\js_message_test\Controller\JSMessageTestController;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests core/drupal.message library.
+ *
+ * @group Javascript
  */
-#[Group('Javascript')]
-#[RunTestsInSeparateProcesses]
 class JsMessageTest extends WebDriverTestBase {
 
   /**

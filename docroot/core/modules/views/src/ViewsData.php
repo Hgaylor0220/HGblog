@@ -5,6 +5,7 @@ namespace Drupal\views;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
@@ -59,11 +60,6 @@ class ViewsData {
   protected $fullyLoaded = FALSE;
 
   /**
-   * Flag that indicates whether views data are currently being loaded.
-   */
-  protected bool $loading = FALSE;
-
-  /**
    * The current language code.
    *
    * @var string
@@ -89,16 +85,24 @@ class ViewsData {
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend to use.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\Config\ConfigFactoryInterface $module_handler
    *   The module handler class to use for invoking hooks.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface|\Drupal\Core\Extension\ModuleHandlerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(CacheBackendInterface $cache_backend, ModuleHandlerInterface|ConfigFactoryInterface $module_handler, LanguageManagerInterface|ModuleHandlerInterface $language_manager) {
     $this->cacheBackend = $cache_backend;
-    $this->moduleHandler = $module_handler;
-    $this->languageManager = $language_manager;
-    $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
+    if ($module_handler instanceof ConfigFactoryInterface) {
+      $this->moduleHandler = $language_manager;
+      $this->languageManager = func_get_arg(3);
+      $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
+      @trigger_error('Calling ' . __CLASS__ . '::_construct() with the $config argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2541974', E_USER_DEPRECATED);
+    }
+    else {
+      $this->moduleHandler = $module_handler;
+      $this->languageManager = $language_manager;
+      $this->langcode = $this->languageManager->getCurrentLanguage()->getId();
+    }
   }
 
   /**
@@ -108,14 +112,6 @@ class ViewsData {
    *   An array of table data.
    */
   public function getAll() {
-    if ($this->loading && \Fiber::getCurrent() !== NULL) {
-      // The loading flag is set in ::getData(). If 'loading' is TRUE when
-      // entering here, that indicates a separate fiber started loading views
-      // data but has not completed. Suspend this fiber once to give the other
-      // fiber a chance to complete loading.
-      \Fiber::suspend();
-    }
-
     if (!$this->fullyLoaded) {
       $this->allStorage = $this->getData();
     }
@@ -140,15 +136,6 @@ class ViewsData {
     if (!$key) {
       throw new \InvalidArgumentException('A valid cache entry key is required. Use getAll() to get all table data.');
     }
-
-    if ($this->loading && \Fiber::getCurrent() !== NULL) {
-      // The loading flag is set in ::getData(). If 'loading' is TRUE when
-      // entering here, that indicates a separate fiber started loading views
-      // data but has not completed. Suspend this fiber once to give the other
-      // fiber a chance to complete loading.
-      \Fiber::suspend();
-    }
-
     if (!isset($this->storage[$key])) {
       // Prepare a cache ID for get and set.
       $cid = $this->baseCid . ':' . $key;
@@ -230,16 +217,12 @@ class ViewsData {
    *   An array of all data.
    */
   protected function getData() {
-    if ($cache = $this->cacheGet($this->baseCid)) {
-      $data = $cache->data;
+    $this->fullyLoaded = TRUE;
+
+    if ($data = $this->cacheGet($this->baseCid)) {
+      return $data->data;
     }
     else {
-      // Set the loading flag in case this is running in a fiber and gets
-      // suspended before the views data is fully loaded. Other code that calls
-      // this method and runs in a separate fiber can check the loading flag
-      // and suspend its fiber once to allow the original fiber a chance to
-      // finish loading.
-      $this->loading = TRUE;
       $data = [];
       $this->moduleHandler->invokeAllWith('views_data', function (callable $hook, string $module) use (&$data) {
         $views_data = $hook();
@@ -257,12 +240,9 @@ class ViewsData {
 
       // Keep a record with all data.
       $this->cacheSet($this->baseCid, $data);
+
+      return $data;
     }
-
-    $this->fullyLoaded = TRUE;
-    $this->loading = FALSE;
-
-    return $data;
   }
 
   /**

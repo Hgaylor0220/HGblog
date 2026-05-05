@@ -11,15 +11,11 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Block\ViewsBlock;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\views\Plugin\block\ViewsBlock.
+ * @coversDefaultClass \Drupal\views\Plugin\block\ViewsBlock
+ * @group views
  */
-#[CoversClass(ViewsBlock::class)]
-#[Group('views')]
 class ViewsBlockTest extends UnitTestCase {
 
   /**
@@ -158,14 +154,7 @@ class ViewsBlockTest extends UnitTestCase {
    */
   public function testBuild(): void {
     $output = $this->randomMachineName(100);
-    $build = [
-      'view_build' => $output,
-      '#view_id' => 'test_view',
-      '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block',
-      '#view_display_show_admin_links' => FALSE,
-      '#view_display_plugin_id' => 'block',
-      '#pre_rendered' => TRUE,
-    ];
+    $build = ['view_build' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE];
     $this->executable->expects($this->once())
       ->method('buildRenderable')
       ->with('block_1', [])
@@ -184,9 +173,10 @@ class ViewsBlockTest extends UnitTestCase {
   /**
    * Tests that cacheable metadata is retrieved from the view and merged with block cacheable metadata.
    *
+   * @dataProvider providerTestCacheableMetadata
+   *
    * @see \Drupal\views\Plugin\block\ViewsBlock::build()
    */
-  #[DataProvider('providerTestCacheableMetadata')]
   public function testCacheableMetadata(int $blockCacheMaxAge, int $viewCacheMaxAge, int $expectedCacheMaxAge): void {
 
     $blockCacheTags = ['block-cachetag-1', 'block-cachetag-2'];
@@ -252,17 +242,11 @@ class ViewsBlockTest extends UnitTestCase {
 
   /**
    * Tests the build method.
+   *
+   * @covers ::build
    */
   public function testBuildEmpty(): void {
-    $build = [
-      'view_build' => [],
-      '#view_id' => 'test_view',
-      '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block',
-      '#view_display_show_admin_links' => FALSE,
-      '#view_display_plugin_id' => 'block',
-      '#pre_rendered' => TRUE,
-      '#cache' => ['contexts' => ['user']],
-    ];
+    $build = ['view_build' => [], '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE, '#cache' => ['contexts' => ['user']]];
     $this->executable->expects($this->once())
       ->method('buildRenderable')
       ->with('block_1', [])
@@ -308,10 +292,7 @@ namespace Drupal\views\Plugin\Block;
 
 if (!function_exists('views_add_contextual_links')) {
 
-  /**
-   * Define method views_add_contextual_links for this test.
-   */
-  function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL): void {
+  function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL) {
   }
 
 }

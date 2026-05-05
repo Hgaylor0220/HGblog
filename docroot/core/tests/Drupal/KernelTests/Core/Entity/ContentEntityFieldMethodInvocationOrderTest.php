@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests correct field method invocation order.
+ *
+ * @group Entity
  */
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class ContentEntityFieldMethodInvocationOrderTest extends EntityKernelTestBase {
 
   /**

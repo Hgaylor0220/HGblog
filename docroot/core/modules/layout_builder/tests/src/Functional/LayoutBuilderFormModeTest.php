@@ -11,14 +11,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Layout Builder forms.
+ *
+ * @group layout_builder
  */
-#[Group('layout_builder')]
-#[RunTestsInSeparateProcesses]
 class LayoutBuilderFormModeTest extends BrowserTestBase {
 
   /**

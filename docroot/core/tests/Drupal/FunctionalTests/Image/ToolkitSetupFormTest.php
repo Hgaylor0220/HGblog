@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Image;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests image toolkit setup form.
+ *
+ * @group Image
  */
-#[Group('Image')]
-#[RunTestsInSeparateProcesses]
 class ToolkitSetupFormTest extends BrowserTestBase {
 
   /**
@@ -85,7 +83,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Get Status Report.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('GD2 image manipulation toolkit');
-    $this->assertSession()->pageTextContains('Supported image file formats: GIF, JPEG, PNG, WEBP, AVIF.');
+    $this->assertSession()->pageTextContains('Supported image file formats: GIF, JPEG, PNG, WEBP.');
   }
 
 }

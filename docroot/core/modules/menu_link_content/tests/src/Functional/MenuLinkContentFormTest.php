@@ -6,14 +6,12 @@ namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the menu link content UI.
+ *
+ * @group Menu
  */
-#[Group('Menu')]
-#[RunTestsInSeparateProcesses]
 class MenuLinkContentFormTest extends BrowserTestBase {
 
   /**
@@ -93,7 +91,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     $option = $this->assertSession()->optionExists('edit-menu-parent', 'admin:');
     $this->assertTrue($option->isSelected());
     // Test that the field description is present.
-    $this->assertSession()->pageTextContains('Start typing the title of a piece of content to select it. ');
+    $this->assertSession()->pageTextContains('The location this menu link points to.');
 
     $this->submitForm([
       'title[0][value]' => 'Front page',

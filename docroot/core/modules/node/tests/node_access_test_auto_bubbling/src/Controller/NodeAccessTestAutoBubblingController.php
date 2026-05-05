@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\node_access_test_auto_bubbling\Controller;
 
 use Drupal\Core\Cache\CacheableMetadata;

@@ -4,25 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Field;
 
-use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Component\Render\MarkupInterface;
 use Prophecy\Prophet;
 
 /**
- * Tests Drupal\Core\Field\FieldFilteredMarkup.
+ * @coversDefaultClass \Drupal\Core\Field\FieldFilteredMarkup
+ * @group Field
  */
-#[CoversClass(FieldFilteredMarkup::class)]
-#[Group('Field')]
 class FieldFilteredMarkupTest extends UnitTestCase {
 
   /**
-   * Tests create.
+   * @covers ::create
+   * @dataProvider providerTestCreate
    */
-  #[DataProvider('providerTestCreate')]
   public function testCreate($string, $expected, $instance_of_check): void {
     $filtered_string = FieldFilteredMarkup::create($string);
 
@@ -35,7 +31,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
   /**
    * Provides data for testCreate().
    */
-  public static function providerTestCreate(): array {
+  public static function providerTestCreate() {
     $data = [];
     $data[] = ['', '', FALSE];
     // Certain tags are filtered.
@@ -54,7 +50,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
   }
 
   /**
-   * Tests display allowed tags.
+   * @covers ::displayAllowedTags
    */
   public function testDisplayAllowedTags(): void {
     $expected = '<a> <b> <big> <code> <del> <em> <i> <ins> <pre> <q> <small> <span> <strong> <sub> <sup> <tt> <ol> <ul> <li> <p> <br> <img>';

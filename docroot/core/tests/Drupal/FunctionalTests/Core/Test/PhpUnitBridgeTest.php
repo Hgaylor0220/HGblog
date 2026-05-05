@@ -6,16 +6,13 @@ namespace Drupal\FunctionalTests\Core\Test;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal's extension to manage code deprecation.
+ * Tests Drupal's integration with Symfony PHPUnit Bridge.
+ *
+ * @group Test
+ * @group legacy
  */
-#[Group('Test')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class PhpUnitBridgeTest extends BrowserTestBase {
 
   /**

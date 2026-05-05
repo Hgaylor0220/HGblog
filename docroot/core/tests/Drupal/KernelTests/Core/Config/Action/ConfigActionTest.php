@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config\Action;
 
+// cspell:ignore inflector
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\config_test\ConfigActionErrorEntity\DuplicatePluralizedMethodName;
@@ -12,15 +13,12 @@ use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\DuplicateConfigActionIdException;
 use Drupal\Core\Config\Action\EntityMethodException;
 use Drupal\KernelTests\KernelTestBase;
-// cspell:ignore inflector
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the config action system.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class ConfigActionTest extends KernelTestBase {
 
   /**
@@ -29,8 +27,6 @@ class ConfigActionTest extends KernelTestBase {
   protected static $modules = ['config_test'];
 
   /**
-   * Tests the behavior of the entity_create config action.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityCreate
    */
   public function testEntityCreate(): void {
@@ -57,8 +53,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests the behavior of the entity_method config action.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testEntityMethod(): void {
@@ -82,20 +76,12 @@ class ConfigActionTest extends KernelTestBase {
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame('Test value 2', $config_test_entity->getProtectedProperty());
 
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:concatProtectedProperty',
-      'config_test.dynamic.dotted.default',
-      ['Test value ', '3'],
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:concatProtectedProperty', 'config_test.dynamic.dotted.default', ['Test value ', '3']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame('Test value 3', $config_test_entity->getProtectedProperty());
 
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:concatProtectedPropertyOptional',
-      'config_test.dynamic.dotted.default',
-      ['Test value ', '4'],
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:concatProtectedPropertyOptional', 'config_test.dynamic.dotted.default', ['Test value ', '4']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame('Test value 4', $config_test_entity->getProtectedProperty());
@@ -126,41 +112,20 @@ class ConfigActionTest extends KernelTestBase {
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame(['foo', 'bar'], $config_test_entity->getArrayProperty());
 
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:addToArray',
-      'config_test.dynamic.dotted.default',
-      ['a', 'b', 'c']
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:addToArray', 'config_test.dynamic.dotted.default', ['a', 'b', 'c']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame(['foo', 'bar', ['a', 'b', 'c']], $config_test_entity->getArrayProperty());
 
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:setArray',
-      'config_test.dynamic.dotted.default',
-      ['a', 'b', 'c']
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:setArray', 'config_test.dynamic.dotted.default', ['a', 'b', 'c']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame(['a', 'b', 'c'], $config_test_entity->getArrayProperty());
 
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:setArray',
-      'config_test.dynamic.dotted.default',
-      [['a', 'b', 'c'], ['a']]
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:setArray', 'config_test.dynamic.dotted.default', [['a', 'b', 'c'], ['a']]);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame([['a', 'b', 'c'], ['a']], $config_test_entity->getArrayProperty());
-
-    // Ensure that we can affect an optional config entity that actually exists.
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:setArray',
-      '?config_test.dynamic.dotted.default',
-      ['x', 'y', 'z'],
-    );
-    $config_test_entity = $storage->load('dotted.default');
-    $this->assertSame(['x', 'y', 'z'], $config_test_entity->getArrayProperty());
 
     $config_test_entity->delete();
     try {
@@ -171,28 +136,12 @@ class ConfigActionTest extends KernelTestBase {
       $this->assertSame('Entity config_test.dynamic.dotted.default does not exist', $e->getMessage());
     }
 
-    // Do the same with the optional modifier in the name does not throw an exception.
-    $manager->applyAction('entity_method:config_test.dynamic:setProtectedProperty', '?config_test.dynamic.dotted.default', 'Test value');
-    // The configuration also didn't get created with and without the modifier.
-    $this->assertNull($storage->load('config_test.dynamic.dotted.default'));
-    $this->assertNull($storage->load('?config_test.dynamic.dotted.default'));
-
-    try {
-      $manager->applyAction('entity_method:config_test.dynamic:setProtectedProperty', '?config_test.dynamic.*.default', 'Test value');
-      $this->fail('Expected exception not thrown');
-    }
-    catch (ConfigActionException $e) {
-      $this->assertSame("The '?config_test.dynamic.*.default' configuration name is optional because it starts with a question mark, and therefore cannot contain wildcards.", $e->getMessage());
-    }
-
     // Test custom and default admin labels.
     $this->assertSame('Test configuration append', (string) $manager->getDefinition('entity_method:config_test.dynamic:append')['admin_label']);
     $this->assertSame('Set default name', (string) $manager->getDefinition('entity_method:config_test.dynamic:defaultProtectedProperty')['admin_label']);
   }
 
   /**
-   * Tests pluralized method config actions on configuration entities.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testPluralizedEntityMethod(): void {
@@ -202,41 +151,25 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     // Call a pluralized method action.
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:addToArrayMultipleTimes',
-      'config_test.dynamic.dotted.default',
-      ['a', 'b', 'c', 'd']
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:addToArrayMultipleTimes', 'config_test.dynamic.dotted.default', ['a', 'b', 'c', 'd']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame(['a', 'b', 'c', 'd'], $config_test_entity->getArrayProperty());
 
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:addToArrayMultipleTimes',
-      'config_test.dynamic.dotted.default',
-      [['foo'], 'bar']
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:addToArrayMultipleTimes', 'config_test.dynamic.dotted.default', [['foo'], 'bar']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame(['a', 'b', 'c', 'd', ['foo'], 'bar'], $config_test_entity->getArrayProperty());
 
     $config_test_entity->setProtectedProperty('')->save();
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:appends',
-      'config_test.dynamic.dotted.default',
-      ['1', '2', '3']
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:appends', 'config_test.dynamic.dotted.default', ['1', '2', '3']);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame('123', $config_test_entity->getProtectedProperty());
 
     // Test that the inflector converts to a good plural form.
     $config_test_entity->setProtectedProperty('')->save();
-    $manager->applyAction(
-      'entity_method:config_test.dynamic:concatProtectedProperties',
-      'config_test.dynamic.dotted.default',
-      [['1', '2'], ['3', '4']]
-    );
+    $manager->applyAction('entity_method:config_test.dynamic:concatProtectedProperties', 'config_test.dynamic.dotted.default', [['1', '2'], ['3', '4']]);
     /** @var \Drupal\config_test\Entity\ConfigTest $config_test_entity */
     $config_test_entity = $storage->load('dotted.default');
     $this->assertSame('34', $config_test_entity->getProtectedProperty());
@@ -250,8 +183,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests exception thrown when applying an action to multiple calls.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testPluralizedEntityMethodException(): void {
@@ -264,8 +195,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests exception thrown for duplicate pluralized method action definitions.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\EntityMethodDeriver
    */
   public function testDuplicatePluralizedMethodNameException(): void {
@@ -280,8 +209,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests exception when creating a duplicate derivative.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\EntityMethodDeriver
    */
   public function testDuplicatePluralizedOtherMethodNameException(): void {
@@ -296,8 +223,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests exception thrown when entity method action has an invalid argument.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityMethod
    */
   public function testEntityMethodException(): void {
@@ -310,8 +235,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests the simple config update action and related exceptions.
-   *
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\SimpleConfigUpdate
    */
   public function testSimpleConfigUpdate(): void {
@@ -343,8 +266,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests shorthand action IDs for a configuration entity.
-   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testShorthandActionIds(): void {
@@ -352,11 +273,7 @@ class ConfigActionTest extends KernelTestBase {
     $this->assertCount(0, $storage->loadMultiple(), 'There are no config_test entities');
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
-    $manager->applyAction(
-      'createIfNotExists',
-      'config_test.dynamic.action_test',
-      ['label' => 'Action test', 'protected_property' => '']
-    );
+    $manager->applyAction('createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test', 'protected_property' => '']);
     /** @var \Drupal\config_test\Entity\ConfigTest[] $config_test_entities */
     $config_test_entities = $storage->loadMultiple();
     $this->assertCount(1, $config_test_entities, 'There is 1 config_test entity');
@@ -374,8 +291,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests that duplicate shorthand action IDs throw an exception.
-   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testDuplicateShorthandActionIds(): void {
@@ -384,16 +299,10 @@ class ConfigActionTest extends KernelTestBase {
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(DuplicateConfigActionIdException::class);
     $this->expectExceptionMessage("The plugins 'entity_method:config_test.dynamic:setProtectedProperty' and 'config_action_duplicate_test:config_test.dynamic:setProtectedProperty' both resolve to the same shorthand action ID for the 'config_test' entity type");
-    $manager->applyAction(
-      'createIfNotExists',
-      'config_test.dynamic.action_test',
-      ['label' => 'Action test', 'protected_property' => '']
-    );
+    $manager->applyAction('createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test', 'protected_property' => '']);
   }
 
   /**
-   * Tests that parent attributes are properly discovered.
-   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testParentAttributes(): void {
@@ -404,8 +313,6 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests that an exception is thrown when an action does not exist.
-   *
    * @see \Drupal\Core\Config\Action\ConfigActionManager
    */
   public function testMissingAction(): void {

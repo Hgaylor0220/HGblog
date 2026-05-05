@@ -16,12 +16,14 @@
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-neutral-soft);
+}
 
-  &:hover {
-    color: var(--color--primary-50);
-  }
+.feed-icon:hover {
+  color: var(--color--primary-50);
+}
 
-  @media (max-width: 75rem) {
+@media (max-width: 75rem) {
+  .feed-icon {
     flex-direction: row-reverse;
     justify-content: flex-end;
   }
@@ -45,13 +47,15 @@
   color: var(--color--white);
   border-radius: 2px;
   background-color: var(--color--primary-50);
+}
 
-  & svg {
-    vertical-align: top;
-    fill: currentColor;
-  }
+.feed-icon__icon svg {
+  vertical-align: top;
+  fill: currentColor;
+}
 
-  @media (max-width: 75rem) {
+@media (max-width: 75rem) {
+  .feed-icon__icon {
     margin-inline: 0 var(--sp0-5);
   }
 }

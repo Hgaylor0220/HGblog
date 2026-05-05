@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests the Select query builder.
+ *
+ * @group Database
  */
-#[Group('Database')]
-#[RunTestsInSeparateProcesses]
 class SelectSubqueryTest extends DatabaseTestBase {
 
   /**

@@ -7,10 +7,11 @@ namespace Drupal\Tests\layout_builder\Kernel;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Provides a base class for testing implementations of a section list.
+ *
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase
  */
 abstract class SectionListTestBase extends EntityKernelTestBase {
 
@@ -74,23 +75,23 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   }
 
   /**
-   * Tests get section.
+   * @covers ::getSection
    */
   public function testGetSection(): void {
     $this->assertInstanceOf(Section::class, $this->sectionList->getSection(0));
   }
 
   /**
-   * Tests get section invalid delta.
+   * @covers ::getSection
    */
   public function testGetSectionInvalidDelta(): void {
     $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid section delta "2", there are 2 sections.');
+    $this->expectExceptionMessage('Invalid delta "2"');
     $this->sectionList->getSection(2);
   }
 
   /**
-   * Tests insert section.
+   * @covers ::insertSection
    */
   public function testInsertSection(): void {
     $expected = [
@@ -108,7 +109,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   }
 
   /**
-   * Tests append section.
+   * @covers ::appendSection
    */
   public function testAppendSection(): void {
     $expected = [
@@ -126,9 +127,10 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   }
 
   /**
-   * Tests remove all sections.
+   * @covers ::removeAllSections
+   *
+   * @dataProvider providerTestRemoveAllSections
    */
-  #[DataProvider('providerTestRemoveAllSections')]
   public function testRemoveAllSections($set_blank, $expected): void {
     if ($set_blank === NULL) {
       $this->sectionList->removeAllSections();
@@ -151,7 +153,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   }
 
   /**
-   * Tests remove section.
+   * @covers ::removeSection
    */
   public function testRemoveSection(): void {
     $expected = [
@@ -165,9 +167,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   }
 
   /**
-   * Tests remove multiple sections.
-   *
-   * @legacy-covers ::removeSection
+   * @covers ::removeSection
    */
   public function testRemoveMultipleSections(): void {
     $expected = [
@@ -186,7 +186,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
     $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
 
     $new_section_storage = clone $this->sectionList;
-    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'foo']);
+    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'qwer']);
     $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
   }
 

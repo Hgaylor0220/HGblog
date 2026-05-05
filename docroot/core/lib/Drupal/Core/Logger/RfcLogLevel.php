@@ -75,14 +75,14 @@ class RfcLogLevel {
   /**
    * An array with the severity levels as keys and labels as values.
    *
-   * @var \Drupal\Core\StringTranslation\TranslatableMarkup[]
+   * @var array
    */
   protected static $levels;
 
   /**
    * Returns a list of severity levels, as defined in RFC 5424.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
+   * @return array
    *   Array of the possible severity levels for log messages.
    *
    * @see http://tools.ietf.org/html/rfc5424

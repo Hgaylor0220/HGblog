@@ -9,7 +9,7 @@ use Drupal\filter\Entity\FilterFormat;
 /**
  * Base class for media embed filter configuration tests.
  */
-abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
+class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -28,7 +28,7 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
    */
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
-    // Necessary for code coverage to work.
+    // Necessary for @covers to work.
     require_once __DIR__ . '/../../../media.module';
   }
 

@@ -7,11 +7,9 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 
@@ -21,7 +19,7 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  * This includes field definitions, base field definitions, and field storage
  * definitions.
  */
-class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInterface {
+class EntityFieldManager implements EntityFieldManagerInterface {
 
   use UseCacheBackendTrait;
   use StringTranslationTrait;
@@ -66,13 +64,6 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
    * @var array
    */
   protected $activeFieldStorageDefinitions;
-
-  /**
-   * Static cache of base field overrides per entity type and bundle.
-   *
-   * @var array
-   */
-  protected $baseFieldOverrides;
 
   /**
    * An array of lightweight maps of fields, keyed by entity type.
@@ -202,10 +193,7 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
       else {
         // Rebuild the definitions and put it into the cache.
         $this->baseFieldDefinitions[$entity_type_id] = $this->buildBaseFieldDefinitions($entity_type_id);
-        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, [
-          'entity_types',
-          'entity_field_info',
-        ]);
+        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
     }
     return $this->baseFieldDefinitions[$entity_type_id];
@@ -399,21 +387,16 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
     // overrides of base fields.
     $bundle_field_definitions = $class::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
 
-    if (!isset($this->baseFieldOverrides)) {
-      $this->baseFieldOverrides = [];
-      $base_field_overrides = $this->entityTypeManager->getStorage('base_field_override')->loadMultiple();
-      foreach ($base_field_overrides as $override) {
-        $this->baseFieldOverrides[$override->getTargetEntityTypeId()][$override->getTargetBundle()][] = $override;
-      }
-    }
-
-    foreach ($this->baseFieldOverrides[$entity_type_id][$bundle] ?? [] as $base_field_override) {
+    // Load base field overrides from configuration. These take precedence over
+    // base field overrides returned above.
+    $base_field_override_ids = array_map(function ($field_name) use ($entity_type_id, $bundle) {
+      return $entity_type_id . '.' . $bundle . '.' . $field_name;
+    }, array_keys($base_field_definitions));
+    $base_field_overrides = $this->entityTypeManager->getStorage('base_field_override')->loadMultiple($base_field_override_ids);
+    foreach ($base_field_overrides as $base_field_override) {
       /** @var \Drupal\Core\Field\Entity\BaseFieldOverride $base_field_override */
-      // Base field definitions can be removed.
-      if (isset($base_field_definitions[$base_field_override->getName()])) {
-        $field_name = $base_field_override->getName();
-        $bundle_field_definitions[$field_name] = $base_field_override;
-      }
+      $field_name = $base_field_override->getName();
+      $bundle_field_definitions[$field_name] = $base_field_override;
     }
 
     $provider = $entity_type->getProvider();
@@ -593,7 +576,7 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    *   An array of field storage definitions, keyed by field name.
@@ -640,7 +623,6 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
     $this->fieldMapByFieldType = [];
     $this->entityDisplayRepository->clearDisplayModeInfo();
     $this->extraFields = NULL;
-    $this->baseFieldOverrides = NULL;
     Cache::invalidateTags(['entity_field_info']);
     // The typed data manager statically caches prototype objects with injected
     // definitions, clear those as well.
@@ -657,7 +639,6 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
       $this->baseFieldDefinitions = [];
       $this->fieldStorageDefinitions = [];
       $this->activeFieldStorageDefinitions = [];
-      $this->baseFieldOverrides = NULL;
     }
   }
 
@@ -710,48 +691,6 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
     ]);
 
     return $extra;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preWarm(): void {
-    $this->getFieldMap();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldLabels(string $entity_type, string $field_name): array {
-    $label_counter = [];
-    $all_labels = [];
-    // Count the number of fields per label per field storage.
-    foreach (array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type)) as $bundle) {
-      $bundle_fields = array_filter($this->getFieldDefinitions($entity_type, $bundle), function ($field_definition) {
-        return $field_definition instanceof FieldConfigInterface;
-      });
-      if (isset($bundle_fields[$field_name])) {
-        $field = $bundle_fields[$field_name];
-        $label = $field->getLabel();
-        $label_counter[$label] = isset($label_counter[$label]) ? ++$label_counter[$label] : 1;
-        $all_labels[$label] = TRUE;
-      }
-    }
-    if (empty($label_counter)) {
-      return [$field_name, $all_labels];
-    }
-    // Sort the field labels by the most used label and return the most used
-    // one. If the counts are equal, sort by the label to ensure the result is
-    // deterministic.
-    uksort($label_counter, function ($a, $b) use ($label_counter) {
-      if ($label_counter[$a] === $label_counter[$b]) {
-        return strcmp($a, $b);
-      }
-      return $label_counter[$b] <=> $label_counter[$a];
-    });
-    $label_counter = array_keys($label_counter);
-
-    return [$label_counter[0], $all_labels];
   }
 
 }

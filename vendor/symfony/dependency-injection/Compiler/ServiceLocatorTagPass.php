@@ -35,8 +35,12 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
     protected function processValue(mixed $value, bool $isRoot = false): mixed
     {
         if ($value instanceof ServiceLocatorArgument) {
-            if ($value->getTaggedIteratorArgument()) {
-                $value->setValues($this->findAndSortTaggedServices($value->getTaggedIteratorArgument(), $this->container));
+            if ($taggedIterator = $value->getTaggedIteratorArgument()) {
+                $exclude = $taggedIterator->getExclude();
+                if ($taggedIterator->excludeSelf()) {
+                    $exclude[] = $this->currentId;
+                }
+                $value->setValues($this->findAndSortTaggedServices($taggedIterator, $this->container, $exclude));
             }
 
             return self::register($this->container, $value->getValues());
@@ -54,39 +58,36 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
             $value->setClass(ServiceLocator::class);
         }
 
-        $values = $value->getArguments()[0] ?? null;
-        $services = [];
+        $services = $value->getArguments()[0] ?? null;
 
-        if ($values instanceof TaggedIteratorArgument) {
-            foreach ($this->findAndSortTaggedServices($values, $this->container) as $k => $v) {
-                $services[$k] = new ServiceClosureArgument($v);
-            }
-        } elseif (!\is_array($values)) {
-            throw new InvalidArgumentException(\sprintf('Invalid definition for service "%s": an array of references is expected as first argument when the "container.service_locator" tag is set.', $this->currentId));
-        } else {
-            $i = 0;
-
-            foreach ($values as $k => $v) {
-                if ($v instanceof ServiceClosureArgument) {
-                    $services[$k] = $v;
-                    continue;
-                }
-
-                if ($i === $k) {
-                    if ($v instanceof Reference) {
-                        $k = (string) $v;
-                    }
-                    ++$i;
-                } elseif (\is_int($k)) {
-                    $i = null;
-                }
-
-                $services[$k] = new ServiceClosureArgument($v);
-            }
-            if (\count($services) === $i) {
-                ksort($services);
-            }
+        if ($services instanceof TaggedIteratorArgument) {
+            $services = $this->findAndSortTaggedServices($services, $this->container);
         }
+
+        if (!\is_array($services)) {
+            throw new InvalidArgumentException(\sprintf('Invalid definition for service "%s": an array of references is expected as first argument when the "container.service_locator" tag is set.', $this->currentId));
+        }
+
+        $i = 0;
+
+        foreach ($services as $k => $v) {
+            if ($v instanceof ServiceClosureArgument) {
+                continue;
+            }
+
+            if ($i === $k) {
+                if ($v instanceof Reference) {
+                    unset($services[$k]);
+                    $k = (string) $v;
+                }
+                ++$i;
+            } elseif (\is_int($k)) {
+                $i = null;
+            }
+
+            $services[$k] = new ServiceClosureArgument($v);
+        }
+        ksort($services);
 
         $value->setArgument(0, $services);
 

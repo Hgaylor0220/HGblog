@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests output on the status overview page.
+ *
+ * @group system
  */
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class TrustedHostsTest extends BrowserTestBase {
 
   /**
@@ -36,7 +34,7 @@ class TrustedHostsTest extends BrowserTestBase {
    * Tests the status page behavior with no setting.
    *
    * Checks that an error is shown when the trusted host setting is missing from
-   * settings.php.
+   * settings.php
    */
   public function testStatusPageWithoutConfiguration(): void {
     $this->drupalGet('admin/reports/status');
@@ -96,7 +94,7 @@ class TrustedHostsTest extends BrowserTestBase {
     $shortcut_storage = $entity_type_manager->getStorage('shortcut');
 
     $shortcut = $shortcut_storage->create([
-      'title' => 'Test Shortcut Label',
+      'title' => $this->randomString(),
       'link' => 'internal:/admin/reports/status',
       'shortcut_set' => 'default',
     ]);

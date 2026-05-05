@@ -6,14 +6,12 @@ namespace Drupal\Tests\content_translation\Kernel\Migrate\d7;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration of entity translation settings.
+ *
+ * @group migrate_drupal_7
  */
-#[Group('migrate_drupal_7')]
-#[RunTestsInSeparateProcesses]
 class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
 
   /**
@@ -27,6 +25,7 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
     'node',
     'taxonomy',
     'text',
+    'user',
   ];
 
   /**

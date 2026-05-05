@@ -9,15 +9,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Functional\ViewTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests the rendering of fields (base fields) and their translations.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class FieldEntityTranslationTest extends ViewTestBase {
 
   /**

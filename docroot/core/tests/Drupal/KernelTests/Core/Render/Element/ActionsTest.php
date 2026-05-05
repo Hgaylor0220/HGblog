@@ -6,31 +6,30 @@ namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\Actions;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\Core\Render\Element\Actions.
+ * @coversDefaultClass \Drupal\Core\Render\Element\Actions
+ * @group Render
  */
-#[CoversClass(Actions::class)]
-#[Group('Render')]
-#[RunTestsInSeparateProcesses]
 class ActionsTest extends KernelTestBase implements FormInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  protected static $modules = ['system'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
     return __CLASS__;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['key'] = [
       '#type' => 'submit',
@@ -64,9 +63,6 @@ class ActionsTest extends KernelTestBase implements FormInterface {
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
-  /**
-   * Tests a drop button with Bubbleable metadata.
-   */
   public function testDropbuttonWithBubbleableMetadata(): void {
     $result = \Drupal::formBuilder()->getForm($this);
     \Drupal::service('renderer')->renderRoot($result);

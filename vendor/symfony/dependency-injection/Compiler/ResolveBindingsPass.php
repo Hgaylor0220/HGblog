@@ -36,7 +36,10 @@ class ResolveBindingsPass extends AbstractRecursivePass
     private array $unusedBindings = [];
     private array $errorMessages = [];
 
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $this->usedBindings = $container->getRemovedBindingIds();
 
@@ -201,17 +204,13 @@ class ResolveBindingsPass extends AbstractRecursivePass
                 if ($typeHint && (
                     \array_key_exists($k = preg_replace('/(^|[(|&])\\\\/', '\1', $typeHint).' $'.$name, $bindings)
                     || \array_key_exists($k = preg_replace('/(^|[(|&])\\\\/', '\1', $typeHint).' $'.$parsedName, $bindings)
-                    || ($name !== $parameter->name && \array_key_exists($k = preg_replace('/(^|[(|&])\\\\/', '\1', $typeHint).' $'.$parameter->name, $bindings))
                 )) {
                     $arguments[$key] = $this->getBindingValue($bindings[$k]);
 
                     continue;
                 }
 
-                if (\array_key_exists($k = '$'.$name, $bindings)
-                    || \array_key_exists($k = '$'.$parsedName, $bindings)
-                    || ($name !== $parameter->name && \array_key_exists($k = '$'.$parameter->name, $bindings))
-                ) {
+                if (\array_key_exists($k = '$'.$name, $bindings) || \array_key_exists($k = '$'.$parsedName, $bindings)) {
                     $arguments[$key] = $this->getBindingValue($bindings[$k]);
 
                     continue;

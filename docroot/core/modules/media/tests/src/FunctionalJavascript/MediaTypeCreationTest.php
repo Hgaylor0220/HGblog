@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore pastafazoul
+
 /**
  * Tests the media type creation.
+ *
+ * @group media
  */
-#[Group('media')]
-#[RunTestsInSeparateProcesses]
 class MediaTypeCreationTest extends MediaJavascriptTestBase {
 
   /**
@@ -94,12 +93,9 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}/fields");
 
     // Check 2nd column of first data row, to be machine name for field name.
-    $cells = $assert_session->elementExists('css', 'table#field-overview tr#field-media-test')
-      ->findAll('css', 'td');
-    // The machine name should be in the first column.
-    $this->assertStringContainsString('field_media_test', $cells[0]->getText());
-    // The second column should contain the field type.
-    $this->assertSame('Text (plain)', $assert_session->elementExists('css', '.field-type-label', $cells[1])->getText());
+    $assert_session->elementContains('xpath', '(//table[@id="field-overview"]//tr)[2]//td[2]', 'field_media_test');
+    // Check 3rd column of first data row, to be correct field type.
+    $assert_session->elementTextContains('xpath', '(//table[@id="field-overview"]//tr)[2]//td[3]', 'Text (plain)');
 
     // Check that the source field is correctly assigned to media type.
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}");
@@ -147,7 +143,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     $page->selectFieldOption('Media source', 'test');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
-    $assert_session->statusMessageContains('The machine-readable name is already in use. It must be unique.', 'error');
+    $assert_session->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
   /**

@@ -100,7 +100,7 @@ class TwigExtension extends AbstractExtension {
       // This function will receive a renderable array, if an array is detected.
       new TwigFunction('render_var', [$this, 'renderVar']),
       // The URL and path function are defined in close parallel to those found
-      // in \Symfony\Bridge\Twig\Extension\RoutingExtension.
+      // in \Symfony\Bridge\Twig\Extension\RoutingExtension
       new TwigFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('link', [$this, 'getLink']),
@@ -128,14 +128,7 @@ class TwigExtension extends AbstractExtension {
       new TwigFilter('placeholder', [$this, 'escapePlaceholder'], ['is_safe' => ['html'], 'needs_environment' => TRUE]),
 
       // Replace twig's escape filter with our own.
-      new TwigFilter(
-        'drupal_escape',
-        [$this, 'escapeFilter'],
-        [
-          'needs_environment' => TRUE,
-          'is_safe_callback' => 'twig_escape_filter_is_safe',
-        ]
-      ),
+      new TwigFilter('drupal_escape', [$this, 'escapeFilter'], ['needs_environment' => TRUE, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
 
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
@@ -198,7 +191,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Generates a URL path given a route name and parameters.
    *
-   * @param string $name
+   * @param $name
    *   The name of the route.
    * @param array $parameters
    *   (optional) An associative array of route parameters names and values.
@@ -221,7 +214,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Generates an absolute URL given a route name and parameters.
    *
-   * @param string $name
+   * @param $name
    *   The name of the route.
    * @param array $parameters
    *   An associative array of route parameter names and values.
@@ -439,15 +432,8 @@ class TwigExtension extends AbstractExtension {
 
     $this->bubbleArgMetadata($arg);
 
-    // Immediately cast and return MarkupInterface objects to a string to ensure
-    // that when Twig renders via yield, later manipulations to the object will
-    // not affect rendering.
-    if ($autoescape && ($arg instanceof MarkupInterface)) {
-      return (string) $arg;
-    }
-
     // Keep \Twig\Markup objects intact to support autoescaping.
-    if ($autoescape && ($arg instanceof TwigMarkup)) {
+    if ($autoescape && ($arg instanceof TwigMarkup || $arg instanceof MarkupInterface)) {
       return $arg;
     }
 
@@ -477,10 +463,7 @@ class TwigExtension extends AbstractExtension {
     // We have a string or an object converted to a string: Autoescape it!
     if (isset($return)) {
       if ($autoescape && $return instanceof MarkupInterface) {
-        // Immediately cast and return MarkupInterface objects to a string to
-        // ensure that when Twig renders via yield, later manipulations to the
-        // object will not affect rendering.
-        return (string) $return;
+        return $return;
       }
       // Drupal only supports the HTML escaping strategy, so provide a
       // fallback for other strategies.
@@ -507,11 +490,12 @@ class TwigExtension extends AbstractExtension {
    * For example: a generated link or generated URL object is passed as a Twig
    * template argument, and its bubbleable metadata must be bubbled.
    *
+   * @see \Drupal\Core\GeneratedLink
+   * @see \Drupal\Core\GeneratedUrl
+   *
    * @param mixed $arg
    *   A Twig template argument that is about to be printed.
    *
-   * @see \Drupal\Core\GeneratedLink
-   * @see \Drupal\Core\GeneratedUrl
    * @see \Drupal\Core\Theme\ThemeManager::render()
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
@@ -578,9 +562,6 @@ class TwigExtension extends AbstractExtension {
       $this->bubbleArgMetadata($arg);
       if ($arg instanceof RenderableInterface) {
         $arg = $arg->toRenderable();
-      }
-      elseif ($arg instanceof MarkupInterface) {
-        return $arg;
       }
       elseif (method_exists($arg, '__toString')) {
         return (string) $arg;
@@ -658,20 +639,22 @@ class TwigExtension extends AbstractExtension {
    *
    * @param array|object $element
    *   The parent renderable array to exclude the child items.
-   * @param string[]|string ...$args
+   * @param string[]|string ...
    *   The string keys of $element to prevent printing. Arguments can include
    *   string keys directly, or arrays of string keys to hide.
    *
    * @return array
    *   The filtered renderable array.
    */
-  public function withoutFilter($element, ...$args) {
+  public function withoutFilter($element) {
     if ($element instanceof \ArrayAccess) {
       $filtered_element = clone $element;
     }
     else {
       $filtered_element = $element;
     }
+    $args = func_get_args();
+    unset($args[0]);
     // Since the remaining arguments can be a mix of arrays and strings, we use
     // some native PHP iterator classes to allow us to recursively iterate over
     // everything in a single pass.

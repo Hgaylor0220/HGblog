@@ -7,28 +7,20 @@ namespace Drupal\Tests\locale\Unit;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\locale\LocaleProjectStorage;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\locale\LocaleProjectStorage.
+ * @coversDefaultClass \Drupal\locale\LocaleProjectStorage
+ * @group locale
+ * @runTestsInSeparateProcesses
  */
-#[CoversClass(LocaleProjectStorage::class)]
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocaleProjectStorageTest extends UnitTestCase {
 
   /**
-   * The local project storage.
-   *
    * @var \Drupal\locale\LocaleProjectStorage
    */
   private LocaleProjectStorage $projectStorage;
 
   /**
-   * The key value memory factory.
-   *
    * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
    */
   private KeyValueMemoryFactory $keyValueMemoryFactory;

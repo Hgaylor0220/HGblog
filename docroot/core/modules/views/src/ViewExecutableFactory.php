@@ -76,10 +76,7 @@ class ViewExecutableFactory {
    */
   public function get(ViewEntityInterface $view) {
     $view_executable = new ViewExecutable($view, $this->user, $this->viewsData, $this->routeProvider, $this->displayPluginManager);
-    $request = $this->requestStack->getCurrentRequest();
-    if ($request) {
-      $view_executable->setRequest($request);
-    }
+    $view_executable->setRequest($this->requestStack->getCurrentRequest());
     return $view_executable;
   }
 

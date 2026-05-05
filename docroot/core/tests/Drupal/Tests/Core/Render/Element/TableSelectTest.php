@@ -10,18 +10,15 @@ use Drupal\Core\Render\Element\Tableselect;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Render\Element\Tableselect.
+ * @coversDefaultClass \Drupal\Core\Render\Element\Tableselect
+ * @group Render
  */
-#[CoversClass(Tableselect::class)]
-#[Group('Render')]
 class TableSelectTest extends UnitTestCase {
 
   /**
-   * Tests process tableselect with link title.
+   * @covers ::processTableselect
    */
   public function testProcessTableselectWithLinkTitle(): void {
     $element = [];
@@ -46,7 +43,7 @@ class TableSelectTest extends UnitTestCase {
   }
 
   /**
-   * Tests process tableselect with string title.
+   * @covers ::processTableselect
    */
   public function testProcessTableselectWithStringTitle(): void {
     $element = [];

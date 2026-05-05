@@ -26,11 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no
- * replacement.
- *
- * @see https://www.drupal.org/node/3533564
  */
 abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface {
 
@@ -61,7 +56,6 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager) {
-    @trigger_error('Class "' . __CLASS__ . '" as extended by "' . static::class . '" is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533564', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state);
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -83,7 +77,7 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
           $this->systemData[$result['type']][$result['name']] = $result;
         }
       }
-      catch (\Exception) {
+      catch (\Exception $e) {
         // The table might not exist for example in tests.
       }
     }
@@ -159,13 +153,12 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
   /**
    * Reads a variable from a source Drupal database.
    *
-   * @param string $name
+   * @param $name
    *   Name of the variable.
-   * @param mixed $default
+   * @param $default
    *   The default value.
    *
    * @return mixed
-   *   The variable value.
    */
   protected function variableGet($name, $default) {
     try {
@@ -176,10 +169,10 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
         ->fetchField();
     }
     // The table might not exist.
-    catch (\Exception) {
+    catch (\Exception $e) {
       $result = FALSE;
     }
-    return $result !== FALSE ? unserialize($result, ['allowed_classes' => ['stdClass']]) : $default;
+    return $result !== FALSE ? unserialize($result) : $default;
   }
 
   /**
@@ -194,13 +187,6 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
       $this->addDependency('module', $this->configuration['constants']['module']);
     }
     return $this->dependencies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSourceModule(): ?string {
-    return parent::getSourceModule() ?? $this->pluginDefinition['source_module'] ?? NULL;
   }
 
 }

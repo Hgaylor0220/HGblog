@@ -7,20 +7,17 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Filefield Multiupload Imagefield
+
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
  *
  * The test method is provided by the MigrateUpgradeTestBase class.
+ *
+ * @group migrate_drupal_ui
+ * @group #slow
  */
-#[Group('migrate_drupal_ui')]
-#[Group('#slow')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
   /**
@@ -28,7 +25,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected static $modules = [
     'config_translation',
-    'contact',
     'content_translation',
     'datetime_range',
     'language',
@@ -61,7 +57,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
 
-    $this->expectedLoggedErrors = 29;
+    $this->expectedLoggedErrors = 27;
     // If saving the logs, then set the admin user.
     if ($this->outputLogs) {
       $this->migratedAdminUserName = 'admin';
@@ -78,9 +74,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts(): array {
+  protected function getEntityCounts() {
     return [
-      'block' => 26,
+      'block' => 27,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 4,
@@ -90,7 +86,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       // Module 'language' comes with 'en', 'und', 'zxx'. Migration adds 'is'
       // and 'fr'.
       'configurable_language' => 5,
-      'contact_form' => 2,
+      'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
       'field_config' => 90,
@@ -140,7 +136,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths(): array {
+  protected function getAvailablePaths() {
     return [
       'Block languages',
       'Block',
@@ -204,7 +200,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths(): array {
+  protected function getMissingPaths() {
     return [
       'Aggregator',
       'Book',
@@ -220,6 +216,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       // These modules are in the missing path list because they are installed
       // on the source site but they are not installed on the destination site.
       'Syslog',
+      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
       'Tracker',
       'Update manager',
     ];

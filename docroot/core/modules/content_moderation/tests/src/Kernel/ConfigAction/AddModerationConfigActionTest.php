@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Kernel\ConfigAction;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\content_moderation\Plugin\ConfigAction\AddModeration;
-use Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
@@ -15,18 +13,13 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\workflows\Entity\Workflow;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Add Moderation Config Action.
+ * @covers \Drupal\content_moderation\Plugin\ConfigAction\AddModeration
+ * @covers \Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver
+ * @group content_moderation
+ * @group Recipe
  */
-#[Group('content_moderation')]
-#[Group('Recipe')]
-#[CoversClass(AddModeration::class)]
-#[CoversClass(AddModerationDeriver::class)]
-#[RunTestsInSeparateProcesses]
 class AddModerationConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -47,11 +40,7 @@ class AddModerationConfigActionTest extends KernelTestBase {
     'user',
   ];
 
-  /**
-   * Tests adding entity types and bundles to a workflow.
-   */
   public function testAddEntityTypeAndBundle(): void {
-    $this->installEntitySchema('node');
     $this->installConfig('node');
 
     $this->createContentType(['type' => 'a']);
@@ -68,9 +57,6 @@ class AddModerationConfigActionTest extends KernelTestBase {
     $this->assertSame(['tags'], $plugin->getBundlesForEntityType('taxonomy_term'));
   }
 
-  /**
-   * Tests that the workflow must be of type Content Moderation.
-   */
   public function testWorkflowMustBeContentModeration(): void {
     $this->enableModules(['workflows', 'workflow_type_test']);
 
@@ -87,9 +73,6 @@ class AddModerationConfigActionTest extends KernelTestBase {
     RecipeRunner::processRecipe($recipe);
   }
 
-  /**
-   * Tests that the action only targets workflows.
-   */
   public function testActionOnlyTargetsWorkflows(): void {
     $recipe = $this->createRecipe('user.role.anonymous');
     $this->expectException(PluginNotFoundException::class);
@@ -97,9 +80,6 @@ class AddModerationConfigActionTest extends KernelTestBase {
     RecipeRunner::processRecipe($recipe);
   }
 
-  /**
-   * Tests that the derived config action definitions have correct admin labels.
-   */
   public function testDeriverAdminLabel(): void {
     $this->enableModules(['workflows', 'content_moderation']);
 
@@ -111,9 +91,6 @@ class AddModerationConfigActionTest extends KernelTestBase {
     $this->assertSame('Add moderation to all vocabularies', (string) $definitions['add_moderation:addTaxonomyVocabularies']['admin_label']);
   }
 
-  /**
-   * Creates a recipe configuration for adding entity types and bundles to a workflow.
-   */
   private function createRecipe(string $config_name): Recipe {
     $recipe = <<<YAML
 name: 'Add entity types and bundles to workflow'

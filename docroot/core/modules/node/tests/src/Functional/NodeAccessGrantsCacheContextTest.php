@@ -6,15 +6,13 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node access grants cache context service.
+ *
+ * @group node
+ * @group Cache
  */
-#[Group('node')]
-#[Group('Cache')]
-#[RunTestsInSeparateProcesses]
 class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
   /**
@@ -96,9 +94,9 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
     ]);
 
     $this->userMapping = [
-      $this->adminUser->id() => $this->adminUser,
-      $this->accessUser->id() => $this->accessUser,
-      $this->noAccessUser->id() => $this->noAccessUser,
+      1 => $this->adminUser,
+      2 => $this->accessUser,
+      3 => $this->noAccessUser,
     ];
   }
 
@@ -114,12 +112,8 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
     foreach ($expected as $uid => $context) {
       if ($uid > 0) {
         $this->drupalLogin($this->userMapping[$uid]);
-        // Also set the current user in the singleton service. ::drupalLogin
-        // sets it using $this->container which isn't compatible with the other
-        // ::service calls in this test.
-        \Drupal::currentUser()->setAccount($this->userMapping[$uid]);
       }
-      $this->assertSame($context, \Drupal::service('cache_context.user.node_grants')->getContext('view'));
+      $this->assertSame($context, $this->container->get('cache_context.user.node_grants')->getContext('view'));
     }
     $this->drupalLogout();
   }
@@ -130,9 +124,9 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
   public function testCacheContext(): void {
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0;node_access_all:0',
-      $this->adminUser->id() => 'all',
-      $this->accessUser->id() => 'view.all:0;node_access_test_author:2;node_access_test:8888,8889',
-      $this->noAccessUser->id() => 'view.all:0;node_access_test_author:3',
+      1 => 'all',
+      2 => 'view.all:0;node_access_test_author:2;node_access_test:8888,8889',
+      3 => 'view.all:0;node_access_test_author:3',
     ]);
 
     // Grant view to all nodes (because nid = 0) for users in the
@@ -149,41 +143,42 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Put user accessUser (uid 0) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', 0);
-    \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
+    drupal_static_reset('node_access_view_all_nodes');
     $this->assertUserCacheContext([
       0 => 'view.all',
-      $this->adminUser->id() => 'all',
-      $this->accessUser->id() => 'view.all:0;node_access_test_author:2;node_access_test:8888,8889',
-      $this->noAccessUser->id() => 'view.all:0;node_access_test_author:3',
+      1 => 'all',
+      2 => 'view.all:0;node_access_test_author:2;node_access_test:8888,8889',
+      3 => 'view.all:0;node_access_test_author:3',
     ]);
 
     // Put user accessUser (uid 2) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', $this->accessUser->id());
-    \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
+    drupal_static_reset('node_access_view_all_nodes');
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0',
-      $this->adminUser->id() => 'all',
-      $this->accessUser->id() => 'view.all',
-      $this->noAccessUser->id() => 'view.all:0;node_access_test_author:3',
+      1 => 'all',
+      2 => 'view.all',
+      3 => 'view.all:0;node_access_test_author:3',
     ]);
 
     // Put user noAccessUser (uid 3) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
-    \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
+    drupal_static_reset('node_access_view_all_nodes');
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0',
-      $this->adminUser->id() => 'all',
-      $this->accessUser->id() => 'view.all:0;node_access_test_author:2;node_access_test:8888,8889',
-      $this->noAccessUser->id() => 'view.all',
+      1 => 'all',
+      2 => 'view.all:0;node_access_test_author:2;node_access_test:8888,8889',
+      3 => 'view.all',
     ]);
 
-    // Uninstall the node_access_test module.
-    \Drupal::service('module_installer')->uninstall(['node_access_test']);
+    // Uninstall the node_access_test module
+    $this->container->get('module_installer')->uninstall(['node_access_test']);
+    drupal_static_reset('node_access_view_all_nodes');
     $this->assertUserCacheContext([
       0 => 'view.all',
-      $this->adminUser->id() => 'all',
-      $this->accessUser->id() => 'view.all',
-      $this->noAccessUser->id() => 'view.all',
+      1 => 'all',
+      2 => 'view.all',
+      3 => 'view.all',
     ]);
   }
 

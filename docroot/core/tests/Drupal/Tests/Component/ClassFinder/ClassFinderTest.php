@@ -6,19 +6,16 @@ namespace Drupal\Tests\Component\ClassFinder;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\ClassFinder\ClassFinder;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\ClassFinder\ClassFinder.
+ * @coversDefaultClass \Drupal\Component\ClassFinder\ClassFinder
+ * @group ClassFinder
  */
-#[CoversClass(ClassFinder::class)]
-#[Group('ClassFinder')]
 class ClassFinderTest extends TestCase {
 
   /**
-   * Tests find file.
+   * @covers ::findFile
    */
   public function testFindFile(): void {
     $finder = new ClassFinder();

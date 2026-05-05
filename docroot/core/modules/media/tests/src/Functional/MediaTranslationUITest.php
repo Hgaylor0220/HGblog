@@ -6,14 +6,12 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Media Translation UI.
+ *
+ * @group media
  */
-#[Group('media')]
-#[RunTestsInSeparateProcesses]
 class MediaTranslationUITest extends ContentTranslationUITestBase {
 
   use MediaTypeCreationTrait;
@@ -59,7 +57,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  public function setupBundle(): void {
+  public function setupBundle() {
     $this->createMediaType('test', [
       'id' => $this->bundle,
       'queue_thumbnail_downloads' => FALSE,
@@ -69,7 +67,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions(): array {
+  protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), [
       'administer media',
       'edit any test media',
@@ -79,14 +77,14 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditorPermissions(): array {
+  protected function getEditorPermissions() {
     return ['administer media', 'create test media'];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAdministratorPermissions(): array {
+  protected function getAdministratorPermissions() {
     return array_merge(parent::getAdministratorPermissions(), [
       'access administration pages',
       'administer media types',

@@ -7,22 +7,17 @@ namespace Drupal\Tests\serialization\Unit\CompilerPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\serialization\RegisterSerializationClassesCompilerPass;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Tests Drupal\serialization\RegisterSerializationClassesCompilerPass.
+ * @coversDefaultClass \Drupal\serialization\RegisterSerializationClassesCompilerPass
+ * @group serialization
  */
-#[CoversClass(RegisterSerializationClassesCompilerPass::class)]
-#[Group('serialization')]
 class RegisterSerializationClassesCompilerPassTest extends UnitTestCase {
 
   /**
-   * Tests encoders.
-   *
-   * @legacy-covers ::process
+   * @covers ::process
    */
   public function testEncoders(): void {
     $container = new ContainerBuilder();

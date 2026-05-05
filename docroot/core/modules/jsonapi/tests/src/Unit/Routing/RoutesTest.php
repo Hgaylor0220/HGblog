@@ -5,24 +5,20 @@ declare(strict_types=1);
 namespace Drupal\Tests\jsonapi\Unit\Routing;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeRelationship;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
 use Drupal\jsonapi\Routing\Routes;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests Drupal\jsonapi\Routing\Routes.
+ * @coversDefaultClass \Drupal\jsonapi\Routing\Routes
+ * @group jsonapi
  *
  * @internal
  */
-#[CoversClass(Routes::class)]
-#[Group('jsonapi')]
 class RoutesTest extends UnitTestCase {
 
   /**
@@ -70,7 +66,7 @@ class RoutesTest extends UnitTestCase {
   }
 
   /**
-   * Tests routes collection.
+   * @covers ::routes
    */
   public function testRoutesCollection(): void {
     // Get the route collection and start making assertions.
@@ -106,7 +102,7 @@ class RoutesTest extends UnitTestCase {
   }
 
   /**
-   * Tests routes individual.
+   * @covers ::routes
    */
   public function testRoutesIndividual(): void {
     // Get the route collection and start making assertions.
@@ -149,7 +145,7 @@ class RoutesTest extends UnitTestCase {
   }
 
   /**
-   * Tests routes related.
+   * @covers ::routes
    */
   public function testRoutesRelated(): void {
     // Get the route collection and start making assertions.
@@ -170,7 +166,7 @@ class RoutesTest extends UnitTestCase {
   }
 
   /**
-   * Tests routes relationships.
+   * @covers ::routes
    */
   public function testRoutesRelationships(): void {
     // Get the route collection and start making assertions.
@@ -192,8 +188,9 @@ class RoutesTest extends UnitTestCase {
 
   /**
    * Ensures that the expected routes are created or not created.
+   *
+   * @dataProvider expectedRoutes
    */
-  #[DataProvider('expectedRoutes')]
   public function testRoutes($route): void {
     $this->assertArrayHasKey($route, $this->routes['ok']->routes()->all());
   }
@@ -225,8 +222,9 @@ class RoutesTest extends UnitTestCase {
 
   /**
    * Ensures that no routes are created for internal resources.
+   *
+   * @dataProvider notExpectedRoutes
    */
-  #[DataProvider('notExpectedRoutes')]
   public function testInternalRoutes($route): void {
     $this->assertArrayNotHasKey($route, $this->routes['ok']->routes()->all());
   }

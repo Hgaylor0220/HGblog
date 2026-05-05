@@ -7,20 +7,14 @@ namespace Drupal\Tests\text\Unit\Plugin\migrate\field\d7;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\text\Plugin\migrate\field\d7\TextField;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\text\Plugin\migrate\field\d7\TextField.
+ * @coversDefaultClass \Drupal\text\Plugin\migrate\field\d7\TextField
+ * @group text
  */
-#[CoversClass(TextField::class)]
-#[Group('text')]
 class TextFieldTest extends UnitTestCase {
 
   /**
-   * The migration field plugin.
-   *
    * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
    */
   protected $plugin;
@@ -46,12 +40,10 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests get field formatter type.
-   *
-   * @legacy-covers ::getFieldFormatterType
-   * @legacy-covers ::getFieldType
+   * @covers ::getFieldFormatterType
+   * @covers ::getFieldType
+   * @dataProvider getFieldFormatterTypeProvider
    */
-  #[DataProvider('getFieldFormatterTypeProvider')]
   public function testGetFieldFormatterType($type, $formatter_type, $expected): void {
     $row = new Row();
     $row->setSourceProperty('type', $type);

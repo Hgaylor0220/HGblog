@@ -9,21 +9,16 @@ use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigFactoryOverrideBase;
 use Drupal\Core\Config\ConfigRenameEvent;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Config\ConfigFactoryOverrideBase.
+ * @coversDefaultClass \Drupal\Core\Config\ConfigFactoryOverrideBase
+ * @group config
  */
-#[CoversClass(ConfigFactoryOverrideBase::class)]
-#[Group('config')]
 class ConfigFactoryOverrideBaseTest extends UnitTestCase {
 
   /**
- * Tests filter nested array.
- */
-  #[DataProvider('providerTestFilterNestedArray')]
+   * @dataProvider providerTestFilterNestedArray
+   */
   public function testFilterNestedArray(array $original_data, array $override_data_before, array $override_data_after, $changed): void {
     $config_factory = new TestConfigFactoryOverrideBase();
     $result = $config_factory->doFilterNestedArray($original_data, $override_data_before);
@@ -31,7 +26,7 @@ class ConfigFactoryOverrideBaseTest extends UnitTestCase {
     $this->assertEquals($override_data_after, $override_data_before);
   }
 
-  public static function providerTestFilterNestedArray(): array {
+  public static function providerTestFilterNestedArray() {
     $data = [];
     $data['empty'] = [
       [],
@@ -87,9 +82,7 @@ class ConfigFactoryOverrideBaseTest extends UnitTestCase {
 
 }
 
-/**
- * Stub class for testing ConfigFactoryOverrideBase.
- */
+
 class TestConfigFactoryOverrideBase extends ConfigFactoryOverrideBase {
 
   public function doFilterNestedArray(array $original_data, array &$override_data) {

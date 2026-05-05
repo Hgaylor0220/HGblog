@@ -184,7 +184,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
         $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, ['core' => $core], $migration);
         $plugin = $this->fieldPluginManager->createInstance($plugin_id, ['core' => $core], $migration);
       }
-      catch (PluginNotFoundException) {
+      catch (PluginNotFoundException $ex) {
         $plugin = FALSE;
       }
       $this->fieldPluginCache[$core][$field_type] = $plugin;
@@ -325,7 +325,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
    *
-   * @return string|false
+   * @return string|bool
    *   A string representation of the Drupal version, or FALSE.
    *
    * @throws \InvalidArgumentException

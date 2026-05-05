@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Entity Form Display Json Cookie.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class EntityFormDisplayJsonCookieTest extends EntityFormDisplayResourceTestBase {
 
   use CookieResourceTestTrait;

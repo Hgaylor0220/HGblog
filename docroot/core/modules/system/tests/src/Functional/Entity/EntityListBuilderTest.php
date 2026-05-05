@@ -7,14 +7,12 @@ namespace Drupal\Tests\system\Functional\Entity;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity list builder functionality.
+ *
+ * @group Entity
  */
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityListBuilderTest extends BrowserTestBase {
 
   /**
@@ -71,13 +69,7 @@ class EntityListBuilderTest extends BrowserTestBase {
     $build = $list_builder->render();
     $this->container->get('renderer')->renderRoot($build);
 
-    $this->assertEqualsCanonicalizing([
-      'entity_test_view_grants',
-      'languages:' . LanguageInterface::TYPE_INTERFACE,
-      'theme',
-      'url.query_args.pagers:0',
-      'user.permissions',
-    ], $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing(['entity_test_view_grants', 'languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'url.query_args.pagers:0', 'user.permissions'], $build['#cache']['contexts']);
   }
 
   /**

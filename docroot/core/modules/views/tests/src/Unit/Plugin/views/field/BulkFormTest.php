@@ -11,15 +11,12 @@ use Drupal\views\Plugin\views\field\BulkForm;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests Drupal\views\Plugin\views\field\BulkForm.
+ * @coversDefaultClass \Drupal\views\Plugin\views\field\BulkForm
+ * @group Views
  */
-#[CoversClass(BulkForm::class)]
-#[Group('Views')]
 class BulkFormTest extends UnitTestCase {
 
   /**
@@ -32,7 +29,7 @@ class BulkFormTest extends UnitTestCase {
   }
 
   /**
-   * Tests views form.
+   * @covers ::viewsForm
    */
   public function testViewsForm(): void {
     $row = new ResultRow();

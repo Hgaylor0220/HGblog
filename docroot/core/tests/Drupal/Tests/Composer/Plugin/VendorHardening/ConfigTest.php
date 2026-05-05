@@ -6,20 +6,19 @@ namespace Drupal\Tests\Composer\Plugin\VendorHardening;
 
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\VendorHardening\Config;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Composer\Plugin\VendorHardening\Config.
+ * @coversDefaultClass Drupal\Composer\Plugin\VendorHardening\Config
+ * @group VendorHardening
  */
-#[CoversClass(Config::class)]
-#[Group('VendorHardening')]
 class ConfigTest extends TestCase {
 
+  use PhpUnitWarnings;
+
   /**
-   * Tests get paths for package mixed case.
+   * @covers ::getPathsForPackage
    */
   public function testGetPathsForPackageMixedCase(): void {
     $config = $this->getMockBuilder(Config::class)
@@ -35,9 +34,7 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * Tests no root merge config.
-   *
-   * @legacy-covers ::getAllCleanupPaths
+   * @covers ::getAllCleanupPaths
    */
   public function testNoRootMergeConfig(): void {
     // Root package has no extra field.
@@ -58,9 +55,7 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * Tests root merge config.
-   *
-   * @legacy-covers ::getAllCleanupPaths
+   * @covers ::getAllCleanupPaths
    */
   public function testRootMergeConfig(): void {
     // Root package has configuration in extra.
@@ -85,11 +80,10 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * Tests mixed case config cleanup packages.
+   * @covers ::getAllCleanupPaths
    *
-   * @legacy-covers ::getAllCleanupPaths
+   * @runInSeparateProcess
    */
-  #[RunInSeparateProcess]
   public function testMixedCaseConfigCleanupPackages(): void {
     // Root package has configuration in extra.
     $root = $this->createMock(RootPackageInterface::class);
@@ -108,8 +102,8 @@ class ConfigTest extends TestCase {
     // Put some mixed-case in the defaults.
     $ref_default = new \ReflectionProperty($config, 'defaultConfig');
     $ref_default->setValue($config, [
-      'BeHatted/Monk' => ['tests'],
-      'SymPhony/HTTPFoundational' => ['src'],
+      'BeHatted/Mank' => ['tests'],
+      'SymFunic/HTTPFoundational' => ['src'],
     ]);
 
     $plugin_config = $ref_plugin_config->invoke($config);
@@ -117,25 +111,6 @@ class ConfigTest extends TestCase {
     foreach (array_keys($plugin_config) as $package_name) {
       $this->assertDoesNotMatchRegularExpression('/[A-Z]/', $package_name);
     }
-  }
-
-  /**
-   * Tests skip clean.
-   *
-   * @legacy-covers ::getAllCleanupPaths
-   */
-  public function testSkipClean(): void {
-    $root = $this->createMock(RootPackageInterface::class);
-    $root->expects($this->once())
-      ->method('getExtra')
-      ->willReturn([
-        'drupal-core-vendor-hardening' => [
-          'composer/composer' => FALSE,
-        ],
-      ]);
-
-    $plugin_config = (new Config($root))->getAllCleanupPaths();
-    $this->assertArrayNotHasKey('composer/composer', $plugin_config);
   }
 
 }

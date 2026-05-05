@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Test\AssertMailTrait;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Controller\UserAuthenticationController;
 use GuzzleHttp\Cookie\CookieJar;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -20,9 +18,9 @@ use Symfony\Component\Serializer\Serializer;
 
 /**
  * Tests login and password reset via direct HTTP.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class UserLoginHttpTest extends BrowserTestBase {
 
   use AssertMailTrait {
@@ -76,7 +74,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
-  protected function loginRequest($name, $pass, $format = 'json'): ResponseInterface {
+  protected function loginRequest($name, $pass, $format = 'json') {
     $user_login_url = Url::fromRoute('user.login.http')
       ->setRouteParameter('_format', $format)
       ->setAbsolute();
@@ -121,7 +119,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param string $format
    *   Serialization format.
    */
-  protected function doTestLogin($format): void {
+  protected function doTestLogin($format) {
     $client = \Drupal::httpClient();
     // Create new user for each iteration to reset flood.
     // Grant the user administer users permissions to they can see the
@@ -219,7 +217,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
-  protected function passwordRequest(array $request_body, $format = 'json'): ResponseInterface {
+  protected function passwordRequest(array $request_body, $format = 'json') {
     $password_reset_url = Url::fromRoute('user.pass.http')
       ->setRouteParameter('_format', $format)
       ->setAbsolute();
@@ -284,7 +282,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Resets all flood entries.
    */
-  protected function resetFlood(): void {
+  protected function resetFlood() {
     $this->container->get('database')->delete(DatabaseBackend::TABLE_NAME)->execute();
   }
 
@@ -444,7 +442,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
-  protected function logoutRequest($format = 'json', $logout_token = ''): ResponseInterface {
+  protected function logoutRequest($format = 'json', $logout_token = '') {
     /** @var \GuzzleHttp\Client $client */
     $client = $this->container->get('http_client');
     $user_logout_url = Url::fromRoute('user.logout.http')
@@ -532,7 +530,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param \Drupal\user\UserInterface $account
    *   Test account.
    */
-  protected function doTestPasswordReset($format, $account): void {
+  protected function doTestPasswordReset($format, $account) {
     $response = $this->passwordRequest([], $format);
     $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name or credentials.mail', $format);
 
@@ -599,7 +597,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Login from reset password email.
    */
-  protected function loginFromResetEmail(): void {
+  protected function loginFromResetEmail() {
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
     $urls = [];

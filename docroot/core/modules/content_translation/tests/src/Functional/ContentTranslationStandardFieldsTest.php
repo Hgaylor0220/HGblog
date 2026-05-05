@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\comment\Entity\CommentType;
-use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Content translation settings.
+ *
+ * @group content_translation
  */
-#[Group('content_translation')]
-#[RunTestsInSeparateProcesses]
 class ContentTranslationStandardFieldsTest extends BrowserTestBase {
-
-  use BlockContentCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -74,11 +70,13 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
       ]);
 
     // Create a basic block type with a body field.
-    $this->createBlockContentType([
+    $bundle = BlockContentType::create([
       'id' => 'basic',
       'label' => 'Basic',
       'revision' => FALSE,
-    ], TRUE);
+    ]);
+    $bundle->save();
+    block_content_add_body_field($bundle->id());
 
     // Create a comment type with a body field.
     $bundle = CommentType::create([

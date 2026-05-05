@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configuration overrides via $config in settings.php.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class ConfigOverrideTest extends KernelTestBase {
 
   /**
@@ -97,7 +95,7 @@ class ConfigOverrideTest extends KernelTestBase {
     // Write file to sync.
     $sync = $this->container->get('config.storage.sync');
     $expected_new_data = [
-      'foo' => 'new_foo',
+      'foo' => 'barbar',
       '404' => 'try again',
     ];
     $sync->write('config_test.system', $expected_new_data);

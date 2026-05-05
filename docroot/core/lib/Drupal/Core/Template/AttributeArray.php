@@ -20,9 +20,6 @@ use Drupal\Component\Utility\Html;
  *  $attributes['class'][] = 'cat';
  * @endcode
  *
- * @implements \ArrayAccess<int|string, mixed>
- * @implements \IteratorAggregate<int|string, mixed>
- *
  * @see \Drupal\Core\Template\Attribute
  */
 class AttributeArray extends AttributeValueBase implements \ArrayAccess, \IteratorAggregate {
@@ -38,14 +35,16 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset): mixed {
+  #[\ReturnTypeWillChange]
+  public function offsetGet($offset) {
     return $this->value[$offset];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value): void {
+  #[\ReturnTypeWillChange]
+  public function offsetSet($offset, $value) {
     if (isset($offset)) {
       $this->value[$offset] = $value;
     }
@@ -57,14 +56,16 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset): void {
+  #[\ReturnTypeWillChange]
+  public function offsetUnset($offset) {
     unset($this->value[$offset]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset): bool {
+  #[\ReturnTypeWillChange]
+  public function offsetExists($offset) {
     return isset($this->value[$offset]);
   }
 
@@ -78,25 +79,23 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   }
 
   /**
-   * Retrieves the iterator for the object.
-   *
-   * @return \ArrayIterator<int|string, mixed>
-   *   The iterator.
+   * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->value);
   }
 
   /**
    * Exchange the array for another one.
    *
+   * @see ArrayObject::exchangeArray
+   *
    * @param array $input
    *   The array input to replace the internal value.
    *
    * @return array
    *   The old array value.
-   *
-   * @see ArrayObject::exchangeArray
    */
   public function exchangeArray($input) {
     $old = $this->value;

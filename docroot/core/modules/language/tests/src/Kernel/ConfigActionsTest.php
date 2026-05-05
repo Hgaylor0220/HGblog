@@ -7,14 +7,10 @@ namespace Drupal\Tests\language\Kernel;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Config Actions.
+ * @group language
  */
-#[Group('language')]
-#[RunTestsInSeparateProcesses]
 class ConfigActionsTest extends KernelTestBase {
 
   /**
@@ -22,9 +18,6 @@ class ConfigActionsTest extends KernelTestBase {
    */
   protected static $modules = ['language'];
 
-  /**
-   * The configuration action manager.
-   */
   private readonly ConfigActionManager $configActionManager;
 
   /**
@@ -36,9 +29,6 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
-  /**
-   * Tests the application of configuration actions on a language.
-   */
   public function testConfigActions(): void {
     $language = ConfigurableLanguage::load('en');
     $this->assertSame('English', $language->getName());

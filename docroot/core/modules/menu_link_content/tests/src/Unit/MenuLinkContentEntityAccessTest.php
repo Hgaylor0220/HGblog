@@ -13,20 +13,19 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\menu_link_content\MenuLinkContentAccessControlHandler;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests menu link content entity access.
+ *
+ * @coversDefaultClass \Drupal\menu_link_content\MenuLinkContentAccessControlHandler
+ * @group menu_link_content
  */
-#[CoversClass(MenuLinkContentAccessControlHandler::class)]
-#[Group('menu_link_content')]
 class MenuLinkContentEntityAccessTest extends UnitTestCase {
 
   /**
    * Tests an operation not implemented by the access control handler.
    *
-   * @legacy-covers ::checkAccess
+   * @covers ::checkAccess
    */
   public function testUnrecognizedOperation(): void {
     $entityType = $this->createMock(EntityTypeInterface::class);

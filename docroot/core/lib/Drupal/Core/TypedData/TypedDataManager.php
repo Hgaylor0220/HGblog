@@ -205,11 +205,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
       }
       // Create the prototype without any value, but with initial parenting
       // so that constructors can set up the objects correctly.
-      $prototype = $this->create($definition, NULL, $property_name, $object);
-      // Unset the parent so that it is not statically cached within the
-      // prototype. It will be set again later anyway.
-      $prototype->setContext(NULL, NULL);
-      $this->prototypes[$key] = $prototype;
+      $this->prototypes[$key] = $this->create($definition, NULL, $property_name, $object);
     }
 
     // Clone the prototype, update its parenting information, and assign the

@@ -39,13 +39,14 @@ class MessageListener implements EventSubscriberInterface
         'bcc' => self::HEADER_ADD,
     ];
 
+    private ?Headers $headers;
     private array $headerRules = [];
+    private ?BodyRendererInterface $renderer;
 
-    public function __construct(
-        private ?Headers $headers = null,
-        private ?BodyRendererInterface $renderer = null,
-        array $headerRules = self::DEFAULT_RULES,
-    ) {
+    public function __construct(?Headers $headers = null, ?BodyRendererInterface $renderer = null, array $headerRules = self::DEFAULT_RULES)
+    {
+        $this->headers = $headers;
+        $this->renderer = $renderer;
         foreach ($headerRules as $headerName => $rule) {
             $this->addHeaderRule($headerName, $rule);
         }

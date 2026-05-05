@@ -6,16 +6,14 @@ namespace Drupal\Tests\file\Kernel\Views;
 
 use Drupal\file\Entity\File;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 
 /**
  * Tests base field access in Views for the file entity.
+ *
+ * @group File
  */
-#[Group('File')]
-#[RunTestsInSeparateProcesses]
 class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**

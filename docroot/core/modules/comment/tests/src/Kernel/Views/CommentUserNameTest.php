@@ -13,14 +13,12 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment user name field.
+ *
+ * @group comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class CommentUserNameTest extends ViewsKernelTestBase {
 
   /**
@@ -85,7 +83,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
 
     $commentType = CommentType::create([
       'id' => 'entity_test_comment',
-      'label' => 'Entity Test Comment',
+      'label' => t('Entity Test Comment'),
       'target_entity_type_id' => 'entity_test',
     ]);
     $commentType->save();

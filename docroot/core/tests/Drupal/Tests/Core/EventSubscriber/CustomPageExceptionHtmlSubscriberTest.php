@@ -12,8 +12,6 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -22,10 +20,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * Tests Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber.
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber
+ * @group EventSubscriber
  */
-#[CoversClass(CustomPageExceptionHtmlSubscriber::class)]
-#[Group('EventSubscriber')]
 class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
 
   /**
@@ -72,7 +69,6 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
 
   /**
    * The mocked access unaware router.
-   *
    * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessUnawareRouter;
@@ -90,12 +86,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->configFactory = $this->getConfigFactoryStub([
-      'system.site' => [
-        'page.403' => '/access-denied-page',
-        'page.404' => '/not-found-page',
-      ],
-    ]);
+    $this->configFactory = $this->getConfigFactoryStub(['system.site' => ['page.403' => '/access-denied-page', 'page.404' => '/not-found-page']]);
 
     $this->kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $this->logger = $this->createMock('Psr\Log\LoggerInterface');

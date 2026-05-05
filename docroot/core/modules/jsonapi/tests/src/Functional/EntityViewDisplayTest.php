@@ -6,16 +6,13 @@ namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\NodeType;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "EntityViewDisplay" config entity type.
+ *
+ * @group jsonapi
  */
-#[Group('jsonapi')]
-#[RunTestsInSeparateProcesses]
 class EntityViewDisplayTest extends ConfigEntityResourceTestBase {
 
   /**
@@ -48,7 +45,7 @@ class EntityViewDisplayTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer node display']);
   }
 
@@ -78,16 +75,16 @@ class EntityViewDisplayTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/entity_view_display/entity_view_display/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -130,7 +127,7 @@ class EntityViewDisplayTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

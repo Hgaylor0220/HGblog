@@ -7,16 +7,12 @@ namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests follow-up migrations.
+ *
+ * @group migrate_drupal
  */
-#[Group('migrate_drupal')]
-#[Group('#slow')]
-#[RunTestsInSeparateProcesses]
 class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;
@@ -62,7 +58,7 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFileMigrationInfo(): array {
+  protected function getFileMigrationInfo() {
     return [
       'path' => 'public://sites/default/files/cube.jpeg',
       'size' => 3620,
@@ -73,8 +69,9 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
   /**
    * Tests entity reference translations.
+   *
+   * @dataProvider providerTestEntityReferenceTranslations
    */
-  #[DataProvider('providerTestEntityReferenceTranslations')]
   public function testEntityReferenceTranslations($node_migrations): void {
     $this->executeMigrations($node_migrations);
 

@@ -6,24 +6,19 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Datetime\Time;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\VariationCache;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
-use Drupal\Core\Lock\NullLockBackend;
-use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Cache\Cache;
 
 /**
- * Tests Drupal\Core\Render\Renderer.
+ * @coversDefaultClass \Drupal\Core\Render\Renderer
+ * @group Render
  */
-#[CoversClass(Renderer::class)]
-#[Group('Render')]
 class RendererBubblingTest extends RendererTestBase {
 
   /**
@@ -137,8 +132,9 @@ class RendererBubblingTest extends RendererTestBase {
    * Tests cache context bubbling in edge cases, because it affects the CID.
    *
    * ::testBubblingWithPrerender() already tests the common case.
+   *
+   * @dataProvider providerTestContextBubblingEdgeCases
    */
-  #[DataProvider('providerTestContextBubblingEdgeCases')]
   public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, $expected_cache_item): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
@@ -276,9 +272,8 @@ class RendererBubblingTest extends RendererTestBase {
     $data[] = [$test_element, ['bar', 'foo'], $expected_cache_item];
 
     // Ensure that bubbleable metadata has been collected from children and set
-    // correctly to the main level of the render array. That ensures that
-    // correct bubbleable metadata exists if render array gets rendered multiple
-    // times.
+    // correctly to the main level of the render array. That ensures that correct
+    // bubbleable metadata exists if render array gets rendered multiple times.
     $test_element = [
       '#cache' => [
         'keys' => ['parent'],
@@ -447,8 +442,9 @@ class RendererBubblingTest extends RendererTestBase {
 
   /**
    * Tests bubbling of bubbleable metadata added by #pre_render callbacks.
+   *
+   * @dataProvider providerTestBubblingWithPrerender
    */
-  #[DataProvider('providerTestBubblingWithPrerender')]
   public function testBubblingWithPrerender($test_element): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
@@ -504,9 +500,8 @@ class RendererBubblingTest extends RendererTestBase {
    * Provides two test elements: one without, and one with the theme system.
    *
    * @return array
-   *   An array of test cases, each containing a render array with different configurations.
    */
-  public static function providerTestBubblingWithPrerender(): array {
+  public static function providerTestBubblingWithPrerender() {
     $data = [];
 
     // Test element without theme.
@@ -538,7 +533,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
-    // Ensure a logic exception.
+    // Ensure a logic exception
     $data = [
       '#cache' => [
         'keys' => ['llama', 'bar'],
@@ -552,15 +547,11 @@ class RendererBubblingTest extends RendererTestBase {
 
 }
 
-/**
- * Test class with implemented trusted callbacks.
- */
+
 class BubblingTest implements TrustedCallbackInterface {
 
   /**
-   * Render API callback:Used for testing testBubblingWithPrerender().
-   *
-   * This function is assigned as an #pre_render callback.
+   * #pre_render callback for testBubblingWithPrerender().
    */
   public static function bubblingPreRender($elements) {
     $elements += [
@@ -599,9 +590,7 @@ class BubblingTest implements TrustedCallbackInterface {
   }
 
   /**
-   * Render API callback: Used for testing testBubblingWithPrerender().
-   *
-   * This function is assigned as an #pre_render callback in.
+   * #pre_render callback for testBubblingWithPrerender().
    */
   public static function bubblingNestedPreRenderUncached($elements) {
     \Drupal::state()->set('bubbling_nested_pre_render_uncached', TRUE);
@@ -610,9 +599,7 @@ class BubblingTest implements TrustedCallbackInterface {
   }
 
   /**
-   * Render API callback: Used for testing testBubblingWithPrerender().
-   *
-   * This function is assigned as an #pre_render callback in.
+   * #pre_render callback for testBubblingWithPrerender().
    */
   public static function bubblingNestedPreRenderCached($elements) {
     \Drupal::state()->set('bubbling_nested_pre_render_cached', TRUE);
@@ -620,20 +607,16 @@ class BubblingTest implements TrustedCallbackInterface {
   }
 
   /**
-   * Render API callback: Used for testing testBubblingWithPrerender().
-   *
-   * This function is assigned as an #lazy_builder callback in.
+   * #lazy_builder callback for testBubblingWithPrerender().
    */
-  public static function bubblingPlaceholder($foo, $baz): array {
+  public static function bubblingPlaceholder($foo, $baz) {
     return [
       '#markup' => 'Placeholder!' . $foo . $baz,
     ];
   }
 
   /**
-   * Render API callback: Used for testing testOverWriteCacheKeys().
-   *
-   * This function is assigned as an #pre_render callback in.
+   * #pre_render callback for testOverWriteCacheKeys().
    */
   public static function bubblingCacheOverwritePrerender($elements) {
     // Overwrite the #cache entry with new data.
@@ -647,14 +630,8 @@ class BubblingTest implements TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks(): array {
-    return [
-      'bubblingPreRender',
-      'bubblingNestedPreRenderUncached',
-      'bubblingNestedPreRenderCached',
-      'bubblingPlaceholder',
-      'bubblingCacheOverwritePrerender',
-    ];
+  public static function trustedCallbacks() {
+    return ['bubblingPreRender', 'bubblingNestedPreRenderUncached', 'bubblingNestedPreRenderCached', 'bubblingPlaceholder', 'bubblingCacheOverwritePrerender'];
   }
 
 }

@@ -6,18 +6,14 @@ namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\file\Plugin\Validation\Constraint\FileImageDimensionsConstraintValidator;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the FileImageDimensionsConstraintValidator.
+ *
+ * @group file
+ * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileImageDimensionsConstraintValidator
  */
-#[CoversClass(FileImageDimensionsConstraintValidator::class)]
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
@@ -42,12 +38,14 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
 
     $this->image = File::create();
     $this->image->setFileUri('core/misc/druplicon.png');
-    $this->image->setFilename(basename($this->image->getFileUri()));
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $this->image->setFilename($file_system->basename($this->image->getFileUri()));
     $this->image->setSize(@filesize($this->image->getFileUri()));
 
     $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/scaffold/README.txt');
-    $this->nonImage->setFilename(basename($this->nonImage->getFileUri()));
+    $this->nonImage->setFilename($file_system->basename($this->nonImage->getFileUri()));
   }
 
   /**
@@ -55,7 +53,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
    *
    * The image will be resized if it's too large.
    *
-   * @legacy-covers ::validate
+   * @covers ::validate
    */
   public function testFileValidateImageResolution(): void {
     // Non-images.

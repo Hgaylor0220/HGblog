@@ -194,6 +194,7 @@ ul {
   margin-block: 0.25em;
   margin-inline: 1.5em 0;
   padding-inline-start: 0;
+  list-style-type: disc;
   list-style-image: none;
 }
 
@@ -214,14 +215,14 @@ pre {
 
 details {
   line-height: var(--details-line-height);
+}
 
-  & summary {
-    padding: 0.95em 1.45em;
+details summary {
+  padding: 0.95em 1.45em;
+}
 
-    &:focus {
-      outline: none;
-    }
-  }
+details summary:focus {
+  outline: none;
 }
 
 img {
@@ -240,15 +241,4 @@ img {
 .ui-dialog *:focus {
   outline: var(--focus-outline);
   box-shadow: var(--focus-box-shadow);
-}
-
-/**
- * These elements should not be displayed until they are processed
- * by JavaScript, and views-ui-noscript.css exists so browsers
- * without JavaScript will still display them
- */
-
-.views-tabs,
-.views-display-top > input.button {
-  display: none;
 }

@@ -8,15 +8,12 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\locale\LocaleTranslation;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests Drupal\locale\LocaleTranslation.
+ * @coversDefaultClass \Drupal\locale\LocaleTranslation
+ * @group locale
  */
-#[CoversClass(LocaleTranslation::class)]
-#[Group('locale')]
 class LocaleTranslationTest extends UnitTestCase {
 
   /**

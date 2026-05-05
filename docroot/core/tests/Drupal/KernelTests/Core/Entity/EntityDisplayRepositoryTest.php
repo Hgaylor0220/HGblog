@@ -6,20 +6,16 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore pastafazoul
+
 /**
- * Tests Drupal\Core\Entity\EntityDisplayRepository.
+ * @coversDefaultClass \Drupal\Core\Entity\EntityDisplayRepository
+ *
+ * @group Entity
  */
-#[CoversClass(EntityDisplayRepository::class)]
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityDisplayRepositoryTest extends KernelTestBase {
 
   /**
@@ -63,9 +59,7 @@ class EntityDisplayRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * Tests view display.
-   *
-   * @legacy-covers ::getViewDisplay
+   * @covers ::getViewDisplay
    */
   public function testViewDisplay(): void {
     $display = $this->displayRepository->getViewDisplay('user', 'user');
@@ -87,9 +81,7 @@ class EntityDisplayRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * Tests form display.
-   *
-   * @legacy-covers ::getFormDisplay
+   * @covers ::getFormDisplay
    */
   public function testFormDisplay(): void {
     $display = $this->displayRepository->getFormDisplay('user', 'user');

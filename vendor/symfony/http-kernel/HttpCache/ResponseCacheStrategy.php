@@ -54,7 +54,10 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
         'expires' => false,
     ];
 
-    public function add(Response $response): void
+    /**
+     * @return void
+     */
+    public function add(Response $response)
     {
         ++$this->embeddedResponses;
 
@@ -110,7 +113,10 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
         }
     }
 
-    public function update(Response $response): void
+    /**
+     * @return void
+     */
+    public function update(Response $response)
     {
         // if we have no embedded Response, do nothing
         if (0 === $this->embeddedResponses) {
@@ -185,7 +191,7 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
 
         // Etag headers cannot be merged, they render the response uncacheable
         // by default (except if the response also has max-age etc.).
-        if (null === $response->getEtag() && \in_array($response->getStatusCode(), [200, 203, 300, 301, 410], true)) {
+        if (null === $response->getEtag() && \in_array($response->getStatusCode(), [200, 203, 300, 301, 410])) {
             return false;
         }
 

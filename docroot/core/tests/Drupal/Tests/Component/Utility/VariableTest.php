@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Variable;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test variable export functionality in Variable component.
+ *
+ * @group Variable
+ * @group Utility
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\Variable
  */
-#[CoversClass(Variable::class)]
-#[Group('Variable')]
-#[Group('Utility')]
 class VariableTest extends TestCase {
 
   /**
@@ -75,8 +74,11 @@ class VariableTest extends TestCase {
    *   A callable.
    * @param string $expected_name
    *   The expected human-readable name of the callable.
+   *
+   * @dataProvider providerCallableToString
+   *
+   * @covers ::callableToString
    */
-  #[DataProvider('providerCallableToString')]
   public function testCallableToString($callable, string $expected_name): void {
     $this->assertSame($expected_name, Variable::callableToString($callable));
   }
@@ -89,21 +91,21 @@ class VariableTest extends TestCase {
    *     - The expected export string.
    *     - The variable to export.
    */
-  public static function providerTestExport(): array {
+  public static function providerTestExport() {
     return [
       // Array.
       [
-        '[]',
+        'array()',
         [],
       ],
       [
         // non-associative.
-        "[\n  1,\n  2,\n  3,\n  4,\n]",
+        "array(\n  1,\n  2,\n  3,\n  4,\n)",
         [1, 2, 3, 4],
       ],
       [
         // associative.
-        "[\n  'a' => 1,\n]",
+        "array(\n  'a' => 1,\n)",
         ['a' => 1],
       ],
       // Bool.
@@ -130,12 +132,12 @@ class VariableTest extends TestCase {
         '\\',
       ],
       [
-        // Double-quote ".
+        // Double-quote "
         "'\"'",
         "\"",
       ],
       [
-        // Single-quote '.
+        // Single-quote '
         '"\'"',
         "'",
       ],
@@ -147,7 +149,7 @@ class VariableTest extends TestCase {
       // Object.
       [
         // A stdClass object.
-        '(object) []',
+        '(object) array()',
         new \stdClass(),
       ],
       [
@@ -164,21 +166,20 @@ class VariableTest extends TestCase {
   /**
    * Tests exporting variables.
    *
+   * @dataProvider providerTestExport
+   * @covers ::export
+   *
    * @param string $expected
    *   The expected exported variable.
    * @param mixed $variable
    *   The variable to be exported.
    */
-  #[DataProvider('providerTestExport')]
   public function testExport($expected, $variable): void {
     $this->assertEquals($expected, Variable::export($variable));
   }
 
 }
 
-/**
- * A class for testing Variable::callableToString().
- */
 class VariableTestMock {
 
   /**

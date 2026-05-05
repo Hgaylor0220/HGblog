@@ -19,7 +19,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\Percentage;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
-use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -146,7 +145,7 @@ function _batch_do() {
  *
  * @see _batch_process()
  */
-function _batch_progress_page(): array {
+function _batch_progress_page() {
   $batch = &batch_get();
 
   $current_set = _batch_current_set();
@@ -223,8 +222,7 @@ function _batch_progress_page(): array {
           'batch_progress_meta_refresh',
         ],
       ],
-      // Adds JavaScript code and settings for clients where JavaScript is
-      // enabled.
+      // Adds JavaScript code and settings for clients where JavaScript is enabled.
       'drupalSettings' => [
         'batch' => [
           'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
@@ -295,9 +293,7 @@ function _batch_process() {
         'finished' => &$finished,
         'message'  => &$task_message,
       ];
-      $callable_resolver = \Drupal::service(CallableResolver::class);
-      $callable = $callable_resolver->getCallableFromDefinition($callback);
-      $callable(...array_merge($args, [&$batch_context]));
+      call_user_func_array($callback, array_merge($args, [&$batch_context]));
 
       if ($finished >= 1) {
         // Make sure this step is not counted twice when computing $current.
@@ -432,9 +428,7 @@ function _batch_next_set() {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
       $complete_form = &$batch['form_state']->getCompleteForm();
-      $callable_resolver = \Drupal::service(CallableResolver::class);
-      $callable = $callable_resolver->getCallableFromDefinition($callback);
-      $callable(...[&$complete_form, &$batch['form_state']]);
+      call_user_func_array($callback, [&$complete_form, &$batch['form_state']]);
     }
     return TRUE;
   }
@@ -457,17 +451,16 @@ function _batch_finished() {
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
         include_once \Drupal::root() . '/' . $batch_set['file'];
       }
-
-      $queue = _batch_queue($batch_set);
-      $operations = $queue->getAllItems();
-      $callable_resolver = \Drupal::service(CallableResolver::class);
-      $callable = $callable_resolver->getCallableFromDefinition($batch_set['finished']);
-      $batch_set_result = $callable(...array_merge([$batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval((int) ($batch_set['elapsed'] / 1000))]));
-      // If a batch 'finished' callback requested a redirect after the batch
-      // is complete, save that for later use. If more than one batch set
-      // returned a redirect, the last one is used.
-      if ($batch_set_result instanceof RedirectResponse) {
-        $batch_finished_redirect = $batch_set_result;
+      if (is_callable($batch_set['finished'])) {
+        $queue = _batch_queue($batch_set);
+        $operations = $queue->getAllItems();
+        $batch_set_result = call_user_func_array($batch_set['finished'], [$batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval((int) ($batch_set['elapsed'] / 1000))]);
+        // If a batch 'finished' callback requested a redirect after the batch
+        // is complete, save that for later use. If more than one batch set
+        // returned a redirect, the last one is used.
+        if ($batch_set_result instanceof RedirectResponse) {
+          $batch_finished_redirect = $batch_set_result;
+        }
       }
     }
   }
@@ -562,7 +555,7 @@ function _batch_finished() {
  * @see _batch_page()
  * @see drupal_register_shutdown_function()
  */
-function _batch_shutdown(): void {
+function _batch_shutdown() {
   if (($batch = batch_get()) && _batch_needs_update()) {
     \Drupal::service('batch.storage')->update($batch);
   }

@@ -7,14 +7,12 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test content moderation when an entity is marked as 'syncing'.
+ *
+ * @group content_moderation
  */
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class ContentModerationSyncingTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -193,7 +191,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
    * @return array
    *   An array of revision names.
    */
-  protected function getAllRevisionNames(EntityTestMulRevPub $entity): array {
+  protected function getAllRevisionNames(EntityTestMulRevPub $entity) {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');
     return array_map(function ($revision_id) use ($storage) {

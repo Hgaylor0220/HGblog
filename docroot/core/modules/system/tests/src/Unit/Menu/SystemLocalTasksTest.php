@@ -8,13 +8,12 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests existence of system local tasks.
+ *
+ * @group system
  */
-#[Group('system')]
 class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
@@ -67,8 +66,9 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * Tests local task existence.
+   *
+   * @dataProvider getSystemAdminRoutes
    */
-  #[DataProvider('getSystemAdminRoutes')]
   public function testSystemAdminLocalTasks($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }

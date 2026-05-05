@@ -9,20 +9,19 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity display configuration entities.
+ *
+ * @group field_ui
  */
-#[Group('field_ui')]
-#[RunTestsInSeparateProcesses]
 class EntityFormDisplayTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
+    'field_ui',
     'field',
     'entity_test',
     'field_test',
@@ -42,9 +41,7 @@ class EntityFormDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests entity get from display.
-   *
-   * @legacy-covers \Drupal\Core\Entity\EntityDisplayRepository::getFormDisplay
+   * @covers \Drupal\Core\Entity\EntityDisplayRepository::getFormDisplay
    */
   public function testEntityGetFromDisplay(): void {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */

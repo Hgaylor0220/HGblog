@@ -6,16 +6,13 @@ namespace Drupal\Tests\views\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutableFactory;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests Drupal\views\ViewExecutableFactory.
+ * @coversDefaultClass \Drupal\views\ViewExecutableFactory
+ * @group views
  */
-#[CoversClass(ViewExecutableFactory::class)]
-#[Group('views')]
 class ViewExecutableFactoryTest extends UnitTestCase {
 
   /**
@@ -88,6 +85,8 @@ class ViewExecutableFactoryTest extends UnitTestCase {
 
   /**
    * Tests the get method.
+   *
+   * @covers ::get
    */
   public function testGet(): void {
     $request_1 = new Request();
@@ -109,19 +108,6 @@ class ViewExecutableFactoryTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\views\ViewExecutable', $executable);
     $this->assertSame($executable->getRequest(), $request_2);
     $this->assertSame($executable->getUser(), $this->user);
-  }
-
-  /**
-   * Tests the get method when current request is null.
-   *
-   * @legacy-covers ::get
-   */
-  public function testGetNoRequest(): void {
-    $executable = $this->viewExecutableFactory->get($this->view);
-
-    $this->assertInstanceOf('Drupal\views\ViewExecutable', $executable);
-    $this->assertSame($executable->getUser(), $this->user);
-    $this->assertSame($executable->getRequest(), NULL);
   }
 
 }

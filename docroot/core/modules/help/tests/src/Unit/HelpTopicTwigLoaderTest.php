@@ -9,15 +9,14 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\help\HelpTopicTwigLoader;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Twig\Error\LoaderError;
 
 /**
  * Unit test for the HelpTopicTwigLoader class.
+ *
+ * @coversDefaultClass \Drupal\help\HelpTopicTwigLoader
+ * @group help
  */
-#[CoversClass(HelpTopicTwigLoader::class)]
-#[Group('help')]
 class HelpTopicTwigLoaderTest extends UnitTestCase {
 
   /**
@@ -57,9 +56,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
   }
 
   /**
-   * Tests constructor.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testConstructor(): void {
     // Verify that the module/theme directories were added in the constructor,
@@ -71,7 +68,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
   }
 
   /**
-   * Tests get source context.
+   * @covers ::getSourceContext
    */
   public function testGetSourceContext(): void {
     $source = $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.topic.html.twig');
@@ -79,7 +76,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
   }
 
   /**
-   * Tests get source context exception.
+   * @covers ::getSourceContext
    */
   public function testGetSourceContextException(): void {
     $this->expectException(LoaderError::class);
@@ -91,7 +88,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
   /**
    * Sets up the virtual file system.
    */
-  protected function setUpVfs(): void {
+  protected function setUpVfs() {
     $content = <<<EOF
 ---
 label: Test

@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
-use Drupal\block\Entity\Block;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use PHPUnit\Framework\Attributes\TestWith;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests that blocks are not created during config sync.
+ *
+ * @group block
  */
-#[Group('block')]
-#[RunTestsInSeparateProcesses]
 class BlockConfigSyncTest extends KernelTestBase {
 
   /**
@@ -32,7 +29,7 @@ class BlockConfigSyncTest extends KernelTestBase {
     parent::setUp();
 
     \Drupal::service(ThemeInstallerInterface::class)
-      ->install(['stark']);
+      ->install(['stark', 'claro']);
 
     // Delete all existing blocks.
     foreach (Block::loadMultiple() as $block) {
@@ -69,23 +66,21 @@ class BlockConfigSyncTest extends KernelTestBase {
    * @param string|null $expected_block_id
    *   The expected ID of the block that should be created, or NULL if no block
    *   should be created.
+   *
+   * @testWith [true, null]
+   *   [false, "claro_test_block"]
    */
-  #[TestWith([TRUE, NULL])]
-  #[TestWith([FALSE, "test_theme_test_block"])]
   public function testNoBlocksCreatedDuringConfigSync(bool $syncing, ?string $expected_block_id): void {
     \Drupal::service(ConfigInstallerInterface::class)
       ->setSyncing($syncing);
 
-    // Install a theme that does not provide blocks to ensure that the syncing
-    // flag specifically is verified and blocks are created when syncing is off.
-    \Drupal::service(ThemeInstallerInterface::class)
-      ->install(['test_theme']);
-
+    // Invoke the hook that should skip block creation due to config sync.
+    \Drupal::moduleHandler()->invoke('block', 'themes_installed', [['claro']]);
     // This should hold true if the "current" install profile triggers an
     // invocation of hook_modules_installed().
     \Drupal::moduleHandler()->invoke('block', 'modules_installed', [['testing'], $syncing]);
 
-    $this->assertSame($expected_block_id, Block::load('test_theme_test_block')?->id());
+    $this->assertSame($expected_block_id, Block::load('claro_test_block')?->id());
   }
 
 }

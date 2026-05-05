@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\MemoryStorage;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests MemoryStorage operations.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class MemoryStorageTest extends ConfigStorageTestBase {
 
   /**
@@ -33,21 +31,21 @@ class MemoryStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function insert($name, $data): void {
+  protected function insert($name, $data) {
     $this->storage->write($name, $data);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function update($name, $data): void {
+  protected function update($name, $data) {
     $this->storage->write($name, $data);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function delete($name): void {
+  protected function delete($name) {
     $this->storage->delete($name);
   }
 

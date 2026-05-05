@@ -8,14 +8,17 @@ announcements_feed.settings:
       type: integer
       label: 'Cache announcements for max-age seconds.'
       constraints:
-        PositiveOrZero: ~
+        Range:
+          min: 0
     cron_interval:
       type: integer
       label: 'Cron interval for fetching announcements in seconds.'
       constraints:
-        PositiveOrZero: ~
+        Range:
+          min: 0
     limit:
       type: integer
       label: 'Number of announcements that will be displayed.'
       constraints:
-        PositiveOrZero: ~
+        Range:
+          min: 0

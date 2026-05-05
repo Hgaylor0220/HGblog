@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
-use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link field UI functionality.
+ *
+ * @group link
  */
-#[Group('link')]
-#[Group('#slow')]
-#[RunTestsInSeparateProcesses]
 class LinkFieldUITest extends BrowserTestBase {
 
   use FieldUiTestTrait;
@@ -94,8 +90,8 @@ class LinkFieldUITest extends BrowserTestBase {
     // text.
     $cardinalities = [1, 2];
     $title_settings = [
-      LinkTitleVisibility::Disabled->value,
-      LinkTitleVisibility::Optional->value,
+      DRUPAL_DISABLED,
+      DRUPAL_OPTIONAL,
     ];
     $link_types = [
       LinkItemInterface::LINK_EXTERNAL => 'https://example.com',
@@ -153,7 +149,7 @@ class LinkFieldUITest extends BrowserTestBase {
    * @param string $default_uri
    *   The default URI value.
    */
-  public function runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri): void {
+  public function runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri) {
     $this->drupalLogin($this->adminUser);
     $type_path = 'admin/structure/types/manage/' . $this->contentType->id();
 
@@ -247,7 +243,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Returns the raw HTML for the given field.
    *
-   * @param string $field_name
+   * @param $field_name
    *   The name of the field for which to return the HTML.
    *
    * @return string

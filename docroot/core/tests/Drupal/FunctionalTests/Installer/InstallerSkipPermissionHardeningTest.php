@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Verifies that the installer skipped permission hardening.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
 
   /**
@@ -22,7 +19,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->settings['settings']['skip_permissions_hardening'] = (object) ['value' => TRUE, 'required' => TRUE];
   }
@@ -30,7 +27,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite(): void {
+  protected function setUpSite() {
     $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
     $this->assertDirectoryIsWritable($site_directory);
     $this->assertFileIsWritable($site_directory . '/settings.php');

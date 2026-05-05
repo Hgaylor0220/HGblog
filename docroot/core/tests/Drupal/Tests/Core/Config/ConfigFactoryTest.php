@@ -7,15 +7,12 @@ namespace Drupal\Tests\Core\Config;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests Drupal\Core\Config\ConfigFactory.
+ * @group Config
+ * @coversDefaultClass \Drupal\Core\Config\ConfigFactory
  */
-#[CoversClass(ConfigFactory::class)]
-#[Group('Config')]
 class ConfigFactoryTest extends UnitTestCase {
 
   /**
@@ -72,7 +69,7 @@ class ConfigFactoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests rename.
+   * @covers ::rename
    */
   public function testRename(): void {
     $old = new Config($this->randomMachineName(), $this->storage, $this->eventDispatcher, $this->typedConfig);

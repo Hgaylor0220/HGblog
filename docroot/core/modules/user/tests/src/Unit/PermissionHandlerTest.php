@@ -14,16 +14,15 @@ use Drupal\user\PermissionHandler;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the permission handler.
+ *
+ * @group user
+ *
+ * @coversDefaultClass \Drupal\user\PermissionHandler
+ * @runTestsInSeparateProcesses
  */
-#[CoversClass(PermissionHandler::class)]
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class PermissionHandlerTest extends UnitTestCase {
 
   /**
@@ -84,10 +83,10 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * Tests permissions provided by YML files.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPermissions
-   * @legacy-covers ::buildPermissionsYaml
-   * @legacy-covers ::moduleProvidesPermissions
+   * @covers ::__construct
+   * @covers ::getPermissions
+   * @covers ::buildPermissionsYaml
+   * @covers ::moduleProvidesPermissions
    */
   public function testBuildPermissionsYaml(): void {
     vfsStreamWrapper::register();
@@ -149,10 +148,10 @@ EOF
   /**
    * Tests permissions sort inside a module.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPermissions
-   * @legacy-covers ::buildPermissionsYaml
-   * @legacy-covers ::sortPermissions
+   * @covers ::__construct
+   * @covers ::getPermissions
+   * @covers ::buildPermissionsYaml
+   * @covers ::sortPermissions
    */
   public function testBuildPermissionsSortPerModule(): void {
     vfsStreamWrapper::register();
@@ -206,9 +205,9 @@ EOF
   /**
    * Tests dynamic callback permissions provided by YML files.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPermissions
-   * @legacy-covers ::buildPermissionsYaml
+   * @covers ::__construct
+   * @covers ::getPermissions
+   * @covers ::buildPermissionsYaml
    */
   public function testBuildPermissionsYamlCallback(): void {
     vfsStreamWrapper::register();
@@ -254,22 +253,10 @@ EOF
     $this->callableResolver->expects($this->exactly(4))
       ->method('getCallableFromDefinition')
       ->willReturnMap([
-        [
-          'Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription',
-          [new TestPermissionCallbacks(), 'singleDescription'],
-        ],
-        [
-          'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription',
-          [new TestPermissionCallbacks(), 'titleDescription'],
-        ],
-        [
-          'Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider',
-          [new TestPermissionCallbacks(), 'titleProvider'],
-        ],
-        [
-          'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess',
-          [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess'],
-        ],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription', [new TestPermissionCallbacks(), 'singleDescription']],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription', [new TestPermissionCallbacks(), 'titleDescription']],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider', [new TestPermissionCallbacks(), 'titleProvider']],
+        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
       ]);
 
     $module_extension_list = $this->createMock(ModuleExtensionList::class);
@@ -336,7 +323,7 @@ EOF
    * Checks that the permissions are like expected.
    *
    * @param array $actual_permissions
-   *   The actual permissions.
+   *   The actual permissions
    *
    * @internal
    */
@@ -354,23 +341,14 @@ EOF
 
 }
 
-/**
- * Provider for testing permissions callbacks.
- */
 class TestPermissionCallbacks {
 
-  /**
-   * Callback that returns a single description.
-   */
   public function singleDescription() {
     return [
       'access_module_a' => 'single_description',
     ];
   }
 
-  /**
-   * Callback that returns the title and description.
-   */
   public function titleDescription() {
     return [
       'access module b' => [
@@ -380,9 +358,6 @@ class TestPermissionCallbacks {
     ];
   }
 
-  /**
-   * Callback that returns restricted access.
-   */
   public function titleDescriptionRestrictAccess() {
     return [
       'access_module_c' => [
@@ -393,9 +368,6 @@ class TestPermissionCallbacks {
     ];
   }
 
-  /**
-   * Callback that returns the title.
-   */
   public function titleProvider() {
     return [
       'access module a via module b' => [
@@ -416,7 +388,6 @@ class TestTranslationManager implements TranslationInterface {
    * {@inheritdoc}
    */
   public function translate($string, array $args = [], array $options = []) {
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return new TranslatableMarkup($string, $args, $options, $this);
   }
 

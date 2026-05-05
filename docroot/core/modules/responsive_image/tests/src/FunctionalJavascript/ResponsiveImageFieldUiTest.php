@@ -7,14 +7,12 @@ namespace Drupal\Tests\responsive_image\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the responsive image field UI.
+ *
+ * @group responsive_image
  */
-#[Group('responsive_image')]
-#[RunTestsInSeparateProcesses]
 class ResponsiveImageFieldUiTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
@@ -49,7 +47,6 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
-    $this->drupalPlaceBlock('local_actions_block');
     // Create a test user.
     $admin_user = $this->drupalCreateUser([
       'access content',
@@ -144,8 +141,8 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     // Save the form to save the settings.
     $page->pressButton('Save');
 
-    $this->assertTrue($assert_session->waitForText('Responsive image style: Style One'));
-    $this->assertTrue($assert_session->waitForText('Linked to content'));
+    $assert_session->responseContains('Responsive image style: Style One');
+    $assert_session->responseContains('Linked to content');
 
     $page->find('css', '#edit-fields-field-image-settings-edit')->click();
     $assert_session->waitForField('fields[field_image][settings_edit_form][settings][responsive_image_style]');
@@ -154,8 +151,8 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     // Save the form to save the settings.
     $page->pressButton('Save');
 
-    $this->assertTrue($assert_session->waitForText('Responsive image style: Style One'));
-    $this->assertTrue($assert_session->waitForText('Linked to file'));
+    $assert_session->responseContains('Responsive image style: Style One');
+    $assert_session->responseContains('Linked to file');
   }
 
 }

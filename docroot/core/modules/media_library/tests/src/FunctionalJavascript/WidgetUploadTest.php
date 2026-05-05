@@ -6,17 +6,15 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that uploads in the 'media_library_widget' works as expected.
  *
+ * @group media_library
+ *
  * @todo This test will occasionally fail with SQLite until
  *   https://www.drupal.org/node/3066447 is addressed.
  */
-#[Group('media_library')]
-#[RunTestsInSeparateProcesses]
 class WidgetUploadTest extends MediaLibraryTestBase {
 
   use TestFileCreationTrait;
@@ -158,7 +156,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->waitForFieldExists('Alternative text')->setValue($this->randomString());
     $this->pressSaveButton();
     $this->pressInsertSelected('Added one media item.');
-    $this->waitForText(basename($png_uri_2));
+    $this->waitForText($file_system->basename($png_uri_2));
 
     // Also make sure that we can upload to the unlimited cardinality field.
     $this->openMediaLibraryForField('field_unlimited_media');
@@ -166,7 +164,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
 
     // Select a media item to check if the selection is persisted when adding
     // new items.
-    $existing_media_name = basename($png_uri_2);
+    $existing_media_name = $file_system->basename($png_uri_2);
     $checkbox = $page->findField("Select $existing_media_name");
     $selected_item_id = $checkbox->getAttribute('value');
     $checkbox->click();
@@ -210,7 +208,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Assert we can now only upload one more media item.
     $this->openMediaLibraryForField('field_twin_media');
     $this->switchToMediaType('Four');
-    // We set the multiple to FALSE if only one file can be uploaded.
+    // We set the multiple to FALSE if only one file can be uploaded
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
     $choose_files = $assert_session->elementExists('css', '.form-managed-file');
@@ -230,7 +228,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Extra Image');
     $jpg_uri_3 = $file_system->copy($jpg_image->uri, 'public://');
     $this->addMediaFileToField('Extra Image', $this->container->get('file_system')->realpath($jpg_uri_3));
-    $this->waitForText(basename($jpg_uri_3));
+    $this->waitForText($file_system->basename($jpg_uri_3));
     // Ensure that the extra image was uploaded to the correct directory.
     $files = $file_storage->loadMultiple();
     $file = array_pop($files);
@@ -239,10 +237,10 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Ensure the media item was saved to the library and automatically
     // selected.
     $this->waitForText('Add or select media');
-    $this->waitForText(basename($jpg_uri_2));
+    $this->waitForText($file_system->basename($jpg_uri_2));
     // Ensure the created item is added in the widget.
     $this->pressInsertSelected('Added one media item.');
-    $assert_session->pageTextContains(basename($jpg_uri_2));
+    $assert_session->pageTextContains($file_system->basename($jpg_uri_2));
 
     // Assert we can also remove selected items from the selection area in the
     // upload form.
@@ -272,7 +270,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->checkboxNotChecked("Select $existing_media_name");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
     $this->pressInsertSelected('Added one media item.');
-    $this->waitForText(basename($png_uri_5));
+    $this->waitForText($file_system->basename($png_uri_5));
 
     // Assert removing an uploaded media item before save works as expected.
     $this->openMediaLibraryForField('field_unlimited_media');
@@ -303,9 +301,9 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Create a list of new files to upload.
     $filenames = [];
     $remote_paths = [];
-    for ($i = 1; $i < 5; $i++) {
+    foreach (range(1, 4) as $i) {
       $path = $file_system->copy($png_image->uri, 'public://');
-      $filenames[] = basename($path);
+      $filenames[] = $file_system->basename($path);
       $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
     }
     $page->findField('Add files')->setValue(implode("\n", $remote_paths));
@@ -506,7 +504,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->saveAnd('insert');
     $this->waitForText('Added one media item.');
     $this->waitForNoText('Add or select media');
-    $this->waitForText(basename($png_uri_2));
+    $this->waitForText($file_system->basename($png_uri_2));
 
     // Also make sure that we can upload to the unlimited cardinality field.
     $this->openMediaLibraryForField('field_unlimited_media');
@@ -514,7 +512,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
 
     // Select a media item to check if the selection is persisted when adding
     // new items.
-    $existing_media_name = basename($png_uri_2);
+    $existing_media_name = $file_system->basename($png_uri_2);
     $checkbox = $page->findField("Select $existing_media_name");
     $selected_item_id = $checkbox->getAttribute('value');
     $checkbox->click();
@@ -561,7 +559,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->openMediaLibraryForField('field_twin_media');
     $this->switchToMediaType('Four');
 
-    // We set the multiple to FALSE if only one file can be uploaded.
+    // We set the multiple to FALSE if only one file can be uploaded
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
     $choose_files = $assert_session->elementExists('css', '.form-managed-file');
@@ -581,7 +579,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Extra Image');
     $jpg_uri_3 = $file_system->copy($jpg_image->uri, 'public://');
     $this->addMediaFileToField('Extra Image', $this->container->get('file_system')->realpath($jpg_uri_3));
-    $this->waitForText(basename($jpg_uri_3));
+    $this->waitForText($file_system->basename($jpg_uri_3));
     // Ensure that the extra image was uploaded to the correct directory.
     $files = $file_storage->loadMultiple();
     $file = array_pop($files);
@@ -590,10 +588,10 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Ensure the media item was saved to the library and automatically
     // selected.
     $this->waitForText('Add or select media');
-    $this->waitForText(basename($jpg_uri_2));
+    $this->waitForText($file_system->basename($jpg_uri_2));
     // Ensure the created item is added in the widget.
     $this->pressInsertSelected('Added one media item.');
-    $assert_session->pageTextContains(basename($jpg_uri_2));
+    $assert_session->pageTextContains($file_system->basename($jpg_uri_2));
 
     // Assert users can not select media items they do not have access to.
     $unpublished_media = Media::create([
@@ -654,7 +652,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->checkboxNotChecked("Select $existing_media_name");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
     $this->pressInsertSelected('Added one media item.');
-    $this->waitForText(basename($png_uri_5));
+    $this->waitForText($file_system->basename($png_uri_5));
 
     // Assert removing an uploaded media item before save works as expected.
     $this->openMediaLibraryForField('field_unlimited_media');
@@ -682,9 +680,9 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Create a list of new files to upload.
     $filenames = [];
     $remote_paths = [];
-    for ($i = 1; $i < 5; $i++) {
+    foreach (range(1, 4) as $i) {
       $path = $file_system->copy($png_image->uri, 'public://');
-      $filenames[] = basename($path);
+      $filenames[] = $file_system->basename($path);
       $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
     }
     $page->findField('Add files')->setValue(implode("\n", $remote_paths));

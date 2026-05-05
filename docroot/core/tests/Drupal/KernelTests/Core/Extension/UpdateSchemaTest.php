@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for schema and update includes.
+ *
+ * @group Core
  */
-#[Group('Core')]
-#[RunTestsInSeparateProcesses]
 class UpdateSchemaTest extends KernelTestBase {
 
   /**

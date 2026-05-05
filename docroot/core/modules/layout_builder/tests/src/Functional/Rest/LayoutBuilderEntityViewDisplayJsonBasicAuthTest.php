@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Layout Builder Entity View Display Json Basic Auth.
+ * @group layout_builder
+ * @group rest
  */
-#[Group('layout_builder')]
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class LayoutBuilderEntityViewDisplayJsonBasicAuthTest extends LayoutBuilderEntityViewDisplayResourceTestBase {
 
   use BasicAuthResourceTestTrait;

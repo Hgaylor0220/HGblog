@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
  * Tests low-level theme functions.
+ *
+ * @group Theme
  */
-#[Group('Theme')]
-#[RunTestsInSeparateProcesses]
 class ThemeTest extends BrowserTestBase {
 
   /**
@@ -49,7 +47,7 @@ class ThemeTest extends BrowserTestBase {
     \Drupal::service('theme.registry')->reset();
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('theme-test/suggestion');
-      $this->assertSession()->pageTextContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=preprocessThemeTest');
+      $this->assertSession()->pageTextContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
     }
   }
 
@@ -60,7 +58,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('theme-test/priority');
 
     // Ensure that the custom theme negotiator was not able to set the theme.
-    $this->assertSession()->pageTextNotContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=preprocessThemeTest');
+    $this->assertSession()->pageTextNotContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
   }
 
   /**

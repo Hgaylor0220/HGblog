@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\LocaleTranslation;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests Drupal\locale\LocaleTranslation.
+ * @coversDefaultClass \Drupal\locale\LocaleTranslation
+ * @group locale
  */
-#[CoversClass(LocaleTranslation::class)]
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocaleTranslationTest extends KernelTestBase {
 
   /**

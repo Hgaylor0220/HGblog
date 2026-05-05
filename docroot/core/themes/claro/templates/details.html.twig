@@ -15,7 +15,7 @@
  *   list.
  * - disabled: whether the details is disabled.
  *
- * @see\Drupal\Core\Form\FormPreprocess::preprocessDetails()
+ * @see template_preprocess_details()
  * @see claro_preprocess_details()
  */
 #}
@@ -75,12 +75,7 @@
         </div>
       {% endif %}
       {%- if description -%}
-        {% set description_attributes = create_attribute({id: attributes['aria-describedby']}) %}
-        {% set description_classes = [
-          'claro-details__description',
-          disabled ? 'is-disabled',
-        ] %}
-        <div{{ description_attributes.addClass(description_classes) }}>{{ description }}</div>
+        <div class="claro-details__description{{ disabled ? ' is-disabled' }}">{{ description }}</div>
       {%- endif -%}
       {%- if children -%}
         {{ children }}

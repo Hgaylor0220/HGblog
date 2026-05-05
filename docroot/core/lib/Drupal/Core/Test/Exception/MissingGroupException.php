@@ -3,7 +3,7 @@
 namespace Drupal\Core\Test\Exception;
 
 /**
- * Exception thrown when a test class is missing the 'group' metadata.
+ * Exception thrown when a test class is missing an @group annotation.
  *
  * @see \Drupal\Core\Test\TestDiscovery::getTestClasses()
  */

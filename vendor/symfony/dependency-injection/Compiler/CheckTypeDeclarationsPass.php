@@ -61,6 +61,9 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
         'string' => true,
     ];
 
+    private bool $autoload;
+    private array $skippedIds;
+
     private ExpressionLanguage $expressionLanguage;
 
     /**
@@ -68,10 +71,10 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
      *                          Defaults to false to save loading code during compilation.
      * @param array $skippedIds An array indexed by the service ids to skip
      */
-    public function __construct(
-        private bool $autoload = false,
-        private array $skippedIds = [],
-    ) {
+    public function __construct(bool $autoload = false, array $skippedIds = [])
+    {
+        $this->autoload = $autoload;
+        $this->skippedIds = $skippedIds;
     }
 
     protected function processValue(mixed $value, bool $isRoot = false): mixed
@@ -275,7 +278,7 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
             return;
         }
 
-        if ('string' === $type && is_a($class, \Stringable::class, true)) {
+        if ('string' === $type && method_exists($class, '__toString')) {
             return;
         }
 

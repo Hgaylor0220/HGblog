@@ -6,14 +6,12 @@ namespace Drupal\Tests\migrate\Unit\Exception;
 
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests deprecation error on MigrateSkipProcessException.
+ *
+ * @group legacy
  */
-#[Group('migrate')]
-#[IgnoreDeprecations]
 class MigrateSkipProcessExceptionTest extends UnitTestCase {
 
   /**

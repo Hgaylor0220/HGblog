@@ -8,9 +8,6 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-/**
- * Resource test base for the entity_form_display entity.
- */
 abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
@@ -72,6 +69,15 @@ abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTes
           'settings' => [],
           'third_party_settings' => [],
         ],
+        'promote' => [
+          'type' => 'boolean_checkbox',
+          'settings' => [
+            'display_label' => TRUE,
+          ],
+          'weight' => 15,
+          'region' => 'content',
+          'third_party_settings' => [],
+        ],
         'status' => [
           'type' => 'boolean_checkbox',
           'weight' => 120,
@@ -79,6 +85,15 @@ abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTes
           'settings' => [
             'display_label' => TRUE,
           ],
+          'third_party_settings' => [],
+        ],
+        'sticky' => [
+          'type' => 'boolean_checkbox',
+          'settings' => [
+            'display_label' => TRUE,
+          ],
+          'weight' => 16,
+          'region' => 'content',
           'third_party_settings' => [],
         ],
         'title' => [
@@ -109,10 +124,7 @@ abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTes
           'node.type.camelids',
         ],
       ],
-      'hidden' => [
-        'promote' => TRUE,
-        'sticky' => TRUE,
-      ],
+      'hidden' => [],
       'id' => 'node.camelids.default',
       'langcode' => 'en',
       'mode' => 'default',

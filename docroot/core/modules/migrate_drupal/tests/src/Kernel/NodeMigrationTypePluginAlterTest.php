@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Kernel;
 
-use Drupal\migrate_drupal\Hook\MigrateDrupalHooks;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the assignment of the node migration type in migrations_plugin_alter.
+ *
+ * @group migrate_drupal
  */
-#[Group('migrate_drupal')]
-#[RunTestsInSeparateProcesses]
 class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
 
   use NodeMigrateTypeTestTrait;
@@ -44,13 +40,13 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
    * @param array $expected
    *   The expected results.
    *
+   * @dataProvider providerMigrationPluginAlter
+   *
    * @throws \Exception
    */
-  #[DataProvider('providerMigrationPluginAlter')]
   public function testMigrationPluginAlter($type, array $migration_definitions, array $expected): void {
     $this->makeNodeMigrateMapTable($type, '7');
-    $migrateDrupalMigrationPluginsAlter = new MigrateDrupalHooks();
-    $migrateDrupalMigrationPluginsAlter->migrationPluginsAlter($migration_definitions);
+    migrate_drupal_migration_plugins_alter($migration_definitions);
     $this->assertSame($expected, $migration_definitions);
   }
 
@@ -127,7 +123,7 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
   /**
    * Creates data in the source database.
    */
-  protected function setupDb(): void {
+  protected function setupDb() {
     $this->sourceDatabase->schema()->createTable('system', [
       'fields' => [
         'name' => [

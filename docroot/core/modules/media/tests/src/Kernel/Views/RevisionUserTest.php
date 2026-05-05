@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Kernel\Views;
 
 use Drupal\media\Entity\Media;
-use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
  * Tests the media_revision_user field.
+ *
+ * @group media
  */
-#[Group('media')]
-#[RunTestsInSeparateProcesses]
 class RevisionUserTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;
@@ -32,6 +30,9 @@ class RevisionUserTest extends ViewsKernelTestBase {
     'media',
     'media_test_views',
     'media_test_source',
+    'system',
+    'user',
+    'views',
     'image',
     'field',
     'file',

@@ -4,25 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Composer\Plugin\Scaffold\Integration;
 
-use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
-use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection;
-use Drupal\Composer\Plugin\Scaffold\Operations\SkipOp;
-use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
+use Drupal\Composer\Plugin\Scaffold\Operations\SkipOp;
+use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection;
 
 /**
- * Tests Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection.
+ * @coversDefaultClass \Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection
+ *
+ * @group Scaffold
  */
-#[CoversClass(ScaffoldFileCollection::class)]
-#[Group('Scaffold')]
 class ScaffoldFileCollectionTest extends TestCase {
 
   /**
-   * Tests create.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testCreate(): void {
     $fixtures = new Fixtures();

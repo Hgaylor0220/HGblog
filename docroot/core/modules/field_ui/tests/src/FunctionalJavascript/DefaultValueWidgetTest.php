@@ -7,14 +7,12 @@ namespace Drupal\Tests\field_ui\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default value widget in Field UI.
+ *
+ * @group field_ui
  */
-#[Group('field_ui')]
-#[RunTestsInSeparateProcesses]
 class DefaultValueWidgetTest extends WebDriverTestBase {
 
   use TaxonomyTestTrait;
@@ -27,7 +25,6 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
     'node',
     'field_ui',
     'taxonomy',
-    'block',
   ];
 
   /**
@@ -40,7 +37,6 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalPlaceBlock('local_actions_block');
 
     // Create a Content type and two test nodes.
     $this->createContentType(['type' => 'test_content']);

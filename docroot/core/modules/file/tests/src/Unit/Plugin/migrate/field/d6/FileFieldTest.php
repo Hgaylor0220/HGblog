@@ -4,33 +4,26 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\field\d6;
 
-use Drupal\file\Plugin\migrate\field\d6\FileField;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\file\Plugin\migrate\field\d6\FileField;
 use Prophecy\Argument;
 
 // cspell:ignore filefield imagefield
+
 /**
- * Tests Drupal\file\Plugin\migrate\field\d6\FileField.
+ * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d6\FileField
+ * @group file
  */
-#[CoversClass(FileField::class)]
-#[Group('file')]
 class FileFieldTest extends UnitTestCase {
 
   /**
-   * The migrate field plugin.
-   *
    * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
    */
   protected $plugin;
 
   /**
-   * The migration.
-   *
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;
@@ -57,7 +50,7 @@ class FileFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests define value process pipeline.
+   * @covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline'): void {
     $this->plugin->$method($this->migration, 'field_name', []);
@@ -81,9 +74,9 @@ class FileFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests get field type.
+   * @covers ::getFieldType
+   * @dataProvider getFieldTypeProvider
    */
-  #[DataProvider('getFieldTypeProvider')]
   public function testGetFieldType($expected_type, $widget_type, array $settings = []): void {
     $row = new Row();
     $row->setSourceProperty('widget_type', $widget_type);

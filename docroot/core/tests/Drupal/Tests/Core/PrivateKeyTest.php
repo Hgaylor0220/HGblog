@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\PrivateKey;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Tests the PrivateKey class.
+ *
+ * @group PrivateKeyTest
  */
-#[Group('PrivateKeyTest')]
 class PrivateKeyTest extends UnitTestCase {
 
   /**

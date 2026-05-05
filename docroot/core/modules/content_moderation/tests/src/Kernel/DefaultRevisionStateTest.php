@@ -9,14 +9,12 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the correct default revision is set.
+ *
+ * @group content_moderation
  */
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class DefaultRevisionStateTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -30,8 +28,10 @@ class DefaultRevisionStateTest extends KernelTestBase {
     'block_content',
     'content_moderation',
     'user',
+    'system',
     'language',
     'content_translation',
+    'text',
     'workflows',
   ];
 

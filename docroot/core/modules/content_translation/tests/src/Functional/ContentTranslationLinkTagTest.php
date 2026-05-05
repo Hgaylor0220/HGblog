@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\entity_test\Entity\EntityTestMul;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip;
 
 /**
  * Tests whether canonical link tags are present for content entities.
+ *
+ * @group content_translation
  */
-#[Group('content_translation')]
-#[RunTestsInSeparateProcesses]
 class ContentTranslationLinkTagTest extends BrowserTestBase {
 
   /**
@@ -73,7 +70,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   An entity with translations.
    */
-  protected function createTranslatableEntity(): EntityInterface {
+  protected function createTranslatableEntity() {
     $entity = EntityTestMul::create(['label' => $this->randomString()]);
 
     // Create translations for non default languages.
@@ -118,7 +115,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
 
     // Ensure link tags for all languages are found on each language variation
     // page of an entity.
-    foreach ($urls as $url) {
+    foreach ($urls as $langcode => $url) {
       $this->drupalGet($url);
       foreach ($urls as $langcode_alternate => $url_alternate) {
         $this->assertSession()->elementAttributeContains('xpath', "head/link[@rel='alternate' and @hreflang='$langcode_alternate']", 'href', $url_alternate->toString());
@@ -130,7 +127,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
     $this->config('system.site')->set('page.front', $entity_canonical)->save();
 
     // Tests hreflang when using entities as a front page.
-    foreach ($urls as $url) {
+    foreach ($urls as $langcode => $url) {
       $this->drupalGet($url);
       foreach ($entity->getTranslationLanguages() as $language) {
         $frontpage_path = Url::fromRoute('<front>', [], [

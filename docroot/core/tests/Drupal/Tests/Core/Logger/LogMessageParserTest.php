@@ -7,15 +7,11 @@ namespace Drupal\Tests\Core\Logger;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\LogMessageParser;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Logger\LogMessageParser.
+ * @coversDefaultClass \Drupal\Core\Logger\LogMessageParser
+ * @group Logger
  */
-#[CoversClass(LogMessageParser::class)]
-#[Group('Logger')]
 class LogMessageParserTest extends UnitTestCase {
 
   /**
@@ -29,8 +25,10 @@ class LogMessageParserTest extends UnitTestCase {
    *   An array with the expected values after the test has run.
    *    - message: The expected parsed message.
    *    - context: The expected values of the placeholders.
+   *
+   * @dataProvider providerTestParseMessagePlaceholders
+   * @covers ::parseMessagePlaceholders
    */
-  #[DataProvider('providerTestParseMessagePlaceholders')]
   public function testParseMessagePlaceholders(array $value, array $expected): void {
     $parser = new LogMessageParser();
     $message_placeholders = $parser->parseMessagePlaceholders($value['message'], $value['context']);
@@ -41,7 +39,7 @@ class LogMessageParserTest extends UnitTestCase {
   /**
    * Data provider for testParseMessagePlaceholders().
    */
-  public static function providerTestParseMessagePlaceholders(): array {
+  public static function providerTestParseMessagePlaceholders() {
     return [
       'PSR3-style placeholder' => [
         ['message' => 'User {username} created', 'context' => ['username' => 'Dries']],
@@ -60,24 +58,12 @@ class LogMessageParserTest extends UnitTestCase {
         ['message' => 'User W-\\};~{&! created @', 'context' => []],
       ],
       'Multiple PSR3-style placeholders' => [
-        [
-          'message' => 'Test {with} two {{encapsuled}} strings',
-          'context' => ['with' => 'together', 'encapsuled' => 'awesome'],
-        ],
-        [
-          'message' => 'Test @with two {@encapsuled} strings',
-          'context' => ['@with' => 'together', '@encapsuled' => 'awesome'],
-        ],
+        ['message' => 'Test {with} two {{encapsuled}} strings', 'context' => ['with' => 'together', 'encapsuled' => 'awesome']],
+        ['message' => 'Test @with two {@encapsuled} strings', 'context' => ['@with' => 'together', '@encapsuled' => 'awesome']],
       ],
       'Disallowed placeholder' => [
-        [
-          'message' => 'Test placeholder with :url and old !bang parameter',
-          'context' => [':url' => 'https://example.com', '!bang' => 'foo bar'],
-        ],
-        [
-          'message' => 'Test placeholder with :url and old !bang parameter',
-          'context' => [':url' => 'https://example.com'],
-        ],
+        ['message' => 'Test placeholder with :url and old !bang parameter', 'context' => [':url' => 'https://example.com', '!bang' => 'foo bar']],
+        ['message' => 'Test placeholder with :url and old !bang parameter', 'context' => [':url' => 'https://example.com']],
       ],
       'Stringable object placeholder' => [
         ['message' => 'object @b', 'context' => ['@b' => new FormattableMarkup('convertible', [])]],
@@ -96,7 +82,7 @@ class LogMessageParserTest extends UnitTestCase {
         ['message' => 'object @b', 'context' => []],
       ],
       'Non-stringable closure placeholder' => [
-        ['message' => 'closure @c', 'context' => ['@c' => function (): void {}]],
+        ['message' => 'closure @c', 'context' => ['@c' => function () {}]],
         ['message' => 'closure @c', 'context' => []],
       ],
       'Non-stringable resource placeholder' => [

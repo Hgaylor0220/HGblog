@@ -5,19 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
-use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
-use PHPUnit\Framework\Attributes\CoversTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait.
+ * @coversDefaultClass \Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait
+ * @uses \Drupal\Component\Plugin\Discovery\DiscoveryTrait
+ * @group Plugin
  */
-#[CoversTrait(DiscoveryCachedTrait::class)]
-#[Group('Plugin')]
-#[UsesTrait(DiscoveryTrait::class)]
 class DiscoveryCachedTraitTest extends TestCase {
 
   /**
@@ -29,7 +23,7 @@ class DiscoveryCachedTraitTest extends TestCase {
    *   - Definitions to be returned by getDefinitions().
    *   - Plugin name to query for.
    */
-  public static function providerGetDefinition(): array {
+  public static function providerGetDefinition() {
     return [
       ['definition', [], ['plugin_name' => 'definition'], 'plugin_name'],
       ['definition', ['plugin_name' => 'definition'], [], 'plugin_name'],
@@ -38,9 +32,9 @@ class DiscoveryCachedTraitTest extends TestCase {
   }
 
   /**
-   * Tests get definition.
+   * @covers ::getDefinition
+   * @dataProvider providerGetDefinition
    */
-  #[DataProvider('providerGetDefinition')]
   public function testGetDefinition($expected, $cached_definitions, $get_definitions, $plugin_id): void {
     $trait = $this->getMockBuilder(DiscoveryCachedTraitMockableClass::class)
       ->onlyMethods(['getDefinitions'])

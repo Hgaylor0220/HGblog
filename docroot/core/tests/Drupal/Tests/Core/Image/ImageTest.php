@@ -6,18 +6,15 @@ namespace Drupal\Tests\Core\Image;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\Image;
-use Drupal\Core\ImageToolkit\ImageToolkitOperationInterface;
-use Drupal\system\Plugin\ImageToolkit\GDToolkit;
+use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RequiresPhpExtension;
-use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests the image class.
+ *
+ * @requires extension gd
+ * @group Image
  */
-#[Group('Image')]
-#[RequiresPhpExtension('gd')]
 class ImageTest extends UnitTestCase {
 
   /**
@@ -64,11 +61,10 @@ class ImageTest extends UnitTestCase {
    * @param array $stubs
    *   (optional) Array containing methods to be replaced with stubs.
    *
-   * @return \Drupal\system\Plugin\ImageToolkit\GDToolkit&\PHPUnit\Framework\MockObject\MockObject
-   *   Mocked GDToolkit instance.
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getToolkitMock(array $stubs = []): GDToolkit&MockObject {
-    $mock_builder = $this->getMockBuilder(GDToolkit::class);
+  protected function getToolkitMock(array $stubs = []) {
+    $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\GDToolkit');
     $stubs = array_merge(['getPluginId', 'save'], $stubs);
     return $mock_builder
       ->disableOriginalConstructor()
@@ -81,13 +77,12 @@ class ImageTest extends UnitTestCase {
    *
    * @param string $class_name
    *   The name of the GD toolkit operation class to be mocked.
-   * @param \Drupal\system\Plugin\ImageToolkit\GDToolkit $toolkit
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit object.
    *
-   * @return \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface&\PHPUnit\Framework\MockObject\MockObject
-   *   Mocked GDToolkit operation instance.
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getToolkitOperationMock($class_name, GDToolkit $toolkit): ImageToolkitOperationInterface&MockObject {
+  protected function getToolkitOperationMock($class_name, ImageToolkitInterface $toolkit) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
     $logger = $this->createMock('Psr\Log\LoggerInterface');
     return $mock_builder

@@ -8,18 +8,15 @@ use Drupal\Core\Asset\LibrariesDirectoryFileFinder;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Asset\LibrariesDirectoryFileFinder.
+ * @coversDefaultClass \Drupal\Core\Asset\LibrariesDirectoryFileFinder
+ * @group Asset
  */
-#[CoversClass(LibrariesDirectoryFileFinder::class)]
-#[Group('Asset')]
 class LibrariesDirectoryFileFinderTest extends UnitTestCase {
 
   /**
-   * Tests find.
+   * @covers ::find
    */
   public function testFind(): void {
     // Place a library file in all the possible locations.

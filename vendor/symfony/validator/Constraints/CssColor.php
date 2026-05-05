@@ -11,12 +11,12 @@
 
 namespace Symfony\Component\Validator\Constraints;
 
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
 /**
- * Validates that a value is a valid CSS color.
+ * @Annotation
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
  *
  * @author Mathieu Santostefano <msantostefano@protonmail.com>
  */
@@ -42,6 +42,11 @@ class CssColor extends Constraint
     ];
 
     /**
+     * @deprecated since Symfony 6.1, use const ERROR_NAMES instead
+     */
+    protected static $errorNames = self::ERROR_NAMES;
+
+    /**
      * @var string[]
      */
     private static array $validationModes = [
@@ -59,66 +64,48 @@ class CssColor extends Constraint
         self::HSLA,
     ];
 
-    public string $message = 'This value is not a valid CSS color.';
-    public array|string $formats;
+    public $message = 'This value is not a valid CSS color.';
+    public $formats;
 
     /**
-     * @param non-empty-string[]|non-empty-string $formats The types of CSS colors allowed ({@see https://symfony.com/doc/current/reference/constraints/CssColor.html#formats})
-     * @param string[]|null                       $groups
+     * @param array|string $formats The types of CSS colors allowed (e.g. hexadecimal only, RGB and HSL only, etc.).
      */
-    #[HasNamedArguments]
-    public function __construct(array|string $formats = [], ?string $message = null, ?array $groups = null, $payload = null, ?array $options = null)
+    public function __construct($formats = [], ?string $message = null, ?array $groups = null, $payload = null, ?array $options = null)
     {
         $validationModesAsString = implode(', ', self::$validationModes);
 
         if (!$formats) {
-            $formats = self::$validationModes;
+            $options['value'] = self::$validationModes;
         } elseif (\is_array($formats) && \is_string(key($formats))) {
-            trigger_deprecation('symfony/validator', '7.3', 'Passing an array of options to configure the "%s" constraint is deprecated, use named arguments instead.', static::class);
-
             $options = array_merge($formats, $options ?? []);
-            $formats = null;
         } elseif (\is_array($formats)) {
             if ([] === array_intersect(self::$validationModes, $formats)) {
                 throw new InvalidArgumentException(\sprintf('The "formats" parameter value is not valid. It must contain one or more of the following values: "%s".', $validationModesAsString));
             }
+
+            $options['value'] = $formats;
         } elseif (\is_string($formats)) {
-            if (!\in_array($formats, self::$validationModes, true)) {
+            if (!\in_array($formats, self::$validationModes)) {
                 throw new InvalidArgumentException(\sprintf('The "formats" parameter value is not valid. It must contain one or more of the following values: "%s".', $validationModesAsString));
             }
 
-            $formats = [$formats];
+            $options['value'] = [$formats];
         } else {
             throw new InvalidArgumentException('The "formats" parameter type is not valid. It should be a string or an array.');
         }
 
         parent::__construct($options, $groups, $payload);
 
-        $this->formats = $formats ?? $this->formats;
         $this->message = $message ?? $this->message;
     }
 
-    /**
-     * @deprecated since Symfony 7.4
-     */
     public function getDefaultOption(): string
     {
-        if (0 === \func_num_args() || func_get_arg(0)) {
-            trigger_deprecation('symfony/validator', '7.4', 'The %s() method is deprecated.', __METHOD__);
-        }
-
         return 'formats';
     }
 
-    /**
-     * @deprecated since Symfony 7.4
-     */
     public function getRequiredOptions(): array
     {
-        if (0 === \func_num_args() || func_get_arg(0)) {
-            trigger_deprecation('symfony/validator', '7.4', 'The %s() method is deprecated.', __METHOD__);
-        }
-
         return ['formats'];
     }
 }

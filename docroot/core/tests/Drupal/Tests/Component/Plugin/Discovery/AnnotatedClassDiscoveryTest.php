@@ -9,17 +9,14 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery.
+ * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery
+ *
+ * @group Annotation
+ * @group Plugin
  */
-#[CoversClass(AnnotatedClassDiscovery::class)]
-#[Group('Annotation')]
-#[Group('Plugin')]
 class AnnotatedClassDiscoveryTest extends TestCase {
 
   /**
@@ -27,7 +24,7 @@ class AnnotatedClassDiscoveryTest extends TestCase {
    *
    * @var string[]
    */
-  public static function provideBadAnnotations(): array {
+  public static function provideBadAnnotations() {
     return [
       ['addtogroup'],
       ['code'],
@@ -56,8 +53,11 @@ class AnnotatedClassDiscoveryTest extends TestCase {
 
   /**
    * Make sure AnnotatedClassDiscovery never tries to autoload bad annotations.
+   *
+   * @dataProvider provideBadAnnotations
+   *
+   * @coversNothing
    */
-  #[DataProvider('provideBadAnnotations')]
   public function testAutoloadBadAnnotations($annotation): void {
     // Set up a class file in vfsStream.
     vfsStreamWrapper::register();
@@ -83,7 +83,7 @@ class AnnotatedClassDiscoveryTest extends TestCase {
 
     // Register our class loader which will fail if the annotation reader tries
     // to autoload disallowed annotations.
-    $class_loader = function ($class_name) use ($annotation): void {
+    $class_loader = function ($class_name) use ($annotation) {
       $name_array = explode('\\', $class_name);
       $name = array_pop($name_array);
       if ($name == $annotation) {

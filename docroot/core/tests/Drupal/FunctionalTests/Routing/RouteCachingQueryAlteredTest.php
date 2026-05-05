@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -14,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * This happens either in the normal course of operations or due to an
  * exception.
+ *
+ * @group routing
  */
-#[Group('routing')]
-#[RunTestsInSeparateProcesses]
 class RouteCachingQueryAlteredTest extends BrowserTestBase {
 
   /**

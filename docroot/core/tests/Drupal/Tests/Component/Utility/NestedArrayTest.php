@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\NestedArray;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Utility\NestedArray.
+ * @coversDefaultClass \Drupal\Component\Utility\NestedArray
+ * @group Utility
  */
-#[CoversClass(NestedArray::class)]
-#[Group('Utility')]
 class NestedArrayTest extends TestCase {
 
   /**
@@ -48,6 +44,8 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests getting nested array values.
+   *
+   * @covers ::getValue
    */
   public function testGetValue(): void {
     // Verify getting a value of a nested element.
@@ -76,6 +74,8 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests setting nested array values.
+   *
+   * @covers ::setValue
    */
   public function testSetValue(): void {
     $new_value = [
@@ -95,6 +95,8 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests force-setting values.
+   *
+   * @covers ::setValue
    */
   public function testSetValueForce(): void {
     $new_value = [
@@ -108,6 +110,8 @@ class NestedArrayTest extends TestCase {
 
   /**
    * Tests unsetting nested array values.
+   *
+   * @covers ::unsetValue
    */
   public function testUnsetValue(): void {
     // Verify unsetting a non-existing nested element throws no errors and the
@@ -142,8 +146,8 @@ class NestedArrayTest extends TestCase {
   /**
    * Tests NestedArray::mergeDeepArray().
    *
-   * @legacy-covers ::mergeDeep
-   * @legacy-covers ::mergeDeepArray
+   * @covers ::mergeDeep
+   * @covers ::mergeDeepArray
    */
   public function testMergeDeepArray(): void {
     $link_options_1 = [
@@ -170,7 +174,7 @@ class NestedArrayTest extends TestCase {
   /**
    * Tests that arrays with implicit keys are appended, not merged.
    *
-   * @legacy-covers ::mergeDeepArray
+   * @covers ::mergeDeepArray
    */
   public function testMergeImplicitKeys(): void {
     $a = [
@@ -191,7 +195,7 @@ class NestedArrayTest extends TestCase {
   /**
    * Tests that even with explicit keys, values are appended, not merged.
    *
-   * @legacy-covers ::mergeDeepArray
+   * @covers ::mergeDeepArray
    */
   public function testMergeExplicitKeys(): void {
     $a = [
@@ -227,7 +231,7 @@ class NestedArrayTest extends TestCase {
    * before those in the first one, they are still appended, and the keys on
    * the first array are deleted and regenerated.
    *
-   * @legacy-covers ::mergeDeepArray
+   * @covers ::mergeDeepArray
    */
   public function testMergeOutOfSequenceKeys(): void {
     $a = [
@@ -257,14 +261,14 @@ class NestedArrayTest extends TestCase {
   }
 
   /**
-   * Tests filter.
+   * @covers ::filter
+   * @dataProvider providerTestFilter
    */
-  #[DataProvider('providerTestFilter')]
   public function testFilter($array, $callable, $expected): void {
     $this->assertEquals($expected, NestedArray::filter($array, $callable));
   }
 
-  public static function providerTestFilter(): array {
+  public static function providerTestFilter() {
     $data = [];
     $data['1d-array'] = [
       [0, 1, '', TRUE], NULL, [1 => 1, 3 => TRUE],

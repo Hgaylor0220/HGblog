@@ -6,14 +6,10 @@ namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Image Style Xml Anon.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class ImageStyleXmlAnonTest extends ImageStyleResourceTestBase {
 
   use AnonResourceTestTrait;

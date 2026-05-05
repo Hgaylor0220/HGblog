@@ -7,17 +7,12 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Tests\ckeditor5\Traits\PrivateMethodUnitTestTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\ckeditor5\Plugin\Editor\CKEditor5.
- *
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\Editor\CKEditor5
+ * @group ckeditor5
  * @internal
  */
-#[CoversClass(CKEditor5::class)]
-#[Group('ckeditor5')]
 class CKEditor5Test extends UnitTestCase {
 
   use PrivateMethodUnitTestTrait;
@@ -45,11 +40,9 @@ class CKEditor5Test extends UnitTestCase {
   ];
 
   /**
-   * Tests paths to form names.
-   *
-   * @legacy-covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::mapViolationPropertyPathsToFormNames
+   * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::mapViolationPropertyPathsToFormNames
+   * @dataProvider providerPathsToFormNames
    */
-  #[DataProvider('providerPathsToFormNames')]
   public function testPathsToFormNames(string $property_path, string $expected_form_item_name, bool $expect_exception = FALSE): void {
     $mapMethod = self::getMethod(CKEditor5::class, 'mapViolationPropertyPathsToFormNames');
     if ($expect_exception) {

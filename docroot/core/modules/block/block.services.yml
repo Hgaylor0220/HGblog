@@ -1,6 +1,3 @@
-parameters:
-  block.skip_procedural_hook_scan: true
-
 services:
   _defaults:
     autoconfigure: true
@@ -14,4 +11,3 @@ services:
     class: Drupal\block\BlockRepository
     arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
   Drupal\block\BlockRepositoryInterface: '@block.repository'
-  Drupal\block\BlockConfigUpdater: ~

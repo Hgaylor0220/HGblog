@@ -6,17 +6,13 @@ namespace Drupal\Tests\views\Unit\Plugin\display;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\views\display\PathPluginBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\views\Plugin\views\display\PathPluginBase.
+ * @coversDefaultClass \Drupal\views\Plugin\views\display\PathPluginBase
+ * @group views
  */
-#[CoversClass(PathPluginBase::class)]
-#[Group('views')]
 class PathPluginBaseTest extends UnitTestCase {
 
   /**
@@ -65,7 +61,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * Setup access plugin manager and config factory in the Drupal class.
    */
-  public function setupContainer(): void {
+  public function setupContainer() {
     $this->accessPluginManager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
@@ -363,12 +359,7 @@ class PathPluginBaseTest extends UnitTestCase {
    */
   public function testAlterRouteWithAlterCallback(): void {
     $collection = new RouteCollection();
-    $collection->add('test_route', new Route(
-      'test_route',
-      [
-        '_controller' => 'Drupal\Tests\Core\Controller\TestController::content',
-        '_title_callback' => '\Drupal\Tests\views\Unit\Plugin\display\TestController::testTitle',
-      ]));
+    $collection->add('test_route', new Route('test_route', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content', '_title_callback' => '\Drupal\Tests\views\Unit\Plugin\display\TestController::testTitle']));
     $route_2 = new Route('test_route/example', ['_controller' => 'Drupal\Tests\Core\Controller\TestController::content']);
     $collection->add('test_route_2', $route_2);
 
@@ -566,7 +557,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * Returns some mocked view entity, view executable, and access plugin.
    */
-  protected function setupViewExecutableAccessPlugin(): array {
+  protected function setupViewExecutableAccessPlugin() {
     $view_entity = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
@@ -585,7 +576,7 @@ class PathPluginBaseTest extends UnitTestCase {
 
     $access_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\access\AccessPluginBase')
       ->disableOriginalConstructor()
-      ->getMock();
+      ->getMockForAbstractClass();
     $this->accessPluginManager->expects($this->any())
       ->method('createInstance')
       ->willReturn($access_plugin);

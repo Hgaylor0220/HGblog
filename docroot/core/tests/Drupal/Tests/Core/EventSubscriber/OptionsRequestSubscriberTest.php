@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\OptionsRequestSubscriber;
-use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -17,16 +14,13 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\Core\EventSubscriber\OptionsRequestSubscriber.
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\OptionsRequestSubscriber
+ * @group EventSubscriber
  */
-#[CoversClass(OptionsRequestSubscriber::class)]
-#[Group('EventSubscriber')]
 class OptionsRequestSubscriberTest extends UnitTestCase {
 
   /**
-   * Tests with non option request.
-   *
-   * @legacy-covers ::onRequest
+   * @covers ::onRequest
    */
   public function testWithNonOptionRequest(): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
@@ -43,9 +37,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests without matching routes.
-   *
-   * @legacy-covers ::onRequest
+   * @covers ::onRequest
    */
   public function testWithoutMatchingRoutes(): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
@@ -62,11 +54,9 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests with options request.
-   *
-   * @legacy-covers ::onRequest
+   * @covers ::onRequest
+   * @dataProvider providerTestOnRequestWithOptionsRequest
    */
-  #[DataProvider('providerTestOnRequestWithOptionsRequest')]
   public function testWithOptionsRequest(RouteCollection $collection, $expected_header): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
     $request = Request::create('/example', 'OPTIONS');
@@ -111,10 +101,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
           $collection->add('example.2', new Route('/example', [], [], [], '', [], [$method_a, $method_b]));
           $collection->add('example.3', new Route('/example', [], [], [], '', [], [$method_b, $method_c]));
           $methods = array_unique([$method_a, $method_b, $method_c]);
-          $data['multiple_routes_' . $method_a . '_' . $method_b . '_' . $method_c] = [
-            $collection,
-            implode(', ', $methods),
-          ];
+          $data['multiple_routes_' . $method_a . '_' . $method_b . '_' . $method_c] = [$collection, implode(', ', $methods)];
         }
       }
     }

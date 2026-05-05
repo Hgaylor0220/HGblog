@@ -14,14 +14,12 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\media\OEmbed\ResourceFetcher.
+ * @group media
+ *
+ * @coversDefaultClass \Drupal\media\OEmbed\ResourceFetcher
  */
-#[CoversClass(ResourceFetcher::class)]
-#[Group('media')]
 class ResourceFetcherTest extends UnitTestCase {
 
   /**
@@ -57,7 +55,7 @@ class ResourceFetcherTest extends UnitTestCase {
   /**
    * Tests how the resource fetcher handles unknown Content-Type headers.
    *
-   * @legacy-covers ::fetchResource
+   * @covers ::fetchResource
    */
   public function testUnknownContentTypeHeader(): void {
     $headers = [

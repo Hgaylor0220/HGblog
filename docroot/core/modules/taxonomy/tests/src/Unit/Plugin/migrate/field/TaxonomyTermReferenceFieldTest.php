@@ -5,29 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Unit\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference.
+ * @coversDefaultClass \Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference
+ * @group taxonomy
  */
-#[CoversClass(TaxonomyTermReference::class)]
-#[Group('taxonomy')]
 class TaxonomyTermReferenceFieldTest extends UnitTestCase {
 
   /**
-   * The migrate field plugin.
-   *
    * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
    */
   protected $plugin;
 
   /**
-   * The migration.
-   *
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;
@@ -55,7 +48,7 @@ class TaxonomyTermReferenceFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests define value process pipeline.
+   * @covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline'): void {
     $this->plugin->$method($this->migration, 'field_name', []);

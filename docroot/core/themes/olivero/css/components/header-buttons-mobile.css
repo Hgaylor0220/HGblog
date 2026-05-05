@@ -13,16 +13,22 @@
 .mobile-buttons {
   margin-block-start: var(--sp0-5);
   margin-inline-start: auto;
+}
 
-  @media (min-width: 31.25rem) {
+@media (min-width: 31.25rem) {
+  .mobile-buttons {
     margin-block-start: var(--sp2);
   }
+}
 
-  @media (min-width: 43.75rem) {
+@media (min-width: 43.75rem) {
+  .mobile-buttons {
     margin-block-start: var(--sp4);
   }
+}
 
-  @media (min-width: 75rem) {
+@media (min-width: 75rem) {
+  .mobile-buttons {
     margin-block-start: var(--sp6);
   }
 }

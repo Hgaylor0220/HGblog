@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for entity translation controllers.
@@ -20,20 +21,47 @@ use Drupal\Core\Url;
 class ContentTranslationController extends ControllerBase {
 
   /**
+   * The content translation manager.
+   *
+   * @var \Drupal\content_translation\ContentTranslationManagerInterface
+   */
+  protected $manager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Initializes a content translation controller.
    *
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   A content translation manager instance.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager service.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
-  public function __construct(
-    protected ContentTranslationManagerInterface $manager,
-    protected EntityFieldManagerInterface $entityFieldManager,
-    protected TimeInterface $time,
-  ) {
+  public function __construct(ContentTranslationManagerInterface $manager, EntityFieldManagerInterface $entity_field_manager, protected ?TimeInterface $time = NULL) {
+    $this->manager = $manager;
+    $this->entityFieldManager = $entity_field_manager;
+    if ($this->time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
+      $this->time = \Drupal::service('datetime.time');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('content_translation.manager'),
+      $container->get('entity_field.manager'),
+      $container->get('datetime.time'),
+    );
   }
 
   /**
@@ -383,13 +411,11 @@ class ContentTranslationController extends ControllerBase {
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
     // See https://www.drupal.org/node/1810394.
-    $entity = clone $entity;
     $this->prepareTranslation($entity, $source, $target);
 
-    // @todo Provide a way to figure out the default form operation in
-    //   https://www.drupal.org/node/2006348. Maybe like
-    // phpcs:ignore
+    // @todo Provide a way to figure out the default form operation. Maybe like
     //   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
+    //   See https://www.drupal.org/node/2006348.
 
     // Use the add form handler, if available, otherwise default.
     $operation = $entity->getEntityType()->hasHandlerClass('form', 'add') ? 'add' : 'default';
@@ -420,10 +446,9 @@ class ContentTranslationController extends ControllerBase {
   public function edit(LanguageInterface $language, RouteMatchInterface $route_match, $entity_type_id = NULL) {
     $entity = $route_match->getParameter($entity_type_id);
 
-    // @todo Provide a way to figure out the default form operation in
-    //   https://www.drupal.org/node/2006348. Maybe like
-    // phpcs:ignore
-    //   operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
+    // @todo Provide a way to figure out the default form operation. Maybe like
+    //   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
+    //   See https://www.drupal.org/node/2006348.
 
     // Use the edit form handler, if available, otherwise default.
     $operation = $entity->getEntityType()->hasHandlerClass('form', 'edit') ? 'edit' : 'default';

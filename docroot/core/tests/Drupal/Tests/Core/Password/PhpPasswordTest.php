@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Password;
 
-use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Password\PhpPassword;
+use Drupal\Core\Password\PasswordInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Unit tests for password hashing API.
+ *
+ * @coversDefaultClass \Drupal\Core\Password\PhpPassword
+ * @group System
  */
-#[CoversClass(PhpPassword::class)]
-#[Group('System')]
 class PhpPasswordTest extends UnitTestCase {
 
   /**
@@ -46,8 +44,8 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests a password needs update.
    *
-   * @legacy-covers ::hash
-   * @legacy-covers ::needsRehash
+   * @covers ::hash
+   * @covers ::needsRehash
    */
   public function testPasswordNeedsUpdate(): void {
     $weakHash = (new PhpPassword(PASSWORD_BCRYPT, ['cost' => 4]))->hash($this->password);
@@ -57,8 +55,8 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests password hashing.
    *
-   * @legacy-covers ::check
-   * @legacy-covers ::needsRehash
+   * @covers ::check
+   * @covers ::needsRehash
    */
   public function testPasswordChecking(): void {
     $this->assertTrue($this->passwordHasher->check($this->password, $this->passwordHash), 'Password check succeeds.');
@@ -68,9 +66,9 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests password rehashing.
    *
-   * @legacy-covers ::hash
-   * @legacy-covers ::check
-   * @legacy-covers ::needsRehash
+   * @covers ::hash
+   * @covers ::check
+   * @covers ::needsRehash
    */
   public function testPasswordRehashing(): void {
     // Increment the cost by one.
@@ -89,9 +87,10 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Verifies that passwords longer than 512 bytes are not hashed.
    *
-   * @legacy-covers ::hash
+   * @covers ::hash
+   *
+   * @dataProvider providerLongPasswords
    */
-  #[DataProvider('providerLongPasswords')]
   public function testLongPassword($password, $allowed): void {
 
     $passwordHash = $this->passwordHasher->hash($password);
@@ -107,7 +106,7 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Provides the test matrix for testLongPassword().
    */
-  public static function providerLongPasswords(): array {
+  public static function providerLongPasswords() {
     // '512 byte long password is allowed.'
     $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
     // 513 byte long password is not allowed.
@@ -130,7 +129,7 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests password check in case provided hash is NULL.
    *
-   * @legacy-covers ::check
+   * @covers ::check
    */
   public function testEmptyHash(): void {
     $this->assertFalse($this->passwordHasher->check($this->password, NULL));

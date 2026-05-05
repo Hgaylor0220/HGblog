@@ -6,14 +6,12 @@ namespace Drupal\Tests\filter\Functional;
 
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests form elements with associated text formats.
+ *
+ * @group filter
  */
-#[Group('filter')]
-#[RunTestsInSeparateProcesses]
 class FilterFormTest extends BrowserTestBase {
 
   /**
@@ -82,7 +80,7 @@ class FilterFormTest extends BrowserTestBase {
   /**
    * Tests the behavior of the 'text_format' element as an administrator.
    */
-  protected function doFilterFormTestAsAdmin(): void {
+  protected function doFilterFormTestAsAdmin() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('filter-test/text-format');
 
@@ -130,7 +128,7 @@ class FilterFormTest extends BrowserTestBase {
   /**
    * Tests the behavior of the 'text_format' element as a normal user.
    */
-  protected function doFilterFormTestAsNonAdmin(): void {
+  protected function doFilterFormTestAsNonAdmin() {
     $this->drupalLogin($this->webUser);
     $this->drupalGet('filter-test/text-format');
 

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Url;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the user interface of project interface translations.
+ *
+ * @group locale
  */
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
   /**

@@ -7,16 +7,14 @@ namespace Drupal\Tests\node\Kernel\Views;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\views\Kernel\Handler\FieldFieldAccessTestBase;
 
 /**
  * Tests base field access in Views for the node entity.
+ *
+ * @group Node
  */
-#[Group('Node')]
-#[RunTestsInSeparateProcesses]
 class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**
@@ -74,7 +72,6 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('node', 'promote', 'On');
     $this->assertFieldAccess('node', 'sticky', 'Off');
 
-    // phpcs:ignore Drupal.Files.LineLength
     // $this->assertFieldAccess('node', 'created', \Drupal::service('date.formatter')->format(123456));
     // $this->assertFieldAccess('node', 'changed', \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime()));
   }

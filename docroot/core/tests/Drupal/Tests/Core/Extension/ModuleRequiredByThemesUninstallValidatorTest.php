@@ -8,14 +8,11 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator.
+ * @coversDefaultClass \Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator
+ * @group Extension
  */
-#[CoversClass(ModuleRequiredByThemesUninstallValidator::class)]
-#[Group('Extension')]
 class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
 
   /**
@@ -50,7 +47,7 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate no theme dependency.
+   * @covers ::validate
    */
   public function testValidateNoThemeDependency(): void {
     $this->themeExtensionList->getAllInstalledInfo()->willReturn([
@@ -71,7 +68,7 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate one theme dependency.
+   * @covers ::validate
    */
   public function testValidateOneThemeDependency(): void {
     $module = 'single_module';
@@ -110,7 +107,7 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate two theme dependencies.
+   * @covers ::validate
    */
   public function testValidateTwoThemeDependencies(): void {
     $module = 'popular_module';

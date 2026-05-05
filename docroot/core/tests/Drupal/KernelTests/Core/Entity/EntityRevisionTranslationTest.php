@@ -6,17 +6,13 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
-use Drupal\entity_test\EntityTestHelper;
-use Drupal\entity_test\EntityTestTypesFilter;
 use Drupal\language\Entity\ConfigurableLanguage;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests proper revision propagation of entities.
+ *
+ * @group Entity
  */
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityRevisionTranslationTest extends EntityKernelTestBase {
 
   /**
@@ -172,15 +168,13 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests set new revision.
-   *
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
+   * @covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
    */
   public function testSetNewRevision(): void {
     $user = $this->createUser();
 
     // All revisionable entity variations have to have the same results.
-    foreach (EntityTestHelper::getEntityTypes(EntityTestTypesFilter::Revisable) as $entity_type) {
+    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
       $this->installEntitySchema($entity_type);
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
 
@@ -206,7 +200,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   /**
    * Tests that revision translations are correctly detected.
    *
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityStorageBase::isAnyStoredRevisionTranslated
+   * @covers \Drupal\Core\Entity\ContentEntityStorageBase::isAnyStoredRevisionTranslated
    */
   public function testIsAnyStoredRevisionTranslated(): void {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */

@@ -40,23 +40,9 @@ class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Block\BlockPluginInterface
-   *   The block plugin instance.
    */
   public function &get($instance_id) {
     return parent::get($instance_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return void
-   *   Returns nothing.
-   */
-  public function addInstanceId($id, $configuration = NULL) {
-    if (!$id) {
-      throw new PluginException("The block '{$this->blockId}' did not specify a plugin.");
-    }
-    parent::addInstanceId($id, $configuration);
   }
 
   /**

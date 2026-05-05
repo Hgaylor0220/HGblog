@@ -6,20 +6,17 @@ namespace Drupal\Tests\Core\Access;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Access\CsrfTokenGenerator;
-use Drupal\Core\Access\RouteProcessorCsrf;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Access\RouteProcessorCsrf;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Access\RouteProcessorCsrf.
+ * @coversDefaultClass \Drupal\Core\Access\RouteProcessorCsrf
+ * @group Access
  */
-#[CoversClass(RouteProcessorCsrf::class)]
-#[Group('Access')]
 class RouteProcessorCsrfTest extends UnitTestCase {
 
   /**

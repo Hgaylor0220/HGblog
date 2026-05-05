@@ -7,19 +7,15 @@ namespace Drupal\Tests\media\Kernel;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\media\Entity\Media;
-use Drupal\media\MediaAccessControlHandler;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the media access control handler.
+ *
+ * @group media
+ *
+ * @coversDefaultClass \Drupal\media\MediaAccessControlHandler
  */
-#[CoversClass(MediaAccessControlHandler::class)]
-#[Group('media')]
-#[RunTestsInSeparateProcesses]
 class MediaAccessControlHandlerTest extends MediaKernelTestBase {
 
   use UserCreationTrait;
@@ -42,9 +38,9 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @param bool $is_latest_revision
    *   If FALSE, the media is historic revision.
    *
-   * @legacy-covers ::checkAccess
+   * @covers ::checkAccess
+   * @dataProvider providerAccess
    */
-  #[DataProvider('providerAccess')]
   public function testAccess(array $permissions, array $entity_values, string $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags, bool $is_latest_revision): void {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage $entity_storage */
     $entity_storage = $this->container->get('entity_type.manager')->getStorage('media');
@@ -82,8 +78,6 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
   }
 
   /**
-   * Tests create access.
-   *
    * @param string[] $permissions
    *   User permissions.
    * @param \Drupal\Core\Access\AccessResultInterface $expected_result
@@ -93,9 +87,9 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @param string[] $expected_cache_tags
    *   Expected cache tags.
    *
-   * @legacy-covers ::checkCreateAccess
+   * @covers ::checkCreateAccess
+   * @dataProvider providerCreateAccess
    */
-  #[DataProvider('providerCreateAccess')]
   public function testCreateAccess(array $permissions, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags): void {
     $user = $this->createUser($permissions);
 

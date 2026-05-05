@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -14,7 +13,6 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -23,7 +21,6 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionListTrait;
-use Drupal\layout_builder\SectionStorage\SupportAwareSectionStorageManagerInterface;
 
 /**
  * Provides an entity view display entity that has a layout.
@@ -32,7 +29,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
   use LayoutEntityHelperTrait;
   use SectionListTrait;
-  use StringTranslationTrait;
 
   /**
    * The entity field manager.
@@ -62,7 +58,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Toggle overridable layouts'), pluralize: FALSE, name: 'allowLayoutOverrides')]
   public function setOverridable($overridable = TRUE) {
     $this->setThirdPartySetting('layout_builder', 'allow_custom', $overridable);
     // Enable Layout Builder if it's not already enabled and overriding.
@@ -87,7 +82,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Enable Layout Builder'), pluralize: FALSE)]
   public function enableLayoutBuilder() {
     $this->setThirdPartySetting('layout_builder', 'enabled', TRUE);
     return $this;
@@ -96,7 +90,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Disable Layout Builder'), pluralize: FALSE)]
   public function disableLayoutBuilder() {
     $this->setOverridable(FALSE);
     $this->setThirdPartySetting('layout_builder', 'enabled', FALSE);
@@ -130,7 +123,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   public function preSave(EntityStorageInterface $storage) {
 
-    $original_value = $this->getOriginal()?->isOverridable() ?? FALSE;
+    $original_value = isset($this->original) ? $this->original->isOverridable() : FALSE;
     $new_value = $this->isOverridable();
     if ($original_value !== $new_value) {
       $entity_type_id = $this->getTargetEntityTypeId();
@@ -146,7 +139,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     parent::preSave($storage);
 
-    $already_enabled = $this->getOriginal()?->isLayoutBuilderEnabled() ?? FALSE;
+    $already_enabled = isset($this->original) ? $this->original->isLayoutBuilderEnabled() : FALSE;
     $set_enabled = $this->isLayoutBuilderEnabled();
     if ($already_enabled !== $set_enabled) {
       if ($set_enabled) {
@@ -156,14 +149,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         // Sort the components by weight.
         uasort($components, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
         foreach ($components as $name => $component) {
-          // We need to call setComponent so fields are added to the default
-          // section if enabled. However, this also adds the fields to the
-          // content key because of EntityDisplayBase::setComponent.
-          // Therefore, we need to hide the fields afterward.
-          // @todo simplify this in https://www.drupal.org/project/drupal/issues/3423225
           $this->setComponent($name, $component);
-          $this->hidden[$name] = $name;
-          unset($this->content[$name]);
         }
       }
       else {
@@ -241,7 +227,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       $field = FieldConfig::create([
         'field_storage' => $field_storage,
         'bundle' => $bundle,
-        'label' => $this->t('Layout'),
+        'label' => t('Layout'),
       ]);
       $field->setTranslatable(FALSE);
       $field->save();
@@ -301,11 +287,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       return $build_list;
     }
 
-    $sectionStorageManager = $this->sectionStorageManager();
     foreach ($entities as $id => $entity) {
-      if ($sectionStorageManager instanceof SupportAwareSectionStorageManagerInterface && $sectionStorageManager->notSupported($entity->getEntityTypeId(), $entity->bundle(), $this->mode)) {
-        continue;
-      }
       $build_list[$id]['_layout_builder'] = $this->buildSections($entity);
 
       // If there are any sections, remove all fields with configurable display

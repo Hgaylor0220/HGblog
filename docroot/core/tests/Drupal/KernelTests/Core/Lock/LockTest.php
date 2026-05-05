@@ -7,14 +7,12 @@ namespace Drupal\KernelTests\Core\Lock;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Database lock backend.
+ *
+ * @group Lock
  */
-#[Group('Lock')]
-#[RunTestsInSeparateProcesses]
 class LockTest extends KernelTestBase {
 
   /**

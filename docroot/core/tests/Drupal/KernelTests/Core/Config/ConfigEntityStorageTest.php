@@ -6,14 +6,12 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configuration entity storage.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class ConfigEntityStorageTest extends KernelTestBase {
 
   /**
@@ -43,7 +41,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
       $entity->save();
       $this->fail('Exception thrown when attempting to save a configuration entity with a UUID that does not match the existing UUID.');
     }
-    catch (ConfigDuplicateUUIDException) {
+    catch (ConfigDuplicateUUIDException $e) {
       // Expected exception; just continue testing.
     }
 
@@ -55,7 +53,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
   /**
    * Tests the hasData() method for config entity storage.
    *
-   * @legacy-covers \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
+   * @covers \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
    */
   public function testHasData(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');

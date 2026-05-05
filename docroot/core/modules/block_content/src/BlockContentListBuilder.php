@@ -44,14 +44,4 @@ class BlockContentListBuilder extends EntityListBuilder {
     return $query->execute();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperations(EntityInterface $entity) {
-    $operations = parent::getOperations($entity);
-    // The 'View' operation doesn't make sense for content blocks.
-    unset($operations['view']);
-    return $operations;
-  }
-
 }

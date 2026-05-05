@@ -6,14 +6,10 @@ namespace Drupal\Tests\contact\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Message Xml Basic Auth.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class MessageXmlBasicAuthTest extends MessageResourceTestBase {
 
   use BasicAuthResourceTestTrait;

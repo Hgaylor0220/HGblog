@@ -6,14 +6,12 @@ namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Make sure that attaching feeds works correctly with various constructs.
+ *
+ * @group Common
  */
-#[Group('Common')]
-#[RunTestsInSeparateProcesses]
 class AddFeedTest extends KernelTestBase {
 
   /**
@@ -71,7 +69,7 @@ class AddFeedTest extends KernelTestBase {
     // Glean the content from the response object.
     $this->setRawContent($response->getContent());
     // Assert that the content contains the RSS links we specified.
-    foreach ($urls as $feed_info) {
+    foreach ($urls as $description => $feed_info) {
       $this->assertPattern($this->urlToRSSLinkPattern($feed_info['url'], $feed_info['title']));
     }
   }

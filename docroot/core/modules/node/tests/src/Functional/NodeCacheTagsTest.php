@@ -8,14 +8,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Node entity's cache tags.
+ *
+ * @group node
  */
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**
@@ -50,7 +48,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAdditionalCacheContextsForEntity(EntityInterface $entity): array {
+  protected function getAdditionalCacheContextsForEntity(EntityInterface $entity) {
     return ['timezone'];
   }
 
@@ -59,14 +57,14 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    *
    * Each node must have an author.
    */
-  protected function getAdditionalCacheTagsForEntity(EntityInterface $node): array {
+  protected function getAdditionalCacheTagsForEntity(EntityInterface $node) {
     return ['user:' . $node->getOwnerId(), 'user_view'];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAdditionalCacheContextsForEntityListing(): array {
+  protected function getAdditionalCacheContextsForEntityListing() {
     return ['user.node_grants:view'];
   }
 

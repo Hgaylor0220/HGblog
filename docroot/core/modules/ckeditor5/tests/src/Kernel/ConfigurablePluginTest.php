@@ -6,16 +6,13 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests configurable plugins.
  *
+ * @group ckeditor5
  * @internal
  */
-#[Group('ckeditor5')]
-#[RunTestsInSeparateProcesses]
 class ConfigurablePluginTest extends KernelTestBase {
 
   /**
@@ -93,12 +90,10 @@ class ConfigurablePluginTest extends KernelTestBase {
           ['language' => 'xml', 'label' => 'XML'],
         ],
       ],
-      'ckeditor5_link_entity_suggestions' => [],
       'ckeditor5_list' => [
         'properties' => [
           'reversed' => TRUE,
           'startIndex' => TRUE,
-          'styles' => TRUE,
         ],
         'multiBlock' => TRUE,
       ],

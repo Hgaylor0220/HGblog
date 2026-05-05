@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutable;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests that list of plugin is correct.
+ *
+ * @group views
  */
-#[Group('views')]
 class PluginTypeListTest extends UnitTestCase {
 
   /**

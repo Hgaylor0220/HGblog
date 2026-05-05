@@ -4,29 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin;
 
-use Drupal\Component\Plugin\PluginBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Plugin\PluginBase.
+ * @coversDefaultClass \Drupal\Component\Plugin\PluginBase
+ * @group Plugin
  */
-#[CoversClass(PluginBase::class)]
-#[Group('Plugin')]
 class PluginBaseTest extends TestCase {
 
   /**
-   * Tests get plugin id.
+   * @dataProvider providerTestGetPluginId
+   * @covers ::getPluginId
    */
-  #[DataProvider('providerTestGetPluginId')]
   public function testGetPluginId($plugin_id, $expected): void {
-    $plugin_base = new StubPluginBase(
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
       [],
-    );
+    ]);
 
     $this->assertEquals($expected, $plugin_base->getPluginId());
   }
@@ -35,10 +30,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetPluginId().
    *
    * @return array
-   *   An array of test cases, where each item contains a plugin ID and
-   *   the expected plugin ID result.
    */
-  public static function providerTestGetPluginId(): array {
+  public static function providerTestGetPluginId() {
     return [
       ['base_id', 'base_id'],
       ['base_id:derivative', 'base_id:derivative'],
@@ -46,17 +39,16 @@ class PluginBaseTest extends TestCase {
   }
 
   /**
-   * Tests get base id.
-   *
+   * @dataProvider providerTestGetBaseId
    * @coves ::getBaseId
    */
-  #[DataProvider('providerTestGetBaseId')]
   public function testGetBaseId($plugin_id, $expected): void {
-    $plugin_base = new StubPluginBase(
+    /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit\Framework\MockObject\MockObject $plugin_base */
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
       [],
-    );
+    ]);
 
     $this->assertEquals($expected, $plugin_base->getBaseId());
   }
@@ -65,10 +57,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetBaseId().
    *
    * @return array
-   *   An array of test cases, where each item contains a plugin ID and
-   *   the expected base ID result.
    */
-  public static function providerTestGetBaseId(): array {
+  public static function providerTestGetBaseId() {
     return [
       ['base_id', 'base_id'],
       ['base_id:derivative', 'base_id'],
@@ -76,15 +66,16 @@ class PluginBaseTest extends TestCase {
   }
 
   /**
-   * Tests get derivative id.
+   * @dataProvider providerTestGetDerivativeId
+   * @covers ::getDerivativeId
    */
-  #[DataProvider('providerTestGetDerivativeId')]
   public function testGetDerivativeId($plugin_id = NULL, $expected = NULL): void {
-    $plugin_base = new StubPluginBase(
+    /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit\Framework\MockObject\MockObject $plugin_base */
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
       [],
-    );
+    ]);
 
     $this->assertEquals($expected, $plugin_base->getDerivativeId());
   }
@@ -93,10 +84,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetDerivativeId().
    *
    * @return array
-   *   An array of test cases, where each item contains a plugin ID and
-   *   the expected derivative ID result.
    */
-  public static function providerTestGetDerivativeId(): array {
+  public static function providerTestGetDerivativeId() {
     return [
       ['base_id', NULL],
       ['base_id:derivative', 'derivative'],
@@ -104,14 +93,14 @@ class PluginBaseTest extends TestCase {
   }
 
   /**
-   * Tests get plugin definition.
+   * @covers ::getPluginDefinition
    */
   public function testGetPluginDefinition(): void {
-    $plugin_base = new StubPluginBase(
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       'plugin_id',
       ['value', ['key' => 'value']],
-    );
+    ]);
 
     $this->assertEquals(['value', ['key' => 'value']], $plugin_base->getPluginDefinition());
   }

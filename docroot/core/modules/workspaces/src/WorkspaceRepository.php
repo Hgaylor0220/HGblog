@@ -69,15 +69,13 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
 
       $tree_children = [];
       foreach ($workspaces as $workspace_id => $workspace) {
-        $key = $workspace->hasParent() ? $workspace->parent->target_id : '';
-        $tree_children[$key][] = $workspace_id;
+        $tree_children[$workspace->parent->target_id][] = $workspace_id;
       }
 
       // Keeps track of the parents we have to process, the last entry is used
-      // for the next processing step. Top-level (root) workspace use an empty
-      // string as the parent, so we need to initialize the list with that
-      // value.
-      $process_parents[] = '';
+      // for the next processing step. Top-level (root) workspace use NULL as
+      // the parent, so we need to initialize the list with that value.
+      $process_parents[] = NULL;
 
       // Loops over the parent entities and adds its children to the tree array.
       // Uses a loop instead of a recursion, because it's more efficient.

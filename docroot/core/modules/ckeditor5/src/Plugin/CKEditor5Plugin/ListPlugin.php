@@ -26,11 +26,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    */
   public function defaultConfiguration() {
     return [
-      'properties' => [
-        'reversed' => TRUE,
-        'startIndex' => TRUE,
-        'styles' => TRUE,
-      ],
+      'properties' => ['reversed' => TRUE, 'startIndex' => TRUE],
       'multiBlock' => TRUE,
     ];
   }
@@ -54,12 +50,6 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
       '#title' => $this->t('Allow the user to create paragraphs in list items (or other block elements)'),
       '#default_value' => $this->configuration['multiBlock'],
     ];
-    $form['styles'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow the user to choose a list style type'),
-      '#description' => $this->t('Available list style types for ordered lists: letters and Roman numerals instead of only numbers. Available list style types for unordered lists: circles and squares instead of only discs.'),
-      '#default_value' => $this->configuration['properties']['styles'],
-    ];
 
     return $form;
   }
@@ -72,8 +62,6 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
     $form_state->setValue('reversed', (bool) $form_value);
     $form_value = $form_state->getValue('startIndex');
     $form_state->setValue('startIndex', (bool) $form_value);
-    $form_value = $form_state->getValue('styles');
-    $form_state->setValue('styles', (bool) $form_value);
     $form_value = $form_state->getValue('multiBlock');
     $form_state->setValue('multiBlock', (bool) $form_value);
   }
@@ -84,7 +72,6 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['properties']['reversed'] = $form_state->getValue('reversed');
     $this->configuration['properties']['startIndex'] = $form_state->getValue('startIndex');
-    $this->configuration['properties']['styles'] = $form_state->getValue('styles');
     $this->configuration['multiBlock'] = $form_state->getValue('multiBlock');
   }
 
@@ -92,13 +79,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $static_plugin_config['list']['properties'] = $this->getConfiguration()['properties'];
-    // Generate configuration to use `type` attribute-based list styles on <ul>
-    // and <ol> elements.
-    // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_list_listconfig-ListPropertiesStyleConfig.html#member-useAttribute
-    if ($this->getConfiguration()['properties']['styles']) {
-      $static_plugin_config['list']['properties']['styles'] = ['useAttribute' => TRUE];
-    }
+    $static_plugin_config['list']['properties'] = $this->getConfiguration()['properties'] + $static_plugin_config['list']['properties'];
     $static_plugin_config['list']['multiBlock'] = $this->getConfiguration()['multiBlock'];
     return $static_plugin_config;
   }
@@ -108,12 +89,6 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    */
   public function getElementsSubset(): array {
     $subset = $this->getPluginDefinition()->getElements();
-    if (!$this->getConfiguration()['properties']['styles']) {
-      $subset = array_diff($subset, [
-        '<ul type>',
-        '<ol type>',
-      ]);
-    }
     $subset = array_diff($subset, ['<ol reversed start>']);
     $reversed_enabled = $this->getConfiguration()['properties']['reversed'];
     $start_index_enabled = $this->getConfiguration()['properties']['startIndex'];

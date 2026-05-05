@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\telephone\Functional;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\telephone\Plugin\Field\FieldType\TelephoneItem;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the creation of telephone fields.
+ *
+ * @group telephone
  */
-#[Group('telephone')]
-#[RunTestsInSeparateProcesses]
 class TelephoneFieldTest extends BrowserTestBase {
 
   /**
@@ -87,7 +85,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   /**
    * Tests to confirm the widget is setup.
    *
-   * @legacy-covers \Drupal\telephone\Plugin\Field\FieldWidget\TelephoneDefaultWidget::formElement
+   * @covers \Drupal\telephone\Plugin\Field\FieldWidget\TelephoneDefaultWidget::formElement
    */
   public function testTelephoneWidget(): void {
     $this->drupalGet('node/add/article');
@@ -99,7 +97,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   /**
    * Tests the telephone formatter.
    *
-   * @legacy-covers \Drupal\telephone\Plugin\Field\FieldFormatter\TelephoneLinkFormatter::viewElements
+   * @covers \Drupal\telephone\Plugin\Field\FieldFormatter\TelephoneLinkFormatter::viewElements
    */
   public function testTelephoneFormatter(): void {
     $phone_numbers = [

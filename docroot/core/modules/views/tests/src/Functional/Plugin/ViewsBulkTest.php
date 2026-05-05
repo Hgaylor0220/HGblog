@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests views bulk operation selection.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class ViewsBulkTest extends ViewTestBase {
 
   /**

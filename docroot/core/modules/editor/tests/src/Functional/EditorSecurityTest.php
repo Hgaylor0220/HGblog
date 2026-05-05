@@ -8,14 +8,12 @@ use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests XSS protection for content creators when using text editors.
+ *
+ * @group editor
  */
-#[Group('editor')]
-#[RunTestsInSeparateProcesses]
 class EditorSecurityTest extends BrowserTestBase {
 
   /**
@@ -125,9 +123,6 @@ class EditorSecurityTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'restricted_with_editor',
       'editor' => 'unicorn',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
     $editor->save();
     $format = FilterFormat::create([
@@ -148,9 +143,6 @@ class EditorSecurityTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'restricted_plus_dangerous_tag_with_editor',
       'editor' => 'unicorn',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
     $editor->save();
     $format = FilterFormat::create([
@@ -170,9 +162,6 @@ class EditorSecurityTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'unrestricted_with_editor',
       'editor' => 'unicorn',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
     $editor->save();
 

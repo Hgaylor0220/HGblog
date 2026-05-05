@@ -6,16 +6,14 @@ namespace Drupal\Tests\block_content\Kernel\Migrate;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\migrate\MigrateException;
-use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\migrate_drupal\Tests\StubTestTrait;
 
 /**
  * Test stub creation for block_content entities.
+ *
+ * @group block_content
  */
-#[Group('block_content')]
-#[RunTestsInSeparateProcesses]
 class MigrateBlockContentStubTest extends MigrateDrupalTestBase {
 
   use StubTestTrait;

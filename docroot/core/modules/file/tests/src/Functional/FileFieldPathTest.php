@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that files are uploaded to proper locations.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class FileFieldPathTest extends FileFieldTestBase {
 
   /**
@@ -36,6 +34,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded to the correct location.
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = $node->{$field_name}->entity;
@@ -54,6 +53,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), "The file {$node_file->getFileUri()} was uploaded to the correct path.");
@@ -66,6 +66,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     // Do token replacement using the same user which uploaded the file, not

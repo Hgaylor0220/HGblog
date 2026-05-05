@@ -56,6 +56,8 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
     'block',
     'config_translation',
     'config_translation_test',
+    'contact',
+    'contact_test',
     'contextual',
     'entity_test',
     'field_test',
@@ -90,10 +92,12 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
         'administer languages',
         'administer site configuration',
         'link to any page',
+        'administer contact forms',
         'administer filters',
         $filtered_html_format->getPermissionName(),
         $full_html_format->getPermissionName(),
         $filter_test_format->getPermissionName(),
+        'access site-wide contact form',
         'access contextual links',
         'administer views',
         'administer account settings',
@@ -119,11 +123,11 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
   /**
    * Gets translation from locale storage.
    *
-   * @param string $config_name
+   * @param $config_name
    *   Configuration object.
-   * @param string $key
+   * @param $key
    *   Translation configuration field key.
-   * @param string $langcode
+   * @param $langcode
    *   String language code to load translation.
    *
    * @return bool|mixed
@@ -187,7 +191,7 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
   }
 
   /**
-   * Returns a .po file with a given number of plural forms.
+   * Helper function that returns a .po file with a given number of plural forms.
    */
   public function getPoFile($plurals) {
     $po_file = [];

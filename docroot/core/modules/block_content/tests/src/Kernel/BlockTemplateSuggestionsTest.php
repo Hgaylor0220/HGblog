@@ -7,16 +7,13 @@ namespace Drupal\Tests\block_content\Kernel;
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\block_content\Hook\BlockContentHooks;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the block_content_theme_suggestions_block() function.
+ *
+ * @group block_content
  */
-#[Group('block_content')]
-#[RunTestsInSeparateProcesses]
 class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**
@@ -26,6 +23,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
     'user',
     'block',
     'block_content',
+    'system',
   ];
 
   /**
@@ -70,12 +68,12 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
     ]);
 
     $variables['elements']['#id'] = $block->id();
+    $variables['elements']['#configuration']['provider'] = 'block_content';
     $variables['elements']['content']['#block_content'] = $this->blockContent;
     $variables['elements']['content']['#view_mode'] = 'full';
-    $suggestions = [];
-    $suggestions[] = 'block__block_content__' . $block->uuid();
-    $blockTemplateSuggestionsAlter = new BlockContentHooks();
-    $blockTemplateSuggestionsAlter->themeSuggestionsBlockAlter($suggestions, $variables);
+    $suggestions_empty = [];
+    $suggestions_empty[] = 'block__block_content__' . $block->uuid();
+    $suggestions = block_content_theme_suggestions_block_alter($suggestions_empty, $variables);
 
     $this->assertSame([
       'block__block_content__' . $block->uuid(),

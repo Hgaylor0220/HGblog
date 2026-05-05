@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
-use Drupal\TestTools\PhpUnitCompatibility\PhpUnit11\TestCompatibilityTrait;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 
 // In order to manage different method signatures between PHPUnit versions, we
@@ -23,7 +22,7 @@ if (FALSE) {
    */
   trait PhpUnitCompatibilityTrait {
 
-    use TestCompatibilityTrait;
+    use \Drupal\TestTools\PhpUnitCompatibility\PhpUnit9\TestCompatibilityTrait;
 
   }
 

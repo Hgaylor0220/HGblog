@@ -68,6 +68,7 @@
         $.ajax({
           async: false,
           url: Drupal.url(path),
+          data: { date: dateString },
           dataType: 'json',
           success(data) {
             if (data) {

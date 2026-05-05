@@ -7,14 +7,12 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the taxonomy term moderation handler.
+ *
+ * @group content_moderation
  */
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
 
   /**
@@ -29,7 +27,7 @@ class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
     parent::setUp();
 
     // Create a "Tags" vocabulary.
-    Vocabulary::create([
+    $bundle = Vocabulary::create([
       'vid' => 'tags',
       'name' => 'Tags',
       'new_revision' => FALSE,
@@ -39,8 +37,8 @@ class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
   /**
    * Tests the taxonomy term moderation handler alters the forms as intended.
    *
-   * @legacy-covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
-   * @legacy-covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
+   * @covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
+   * @covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testEnforceRevisionsEntityFormAlter(): void {
     $this->drupalLogin($this->adminUser);

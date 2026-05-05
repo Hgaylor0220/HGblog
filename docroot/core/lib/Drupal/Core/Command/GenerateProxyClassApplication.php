@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
  * Provides a console command to generate proxy classes.
  *
  * @see lazy_services
- * @see core/scripts/generate-proxy-class.php
+ * @see core/scripts/generate-proxy.sh
  */
 class GenerateProxyClassApplication extends Application {
 

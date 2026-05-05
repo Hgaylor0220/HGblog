@@ -21,17 +21,14 @@ use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage.
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage
+ *
+ * @group layout_builder
  */
-#[CoversClass(DefaultsSectionStorage::class)]
-#[Group('layout_builder')]
 class DefaultsSectionStorageTest extends UnitTestCase {
 
   /**
@@ -73,10 +70,8 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests third party settings.
-   *
-   * @legacy-covers ::getThirdPartySetting
-   * @legacy-covers ::setThirdPartySetting
+   * @covers ::getThirdPartySetting
+   * @covers ::setThirdPartySetting
    */
   public function testThirdPartySettings(): void {
     $this->entityTypeManager->getDefinition('entity_view_display')->willReturn(new EntityType(['id' => 'entity_view_display']));
@@ -114,7 +109,9 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests extract entity from route.
+   * @covers ::extractEntityFromRoute
+   *
+   * @dataProvider providerTestExtractEntityFromRoute
    *
    * @param bool $success
    *   Whether a successful result is expected.
@@ -125,7 +122,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    * @param array $defaults
    *   The defaults to pass to ::extractEntityFromRoute().
    */
-  #[DataProvider('providerTestExtractEntityFromRoute')]
   public function testExtractEntityFromRoute($success, $expected_entity_id, $value, array $defaults): void {
     if ($expected_entity_id) {
       $entity_storage = $this->prophesize(EntityStorageInterface::class);
@@ -196,7 +192,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests extract entity from route create.
+   * @covers ::extractEntityFromRoute
    */
   public function testExtractEntityFromRouteCreate(): void {
     $expected = 'the_return_value';
@@ -220,11 +216,9 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests build routes.
-   *
-   * @legacy-covers ::buildRoutes
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
+   * @covers ::buildRoutes
+   * @covers ::getEntityTypes
+   * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
    */
   public function testBuildRoutes(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -419,7 +413,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests build routes no field ui.
+   * @covers ::buildRoutes
    */
   public function testBuildRoutesNoFieldUi(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);

@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the authorize.php script and related API.
+ *
+ * @group system
  */
-#[IgnoreDeprecations]
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class SystemAuthorizeTest extends BrowserTestBase {
 
   /**
@@ -50,7 +46,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
    *
    * @see system_authorized_init()
    */
-  public function drupalGetAuthorizePHP($page_title = 'system-test-auth'): void {
+  public function drupalGetAuthorizePHP($page_title = 'system-test-auth') {
     $this->drupalGet('system-test/authorize-init/' . $page_title);
   }
 

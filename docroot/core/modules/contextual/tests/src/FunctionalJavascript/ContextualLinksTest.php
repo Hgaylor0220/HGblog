@@ -7,14 +7,12 @@ namespace Drupal\Tests\contextual\FunctionalJavascript;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\user\Entity\Role;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI for correct contextual links.
+ *
+ * @group contextual
  */
-#[Group('contextual')]
-#[RunTestsInSeparateProcesses]
 class ContextualLinksTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
@@ -64,7 +62,7 @@ class ContextualLinksTest extends WebDriverTestBase {
     $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
     $this->assertNotEmpty($contextualLinks);
 
-    // Confirm touchevents detection is loaded with Contextual Links.
+    // Confirm touchevents detection is loaded with Contextual Links
     $this->assertSession()->elementExists('css', 'html.no-touchevents');
 
     // Ensure visibility remains correct after cached paged load.
@@ -92,7 +90,9 @@ class ContextualLinksTest extends WebDriverTestBase {
     // as it would with a real user interaction. Otherwise clickContextualLink()
     // does not open the dialog in a manner that is opener-aware, and it isn't
     // possible to reliably test focus management.
-    $this->getSession()->getDriver()->mouseOver('.//*[@id="block-branding"]');
+    $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
+    $element = $driver_session->element('css selector', '#block-branding');
+    $driver_session->moveto(['element' => $element->getID()]);
     $this->clickContextualLink('#block-branding', 'Test Link with Ajax', FALSE);
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#drupal-modal'));
     $this->assertSession()->elementContains('css', '#drupal-modal', 'Everything is contextual!');

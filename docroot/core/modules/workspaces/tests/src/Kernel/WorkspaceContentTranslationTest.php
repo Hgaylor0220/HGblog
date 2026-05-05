@@ -8,14 +8,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity translations with workspaces.
+ *
+ * @group workspaces
  */
-#[Group('workspaces')]
-#[RunTestsInSeparateProcesses]
 class WorkspaceContentTranslationTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -37,7 +35,6 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
     'language',
     'user',
     'workspaces',
-    'workspaces_test',
   ];
 
   /**
@@ -54,7 +51,7 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
 
     $this->installConfig(['language', 'content_translation']);
 
-    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
+    $this->installSchema('workspaces', ['workspace_association']);
 
     $language = ConfigurableLanguage::createFromLangcode('ro');
     $language->save();
@@ -68,13 +65,12 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
   /**
    * Tests translations created in a workspace.
    *
-   * @legacy-covers \Drupal\workspaces\Hook\EntityOperations::entityTranslationInsert
+   * @covers \Drupal\workspaces\EntityOperations::entityTranslationInsert
    */
   public function testTranslations(): void {
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');
 
-    // Create two untranslated nodes in Live, a published and an unpublished
-    // one.
+    // Create two untranslated nodes in Live, a published and an unpublished one.
     $entity_published = $storage->create(['name' => 'live - 1 - published', 'status' => TRUE]);
     $entity_published->save();
     $entity_unpublished = $storage->create(['name' => 'live - 2 - unpublished', 'status' => FALSE]);
@@ -86,9 +82,6 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
     // Add a translation for each entity.
     $entity_published->addTranslation('ro', ['name' => 'live - 1 - published - RO']);
     $entity_published->save();
-
-    // Test that the default revision translation is created in a WS.
-    $this->assertTrue(\Drupal::keyValue('ws_test')->get('workspace_was_active'));
 
     $entity_unpublished->addTranslation('ro', ['name' => 'live - 2 - unpublished - RO']);
     $entity_unpublished->save();

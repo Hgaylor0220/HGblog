@@ -6,14 +6,12 @@ namespace Drupal\Tests\system\Functional\Common;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that bubbleable metadata of early rendering is not lost.
+ *
+ * @group Common
  */
-#[Group('Common')]
-#[RunTestsInSeparateProcesses]
 class EarlyRenderingControllerTest extends BrowserTestBase {
 
   /**

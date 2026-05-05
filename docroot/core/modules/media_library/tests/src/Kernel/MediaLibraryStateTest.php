@@ -9,19 +9,16 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Tests the media library state value object.
+ *
+ * @group media_library
+ *
+ * @coversDefaultClass \Drupal\media_library\MediaLibraryState
  */
-#[CoversClass(MediaLibraryState::class)]
-#[Group('media_library')]
-#[RunTestsInSeparateProcesses]
 class MediaLibraryStateTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;
@@ -99,8 +96,10 @@ class MediaLibraryStateTest extends KernelTestBase {
    *   library.
    * @param string $exception_message
    *   The expected exception message.
+   *
+   * @covers ::create
+   * @dataProvider providerCreate
    */
-  #[DataProvider('providerCreate')]
   public function testCreate($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, $exception_message = ''): void {
     if ($exception_message) {
       $this->expectException(\InvalidArgumentException::class);
@@ -275,8 +274,10 @@ class MediaLibraryStateTest extends KernelTestBase {
    *   The query parameters to override.
    * @param bool $exception_expected
    *   Whether an AccessDeniedHttpException is expected or not.
+   *
+   * @covers ::fromRequest
+   * @dataProvider providerFromRequest
    */
-  #[DataProvider('providerFromRequest')]
   public function testFromRequest(array $query_overrides, $exception_expected): void {
     // Override the query parameters and verify an exception is thrown when
     // required state parameters are changed.
@@ -292,7 +293,7 @@ class MediaLibraryStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests from request query less.
+   * @covers ::fromRequest
    */
   public function testFromRequestQueryLess(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -363,9 +364,7 @@ class MediaLibraryStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests opener parameters.
-   *
-   * @legacy-covers ::getOpenerParameters
+   * @covers ::getOpenerParameters
    */
   public function testOpenerParameters(): void {
     $state = MediaLibraryState::create('test', ['file'], 'file', -1, [

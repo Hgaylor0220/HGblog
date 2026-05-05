@@ -7,21 +7,17 @@ namespace Drupal\Tests\Core\Layout;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Layout\LayoutDefault.
+ * @coversDefaultClass \Drupal\Core\Layout\LayoutDefault
+ * @group Layout
  */
-#[CoversClass(LayoutDefault::class)]
-#[Group('Layout')]
 class LayoutDefaultTest extends UnitTestCase {
 
   /**
-   * Tests build.
+   * @covers ::build
+   * @dataProvider providerTestBuild
    */
-  #[DataProvider('providerTestBuild')]
   public function testBuild($regions, $expected): void {
     $definition = new LayoutDefinition([
       'theme_hook' => 'layout',
@@ -56,7 +52,7 @@ class LayoutDefaultTest extends UnitTestCase {
   /**
    * Provides test data for ::testBuild().
    */
-  public static function providerTestBuild(): array {
+  public static function providerTestBuild() {
     $data = [];
     // Empty regions are not added.
     $data['right_only'] = [

@@ -8,28 +8,23 @@ use Drupal\Core\Authentication\AuthenticationCollector;
 use Drupal\Core\Authentication\AuthenticationManager;
 use Drupal\Core\Authentication\AuthenticationProviderFilterInterface;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Authentication\AuthenticationManager.
+ * @coversDefaultClass \Drupal\Core\Authentication\AuthenticationManager
+ * @group Authentication
  */
-#[CoversClass(AuthenticationManager::class)]
-#[Group('Authentication')]
 class AuthenticationManagerTest extends UnitTestCase {
 
   /**
-   * Tests default filter.
+   * @covers ::defaultFilter
+   * @covers ::applyFilter
    *
-   * @legacy-covers ::defaultFilter
-   * @legacy-covers ::applyFilter
+   * @dataProvider providerTestDefaultFilter
    */
-  #[DataProvider('providerTestDefaultFilter')]
   public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global): void {
     $auth_provider = $this->createMock('Drupal\Core\Authentication\AuthenticationProviderInterface');
     $auth_collector = new AuthenticationCollector();
@@ -49,7 +44,7 @@ class AuthenticationManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply filter with filter provider.
+   * @covers ::applyFilter
    */
   public function testApplyFilterWithFilterProvider(): void {
     $auth_provider = $this->createMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');
@@ -69,7 +64,7 @@ class AuthenticationManagerTest extends UnitTestCase {
   /**
    * Provides data to self::testDefaultFilter().
    */
-  public static function providerTestDefaultFilter(): array {
+  public static function providerTestDefaultFilter() {
     $data = [];
     // No route, cookie is global, should apply.
     $data[] = [TRUE, FALSE, [], 'cookie', TRUE];

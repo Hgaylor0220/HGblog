@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\help\Functional;
 
-use Drupal\Component\FrontMatter\FrontMatter;
 use Drupal\Core\Extension\ExtensionLifecycle;
+use Drupal\Component\FrontMatter\FrontMatter;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\help\HelpTopicDiscovery;
 use Drupal\help_topics_twig_tester\HelpTestTwigNodeVisitor;
-use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Verifies that all core Help topics can be rendered and comply with standards.
+ *
+ * @group help
+ * @group #slow
  */
-#[Group('help')]
-#[Group('#slow')]
-#[RunTestsInSeparateProcesses]
 class HelpTopicsSyntaxTest extends BrowserTestBase {
 
   /**
@@ -100,7 +98,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param int $response
    *   Expected response from visiting the page for the topic.
    */
-  protected function verifyTopic($id, $definitions, $response = 200): void {
+  protected function verifyTopic($id, $definitions, $response = 200) {
     $definition = $definitions[$id];
     HelpTestTwigNodeVisitor::setStateValue('manner', 0);
 
@@ -193,16 +191,17 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param string $id
    *   ID of help topic (for error messages).
    */
-  protected function validateHtml(string $body, string $id): void {
+  protected function validateHtml(string $body, string $id) {
     $doc = new \DOMDocument();
     $doc->strictErrorChecking = TRUE;
     $doc->validateOnParse = FALSE;
     libxml_use_internal_errors(TRUE);
-    libxml_clear_errors();
     if (!$doc->loadXML('<html><body>' . $body . '</body></html>')) {
       foreach (libxml_get_errors() as $error) {
         $this->fail('Topic ' . $id . ' fails HTML validation: ' . $error->message);
       }
+
+      libxml_clear_errors();
     }
 
     // Check for headings hierarchy.
@@ -233,7 +232,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param array $definitions
    *   Array of all topic definitions, keyed by ID.
    */
-  protected function verifyBadTopic($id, $definitions): void {
+  protected function verifyBadTopic($id, $definitions) {
     $bad_topic_type = substr($id, 16);
     // Topics should fail verifyTopic() in specific ways.
     $found_error = FALSE;

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests drag and drop blocks on block layout page.
+ *
+ * @group block
  */
-#[Group('block')]
-#[RunTestsInSeparateProcesses]
 class BlockDragTest extends WebDriverTestBase {
 
   /**
@@ -72,8 +70,7 @@ class BlockDragTest extends WebDriverTestBase {
     // Check if the message unsaved changed appears.
     $assertSession->pageTextContains('You have unsaved changes.');
 
-    // Test if the message for empty regions appear after drag the unique block
-    // on the region.
+    // Test if the message for empty regions appear after drag the unique block on the region.
     $noBlockMessage = $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-primary-menu-message"] td')->getText();
     $this->assertSession()->assert($noBlockMessage === 'No blocks in this region', 'Region primary menu should be empty.');
 

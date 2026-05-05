@@ -7,8 +7,6 @@ namespace Drupal\Tests\serialization\Unit\EventSubscriber;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -17,14 +15,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Tests Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber.
+ * @coversDefaultClass \Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber
+ * @group serialization
  */
-#[CoversClass(DefaultExceptionSubscriber::class)]
-#[Group('serialization')]
 class DefaultExceptionSubscriberTest extends UnitTestCase {
 
   /**
-   * Tests on 4xx.
+   * @covers ::on4xx
    */
   public function testOn4xx(): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);

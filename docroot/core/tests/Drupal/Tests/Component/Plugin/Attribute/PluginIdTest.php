@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Drupal\Component\Plugin\Attribute\PluginID;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Plugin\Attribute\PluginID.
+ * @coversDefaultClass \Drupal\Component\Plugin\Attribute\PluginId
+ * @group Attribute
  */
-#[CoversClass(PluginID::class)]
-#[Group('Attribute')]
 class PluginIdTest extends TestCase {
 
   /**
-   * Tests get.
+   * @covers ::get
    */
   public function testGet(): void {
     // Assert plugin starts with only an ID.

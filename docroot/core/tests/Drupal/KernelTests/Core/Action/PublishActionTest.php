@@ -8,14 +8,10 @@ use Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Action;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Publish Action.
+ * @group Action
  */
-#[Group('Action')]
-#[RunTestsInSeparateProcesses]
 class PublishActionTest extends KernelTestBase {
 
   /**
@@ -32,9 +28,7 @@ class PublishActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests get derivative definitions.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver::getDerivativeDefinitions
+   * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions(): void {
     $deriver = new EntityPublishedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
@@ -49,9 +43,7 @@ class PublishActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests publish action.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\PublishAction::execute
+   * @covers \Drupal\Core\Action\Plugin\Action\PublishAction::execute
    */
   public function testPublishAction(): void {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
@@ -69,9 +61,7 @@ class PublishActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests unpublish action.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\UnpublishAction::execute
+   * @covers \Drupal\Core\Action\Plugin\Action\UnpublishAction::execute
    */
   public function testUnpublishAction(): void {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);

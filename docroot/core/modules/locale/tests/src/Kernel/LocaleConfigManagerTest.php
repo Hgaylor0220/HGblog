@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\block\Entity\Block;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests that the locale config manager operates correctly.
+ *
+ * @group locale
  */
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocaleConfigManagerTest extends KernelTestBase {
 
   /**
@@ -100,7 +98,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
         'id' => 'local_tasks_block',
         'label' => $this->randomMachineName(),
         'provider' => 'core',
-        'label_display' => '0',
+        'label_display' => FALSE,
         'primary' => TRUE,
         'secondary' => TRUE,
       ],

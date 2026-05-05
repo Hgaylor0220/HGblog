@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Permissions.
+ * @group system
  */
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class PermissionsTest extends KernelTestBase {
 
   /**

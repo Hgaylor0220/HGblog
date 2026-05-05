@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\entity_test\EntityTestHelper;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests default values for entity fields.
+ *
+ * @group Entity
  */
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityFieldDefaultValueTest extends EntityKernelTestBase {
 
   /**
@@ -37,7 +34,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
    */
   public function testDefaultValues(): void {
     // All entity variations have to have the same results.
-    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
+    foreach (entity_test_entity_types() as $entity_type) {
       $this->assertDefaultValues($entity_type);
     }
   }
@@ -67,7 +64,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
   public function testDefaultValueCallback(): void {
     $entity = $this->entityTypeManager->getStorage('entity_test_default_value')->create();
     // The description field has a default value callback for testing, see
-    // \Drupal\entity_test\Entity\EntityTestDefaultValue::descriptionDefaultValue().
+    // entity_test_field_default_value().
     $string = 'description_' . $entity->language()->getId();
     $expected = [
       [

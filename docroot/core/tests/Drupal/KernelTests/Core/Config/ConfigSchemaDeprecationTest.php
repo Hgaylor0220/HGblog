@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests config schema deprecation.
+ *
+ * @group config
+ * @group legacy
  */
-#[Group('config')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class ConfigSchemaDeprecationTest extends KernelTestBase {
 
   /**

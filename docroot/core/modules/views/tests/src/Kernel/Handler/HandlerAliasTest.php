@@ -6,14 +6,12 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handler table and field aliases.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class HandlerAliasTest extends ViewsKernelTestBase {
 
   /**
@@ -50,9 +48,6 @@ class HandlerAliasTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  /**
-   * Tests the behavior of plugin aliases in Views filters.
-   */
   public function testPluginAliases(): void {
     $view = Views::getView('test_filter');
     $view->initDisplay();

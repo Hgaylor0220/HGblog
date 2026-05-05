@@ -6,19 +6,15 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Drupal 6 upgrade using the migrate UI.
  *
  * The test method is provided by the MigrateUpgradeTestBase class.
+ *
+ * @group migrate_drupal_ui
+ * @group #slow
  */
-#[Group('migrate_drupal_ui')]
-#[Group('#slow')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
   /**
@@ -26,7 +22,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected static $modules = [
     'config_translation',
-    'contact',
     'content_translation',
     'datetime_range',
     'language',
@@ -59,7 +54,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
 
-    $this->expectedLoggedErrors = 41;
+    $this->expectedLoggedErrors = 39;
     // If saving the logs, then set the admin user.
     if ($this->outputLogs) {
       $this->migratedAdminUserName = 'admin';
@@ -76,16 +71,16 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts(): array {
+  protected function getEntityCounts() {
     return [
-      'block' => 36,
+      'block' => 37,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 8,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 12 comment types, one per node type.
       'comment_type' => 14,
-      'contact_form' => 4,
+      'contact_form' => 5,
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
@@ -138,7 +133,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths(): array {
+  protected function getAvailablePaths() {
     return [
       'Block',
       'Block translation',
@@ -191,7 +186,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths(): array {
+  protected function getMissingPaths() {
     return [
       'Aggregator',
       'Book',

@@ -8,22 +8,18 @@ use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests Drupal\Core\DependencyInjection\DependencySerializationTrait.
+ * @coversDefaultClass \Drupal\Core\DependencyInjection\DependencySerializationTrait
+ * @group DependencyInjection
  */
-#[CoversClass(DependencySerializationTrait::class)]
-#[Group('DependencyInjection')]
 class DependencySerializationTest extends UnitTestCase {
 
   /**
-   * Tests serialization.
-   *
-   * @legacy-covers ::__sleep
-   * @legacy-covers ::__wakeup
+   * @covers ::__sleep
+   * @covers ::__wakeup
    */
   public function testSerialization(): void {
     // Create a pseudo service and dependency injected object.
@@ -50,7 +46,7 @@ class DependencySerializationTest extends UnitTestCase {
 /**
  * Defines a test class which has a single service as dependency.
  */
-class DependencySerializationTestDummy {
+class DependencySerializationTestDummy implements ContainerAwareInterface {
 
   use DependencySerializationTrait;
 
@@ -80,8 +76,11 @@ class DependencySerializationTestDummy {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
-  public function setContainer(?ContainerInterface $container): void {
+  public function setContainer(?ContainerInterface $container = NULL) {
     $this->container = $container;
   }
 

@@ -25,14 +25,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListCommand extends Command
 {
-    protected function configure(): void
+    /**
+     * @return void
+     */
+    protected function configure()
     {
         $this
             ->setName('list')
             ->setDefinition([
                 new InputArgument('namespace', InputArgument::OPTIONAL, 'The namespace name', null, fn () => array_keys((new ApplicationDescription($this->getApplication()))->getNamespaces())),
                 new InputOption('raw', null, InputOption::VALUE_NONE, 'To output raw command list'),
-                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt', fn () => (new DescriptorHelper())->getFormats()),
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt', static fn () => (new DescriptorHelper())->getFormats()),
                 new InputOption('short', null, InputOption::VALUE_NONE, 'To skip describing commands\' arguments'),
             ])
             ->setDescription('List commands')
@@ -45,7 +48,7 @@ class ListCommand extends Command
 
                   <info>%command.full_name% test</info>
 
-                You can also output the information in other formats by using the <info>--format</info> option:
+                You can also output the information in other formats by using the <comment>--format</comment> option:
 
                   <info>%command.full_name% --format=xml</info>
 

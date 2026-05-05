@@ -11,7 +11,7 @@ use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 /**
  * Base class for Settings Tray tests.
  */
-abstract class SettingsTrayTestBase extends OffCanvasTestBase {
+class SettingsTrayTestBase extends OffCanvasTestBase {
 
   use ContextualLinkClickTrait;
 
@@ -125,8 +125,7 @@ abstract class SettingsTrayTestBase extends OffCanvasTestBase {
     $web_assert->elementNotExists('css', '.contextual .trigger.visually-hidden');
     // The toolbar edit button should read "Editing".
     $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Editing');
-    // The main canvas element should have the "js-settings-tray-edit-mode"
-    // class.
+    // The main canvas element should have the "js-settings-tray-edit-mode" class.
     $web_assert->elementExists('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
   }
 
@@ -157,7 +156,7 @@ abstract class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static function getTestThemes(): array {
+  protected static function getTestThemes() {
     // Remove 'claro' theme. Settings Tray "Edit Mode" will not work with this
     // theme because it removes all contextual links.
     return array_filter(parent::getTestThemes(), function ($theme) {
@@ -184,7 +183,7 @@ abstract class SettingsTrayTestBase extends OffCanvasTestBase {
    * @return bool
    *   TRUE if the label is visible, FALSE if it is not.
    */
-  protected function isLabelInputVisible(): bool {
+  protected function isLabelInputVisible() {
     return $this->getSession()->getPage()->find('css', static::LABEL_INPUT_SELECTOR)->isVisible();
   }
 

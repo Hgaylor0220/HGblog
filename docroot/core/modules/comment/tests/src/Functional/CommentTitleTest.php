@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentPreviewMode;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests that appropriate and accessible markup is created for comment titles.
+ *
+ * @group comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class CommentTitleTest extends CommentTestBase {
 
   /**
@@ -40,7 +36,7 @@ class CommentTitleTest extends CommentTestBase {
     \Drupal::service('module_installer')->install(['comment_empty_title_test']);
 
     // Set comments to have a subject with preview disabled.
-    $this->setCommentPreview(CommentPreviewMode::Disabled);
+    $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
 
@@ -73,7 +69,7 @@ class CommentTitleTest extends CommentTestBase {
    */
   public function testCommentPopulatedTitles(): void {
     // Set comments to have a subject with preview disabled.
-    $this->setCommentPreview(CommentPreviewMode::Disabled);
+    $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
 

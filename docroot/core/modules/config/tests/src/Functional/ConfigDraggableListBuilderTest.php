@@ -7,14 +7,12 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests draggable list builder.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class ConfigDraggableListBuilderTest extends BrowserTestBase {
 
   /**
@@ -42,7 +40,7 @@ class ConfigDraggableListBuilderTest extends BrowserTestBase {
       $role->save();
     }
 
-    // Navigate to Roles page.
+    // Navigate to Roles page
     $this->drupalGet('admin/people/roles');
 
     // Test for the page title.
@@ -61,6 +59,16 @@ class ConfigDraggableListBuilderTest extends BrowserTestBase {
 
     $this->drupalGet('admin/people/roles');
     $this->assertSession()->responseContains('<td>' . Html::escape($role_name));
+
+    // Make sure that NULL weights do not break the list builder. Use the
+    // configuration API so that the value does not get type-casted according to
+    // the configuration schema.
+    \Drupal::configFactory()
+      ->getEditable('user.role.role_0')
+      ->set('weight', NULL)
+      ->save(TRUE);
+    $this->drupalGet('admin/people/roles');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

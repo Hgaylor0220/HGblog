@@ -6,19 +6,15 @@ namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber;
 use Drupal\Core\Routing\RouteBuildEvent;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber.
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
+ * @group EventSubscriber
  */
-#[CoversClass(SpecialAttributesRouteSubscriber::class)]
-#[Group('EventSubscriber')]
 class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
 
   /**
@@ -76,9 +72,10 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
    *
-   * @legacy-covers ::onAlterRoutes
+   * @dataProvider providerTestOnRouteBuildingValidVariables
+   *
+   * @covers ::onAlterRoutes
    */
-  #[DataProvider('providerTestOnRouteBuildingValidVariables')]
   public function testOnRouteBuildingValidVariables(Route $route): void {
     $route_collection = new RouteCollection();
     $route_collection->add('test', $route);
@@ -94,17 +91,17 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
    *
-   * @legacy-covers ::onAlterRoutes
+   * @dataProvider providerTestOnRouteBuildingInvalidVariables
+   * @covers ::onAlterRoutes
    */
-  #[DataProvider('providerTestOnRouteBuildingInvalidVariables')]
   public function testOnRouteBuildingInvalidVariables(Route $route): void {
     $route_collection = new RouteCollection();
     $route_collection->add('test', $route);
 
     $event = new RouteBuildEvent($route_collection);
     $subscriber = new SpecialAttributesRouteSubscriber();
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Route test uses reserved variable names:');
+    $this->expectWarning();
+    $this->expectWarningMessage('uses reserved variable names');
     $subscriber->onAlterRoutes($event);
   }
 

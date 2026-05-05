@@ -6,14 +6,12 @@ namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests private files migration.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class MigratePrivateFileTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;
@@ -35,7 +33,7 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFileMigrationInfo(): array {
+  protected function getFileMigrationInfo() {
     return [
       'path' => 'private://sites/default/private/Babylon5.txt',
       'size' => 3,
@@ -47,7 +45,7 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
       ->addTag('stream_wrapper', ['scheme' => 'private']);

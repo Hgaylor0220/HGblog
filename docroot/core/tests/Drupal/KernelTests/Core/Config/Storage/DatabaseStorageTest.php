@@ -7,14 +7,12 @@ namespace Drupal\KernelTests\Core\Config\Storage;
 use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests DatabaseStorage operations.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class DatabaseStorageTest extends ConfigStorageTestBase {
 
   /**
@@ -27,32 +25,20 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
     $this->invalidStorage = new DatabaseStorage($this->container->get('database'), 'invalid');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function read($name): mixed {
+  protected function read($name) {
     $data = Database::getConnection()->select('config', 'c')->fields('c', ['data'])->condition('name', $name)->execute()->fetchField();
     return unserialize($data);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function insert($name, $data): void {
+  protected function insert($name, $data) {
     Database::getConnection()->insert('config')->fields(['name' => $name, 'data' => $data])->execute();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function update($name, $data): void {
+  protected function update($name, $data) {
     Database::getConnection()->update('config')->fields(['data' => $data])->condition('name', $name)->execute();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function delete($name): void {
+  protected function delete($name) {
     Database::getConnection()->delete('config')->condition('name', $name)->execute();
   }
 
@@ -84,56 +70,56 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->exists('config.settings');
       $this->fail('Expected exception not thrown from exists()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     try {
       $this->storage->read('config.settings');
       $this->fail('Expected exception not thrown from read()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     try {
       $this->storage->readMultiple(['config.settings', 'config.settings2']);
       $this->fail('Expected exception not thrown from readMultiple()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     try {
       $this->storage->write('config.settings', ['data' => '']);
       $this->fail('Expected exception not thrown from deleteAll()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     try {
       $this->storage->listAll();
       $this->fail('Expected exception not thrown from listAll()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     try {
       $this->storage->deleteAll();
       $this->fail('Expected exception not thrown from deleteAll()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     try {
       $this->storage->getAllCollectionNames();
       $this->fail('Expected exception not thrown from getAllCollectionNames()');
     }
-    catch (DatabaseExceptionWrapper) {
-      // Exception was expected.
+    catch (DatabaseExceptionWrapper $e) {
+      // Exception was expected
     }
 
     $this->assertTrue(TRUE);

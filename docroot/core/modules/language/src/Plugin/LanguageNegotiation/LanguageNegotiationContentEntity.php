@@ -50,9 +50,9 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
   /**
    * Static cache for the language negotiation order check.
    *
-   * @var bool
-   *
    * @see \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity::hasLowerLanguageNegotiationWeight()
+   *
+   * @var bool
    */
   protected $hasLowerLanguageNegotiationWeightResult;
 
@@ -98,11 +98,8 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
 
     $langcode = $request->query->get(static::QUERY_PARAMETER);
 
-    if ($langcode === NULL || !array_key_exists($langcode, $this->languageManager->getLanguages())) {
-      return NULL;
-    }
-
-    return $langcode;
+    $language_enabled = array_key_exists($langcode, $this->languageManager->getLanguages());
+    return $language_enabled ? $langcode : NULL;
   }
 
   /**

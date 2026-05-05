@@ -4,27 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\EventSubscriber;
 
-use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\jsonapi\EventSubscriber\ResourceResponseValidator;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\Routing\Routes;
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\jsonapi\EventSubscriber\ResourceResponseValidator.
+ * @coversDefaultClass \Drupal\jsonapi\EventSubscriber\ResourceResponseValidator
+ * @group jsonapi
  *
  * @internal
  */
-#[CoversClass(ResourceResponseValidator::class)]
-#[Group('jsonapi')]
 class ResourceResponseValidatorTest extends UnitTestCase {
 
   /**
@@ -59,9 +55,9 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests validate response.
+   * @covers ::validateResponse
+   * @dataProvider validateResponseProvider
    */
-  #[DataProvider('validateResponseProvider')]
   public function testValidateResponse($request, $response, $expected, $description): void {
     // Expose protected ResourceResponseSubscriber::validateResponse() method.
     $object = new \ReflectionObject($this->subscriber);

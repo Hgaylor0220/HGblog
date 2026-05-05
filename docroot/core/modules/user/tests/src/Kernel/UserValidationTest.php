@@ -11,15 +11,12 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verify that user validity checks behave as designed.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class UserValidationTest extends KernelTestBase {
 
   /**
@@ -41,8 +38,9 @@ class UserValidationTest extends KernelTestBase {
 
   /**
    * Tests user name validation.
+   *
+   * @group legacy
    */
-  #[IgnoreDeprecations]
   public function testUsernames(): void {
     // cSpell:disable
     $test_cases = [

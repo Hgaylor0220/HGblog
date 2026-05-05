@@ -7,17 +7,14 @@ namespace Drupal\Tests\workflows\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\Exception\RequiredStateMissingException;
-use Drupal\workflows\Plugin\WorkflowTypeBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Workflow type's required states and configuration initialization.
+ *
+ * @coversDefaultClass \Drupal\workflows\Plugin\WorkflowTypeBase
+ *
+ * @group workflows
  */
-#[CoversClass(WorkflowTypeBase::class)]
-#[Group('workflows')]
-#[RunTestsInSeparateProcesses]
 class RequiredStatesTest extends KernelTestBase {
 
   /**
@@ -26,10 +23,8 @@ class RequiredStatesTest extends KernelTestBase {
   protected static $modules = ['workflows', 'workflow_type_test'];
 
   /**
-   * Tests get required states.
-   *
-   * @legacy-covers ::getRequiredStates
-   * @legacy-covers ::__construct
+   * @covers ::getRequiredStates
+   * @covers ::__construct
    */
   public function testGetRequiredStates(): void {
     $workflow = Workflow::create([
@@ -48,9 +43,7 @@ class RequiredStatesTest extends KernelTestBase {
   }
 
   /**
-   * Tests delete required state a p i.
-   *
-   * @legacy-covers \Drupal\workflows\Entity\Workflow::preSave
+   * @covers \Drupal\workflows\Entity\Workflow::preSave
    */
   public function testDeleteRequiredStateAPI(): void {
     $workflow = Workflow::create([
@@ -67,9 +60,7 @@ class RequiredStatesTest extends KernelTestBase {
   }
 
   /**
-   * Tests no states required state a p i.
-   *
-   * @legacy-covers \Drupal\workflows\Entity\Workflow::preSave
+   * @covers \Drupal\workflows\Entity\Workflow::preSave
    */
   public function testNoStatesRequiredStateAPI(): void {
     $workflow = Workflow::create([

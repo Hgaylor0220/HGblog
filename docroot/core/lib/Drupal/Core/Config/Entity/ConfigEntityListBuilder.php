@@ -35,21 +35,21 @@ class ConfigEntityListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
+  public function getDefaultOperations(EntityInterface $entity) {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     $operations = parent::getDefaultOperations($entity);
 
     if ($this->entityType->hasKey('status')) {
       if (!$entity->status() && $entity->hasLinkTemplate('enable')) {
         $operations['enable'] = [
-          'title' => $this->t('Enable'),
+          'title' => t('Enable'),
           'weight' => -10,
           'url' => $this->ensureDestination($entity->toUrl('enable')),
         ];
       }
       elseif ($entity->hasLinkTemplate('disable')) {
         $operations['disable'] = [
-          'title' => $this->t('Disable'),
+          'title' => t('Disable'),
           'weight' => 40,
           'url' => $this->ensureDestination($entity->toUrl('disable')),
         ];

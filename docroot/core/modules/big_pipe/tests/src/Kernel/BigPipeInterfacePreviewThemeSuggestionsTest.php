@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Kernel;
 
-use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\block\Entity\Block;
 
 /**
- * Tests the big pipe theme suggestions.
+ * Tests the big_pipe_theme_suggestions_big_pipe_interface_preview() function.
+ *
+ * @group big_pipe
  */
-#[Group('big_pipe')]
-#[RunTestsInSeparateProcesses]
 class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
 
   /**
@@ -60,7 +58,7 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
   }
 
   /**
-   * Tests theme suggestions from big_pipe.
+   * Tests template suggestions from big_pipe_theme_suggestions_big_pipe_interface_preview().
    */
   public function testBigPipeThemeHookSuggestions(): void {
     $entity = $this->controller->create([
@@ -79,11 +77,10 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $variables = [];
     // In turn this is what createBigPipeJsPlaceholder() uses to
     // build the BigPipe JS placeholder render array which is used as input
-    // for big_pipe theme suggestions().
+    // for big_pipe_theme_suggestions_big_pipe_interface_preview().
     $variables['callback'] = $build['#lazy_builder'][0];
     $variables['arguments'] = $build['#lazy_builder'][1];
-    $module_handler = $this->container->get('module_handler');
-    $suggestions = $module_handler->invoke('big_pipe', 'theme_suggestions_big_pipe_interface_preview', [$variables]);
+    $suggestions = big_pipe_theme_suggestions_big_pipe_interface_preview($variables);
     $suggested_id = preg_replace('/[^a-zA-Z0-9]/', '_', $block->id());
     $this->assertSame([
       'big_pipe_interface_preview__block',

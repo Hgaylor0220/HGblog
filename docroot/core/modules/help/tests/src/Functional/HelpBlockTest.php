@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests display of help block.
+ *
+ * @group help
  */
-#[Group('help')]
-#[RunTestsInSeparateProcesses]
 class HelpBlockTest extends BrowserTestBase {
 
   /**

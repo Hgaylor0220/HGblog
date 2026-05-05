@@ -11,8 +11,6 @@
 
 namespace Symfony\Component\Validator\Constraints;
 
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
-
 /**
  * A sequence of validation groups.
  *
@@ -46,6 +44,9 @@ use Symfony\Component\Validator\Attribute\HasNamedArguments;
  *
  *     $validator->validate($address, null, "Address")
  *
+ * @Annotation
+ * @Target({"CLASS", "ANNOTATION"})
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
@@ -56,7 +57,7 @@ class GroupSequence
      *
      * @var array<int, string|string[]|GroupSequence>
      */
-    public array $groups;
+    public $groups;
 
     /**
      * The group in which cascaded objects are validated when validating
@@ -69,21 +70,18 @@ class GroupSequence
      * "Default" group. When validating that class in the "Default" group, the
      * group sequence is used instead, but still the "Default" group should be
      * cascaded to other objects.
+     *
+     * @var string|GroupSequence
      */
-    public string|GroupSequence $cascadedGroup;
+    public $cascadedGroup;
 
     /**
      * Creates a new group sequence.
      *
      * @param array<string|string[]|GroupSequence> $groups The groups in the sequence
      */
-    #[HasNamedArguments]
     public function __construct(array $groups)
     {
-        if (!array_is_list($groups)) {
-            trigger_deprecation('symfony/validator', '7.4', 'Support for passing an array of options to "%s()" is deprecated.', __METHOD__);
-        }
-
         $this->groups = $groups['value'] ?? $groups;
     }
 }

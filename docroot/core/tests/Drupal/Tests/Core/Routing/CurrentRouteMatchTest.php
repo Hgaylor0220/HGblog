@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\Core\Routing\NullRouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,10 +14,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Routing\CurrentRouteMatch.
+ * @coversDefaultClass \Drupal\Core\Routing\CurrentRouteMatch
+ * @group Routing
  */
-#[CoversClass(CurrentRouteMatch::class)]
-#[Group('Routing')]
 class CurrentRouteMatchTest extends RouteMatchTestBase {
 
   /**
@@ -40,12 +36,10 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   }
 
   /**
-   * Tests get current route object.
-   *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getRouteObject
-   * @legacy-covers ::getCurrentRouteMatch
-   * @legacy-covers ::getRouteMatch
+   * @covers ::__construct
+   * @covers ::getRouteObject
+   * @covers ::getCurrentRouteMatch
+   * @covers ::getRouteMatch
    */
   public function testGetCurrentRouteObject(): void {
 
@@ -79,14 +73,10 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
     // Restored original request.
     $request_stack->pop();
     $this->assertSame('1', $current_route_match->getParameter('foo'));
-
-    // Test a null request.
-    $request_stack->pop();
-    $this->assertTrue($current_route_match->getCurrentRouteMatch() instanceof NullRouteMatch);
   }
 
   /**
-   * Tests get route match from request with routing.
+   * @covers ::getRouteMatchFromRequest
    */
   public function testGetRouteMatchFromRequestWithRouting(): void {
     $request_stack = new RequestStack();
@@ -101,7 +91,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   }
 
   /**
-   * Tests get route match from request.
+   * @covers ::getRouteMatchFromRequest
    */
   public function testGetRouteMatchFromRequest(): void {
     $request_stack = new RequestStack();
@@ -120,7 +110,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   }
 
   /**
-   * Tests reset route match.
+   * @covers ::resetRouteMatch
    */
   public function testResetRouteMatch(): void {
     $route = new Route('/test-route/{foo}');

@@ -9,10 +9,9 @@ use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
  * Remove plugin definitions with non-existing providers.
  *
  * @internal
- *   This provides backwards compatibility for migration source plugins
- *   using annotations and having more than one provider. This functionality
- *   will be deprecated with plugin discovery by annotations in
- *   https://www.drupal.org/project/drupal/issues/3522409.
+ *   This is a temporary solution to the fact that migration source plugins have
+ *   more than one provider. This functionality will be moved to core in
+ *   https://www.drupal.org/node/2786355.
  */
 class ProviderFilterDecorator implements DiscoveryInterface {
 
@@ -68,12 +67,9 @@ class ProviderFilterDecorator implements DiscoveryInterface {
     return array_filter($definitions, function ($definition) use ($provider_exists) {
       // Plugin definitions can be objects (for example, Typed Data) those will
       // become empty array here and cause no problems.
-      $definition = (array) $definition + [
-        'provider' => [],
-        'providers' => [],
-      ];
+      $definition = (array) $definition + ['provider' => []];
       // There can be one or many providers, handle them as multiple always.
-      $providers = $definition['providers'] ?: (array) $definition['provider'];
+      $providers = (array) $definition['provider'];
       return count($providers) == count(array_filter($providers, $provider_exists));
     });
   }

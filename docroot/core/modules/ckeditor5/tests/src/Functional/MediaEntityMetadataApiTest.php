@@ -17,19 +17,16 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\ckeditor5\Traits\SynchronizeCsrfTokenSeedTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use Symfony\Component\Validator\ConstraintViolationInterface;
+use Drupal\user\Entity\User;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests the media entity metadata API.
  *
+ * @group ckeditor5
  * @internal
  */
-#[Group('ckeditor5')]
-#[RunTestsInSeparateProcesses]
 class MediaEntityMetadataApiTest extends BrowserTestBase {
 
   use TestFileCreationTrait;
@@ -142,9 +139,6 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
       'settings' => [
         'toolbar' => [
           'items' => [],
@@ -170,7 +164,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     ])->save();
 
     $this->assertSame([], array_map(
-      function (ConstraintViolationInterface $v) {
+      function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))

@@ -9,14 +9,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class TaggedWithTest extends WizardTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -100,7 +98,7 @@ class TaggedWithTest extends WizardTestBase {
       ],
       'auto_create' => TRUE,
     ];
-    $this->createEntityReferenceField('node', $this->nodeTypeWithTags->id(), $this->tagFieldName, '', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField('node', $this->nodeTypeWithTags->id(), $this->tagFieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
@@ -196,9 +194,7 @@ class TaggedWithTest extends WizardTestBase {
   }
 
   /**
-   * Tests the "tagged with" form element.
-   *
-   * Confirm that the element only shows for node types that support it.
+   * Tests that the "tagged with" form element only shows for node types that support it.
    */
   public function testTaggedWithByNodeType(): void {
     // The tagging field is associated with one of our node types only. So the

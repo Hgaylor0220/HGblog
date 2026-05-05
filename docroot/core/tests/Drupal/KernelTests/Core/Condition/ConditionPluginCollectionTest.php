@@ -6,16 +6,12 @@ namespace Drupal\KernelTests\Core\Condition;
 
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\Core\Condition\ConditionPluginCollection.
+ * @coversDefaultClass \Drupal\Core\Condition\ConditionPluginCollection
+ *
+ * @group Condition
  */
-#[CoversClass(ConditionPluginCollection::class)]
-#[Group('Condition')]
-#[RunTestsInSeparateProcesses]
 class ConditionPluginCollectionTest extends KernelTestBase {
 
   /**
@@ -28,7 +24,7 @@ class ConditionPluginCollectionTest extends KernelTestBase {
   ];
 
   /**
-   * Tests get configuration.
+   * @covers ::getConfiguration
    */
   public function testGetConfiguration(): void {
     // Include a condition that has custom configuration and a type mismatch on

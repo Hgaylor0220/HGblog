@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Media Type Json Basic Auth.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class MediaTypeJsonBasicAuthTest extends MediaTypeResourceTestBase {
 
   use BasicAuthResourceTestTrait;

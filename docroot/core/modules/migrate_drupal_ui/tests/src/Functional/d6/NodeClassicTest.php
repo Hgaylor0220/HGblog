@@ -7,19 +7,15 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the classic node migration runs.
  *
  * The classic node migration will run and not the complete node migration
  * when there is a pre-existing classic node migrate map table.
+ *
+ * @group migrate_drupal_ui
  */
-#[Group('migrate_drupal_ui')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
 
   use NodeMigrateTypeTestTrait;
@@ -53,28 +49,28 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts(): array {
+  protected function getEntityCounts() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCountsIncremental(): array {
+  protected function getEntityCountsIncremental() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths(): array {
+  protected function getAvailablePaths() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths(): array {
+  protected function getMissingPaths() {
     return [];
   }
 

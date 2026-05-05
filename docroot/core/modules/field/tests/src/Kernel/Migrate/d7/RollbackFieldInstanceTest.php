@@ -6,14 +6,12 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\MigrateExecutable;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Migrates and rolls back Drupal 7 fields.
+ *
+ * @group field
  */
-#[Group('field')]
-#[RunTestsInSeparateProcesses]
 class RollbackFieldInstanceTest extends MigrateFieldInstanceTest {
 
   /**
@@ -71,7 +69,7 @@ class RollbackFieldInstanceTest extends MigrateFieldInstanceTest {
    * @param string|\Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to rollback, or its ID.
    */
-  protected function executeRollback($migration): void {
+  protected function executeRollback($migration) {
     if (is_string($migration)) {
       $this->migration = $this->getMigration($migration);
     }

@@ -10,19 +10,16 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use GuzzleHttp\RequestOptions;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "User" content entity type.
+ *
+ * @group jsonapi
  */
-#[Group('jsonapi')]
-#[RunTestsInSeparateProcesses]
 class UserTest extends ResourceTestBase {
 
   const BATCH_TEST_NODE_COUNT = 15;
@@ -84,7 +81,7 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     // @todo Remove this in
     $this->grantPermissionsToTestedRole(['access content']);
 
@@ -139,16 +136,16 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/user/user/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -186,7 +183,7 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     return [
       'data' => [
         'type' => 'user--user',
@@ -475,18 +472,8 @@ class UserTest extends ResourceTestBase {
     $this->grantPermissionsToTestedRole(['administer users']);
 
     $response = $this->request('GET', $collection_url, $request_options);
-    $expected_cache_contexts = ['url.path', 'url.query_args', 'url.site', 'user.permissions'];
-    $this->assertResourceErrorResponse(
-      400,
-      "Filtering on config entities is not supported by Drupal's entity API. You tried to filter on a Role config entity.",
-      $collection_url,
-      $response,
-      FALSE,
-      ['4xx-response', 'http_response'],
-      $expected_cache_contexts,
-      NULL,
-      'MISS',
-    );
+    $expected_cache_contexts = ['url.path', 'url.query_args', 'url.site'];
+    $this->assertResourceErrorResponse(400, "Filtering on config entities is not supported by Drupal's entity API. You tried to filter on a Role config entity.", $collection_url, $response, FALSE, ['4xx-response', 'http_response'], $expected_cache_contexts, NULL, 'MISS');
   }
 
   /**
@@ -703,8 +690,8 @@ class UserTest extends ResourceTestBase {
 
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block_unpublish.
+   * @group jsonapi
    */
-  #[Group('jsonapi')]
   public function testDeleteRespectsUserCancelBlockUnpublishAndProcessesBatches(): void {
     $cancel_method = 'user_cancel_block_unpublish';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -839,7 +826,7 @@ class UserTest extends ResourceTestBase {
    * @param string $cancel_method
    *   The cancel method.
    */
-  private function sendDeleteRequestForUser(UserInterface $account, string $cancel_method): void {
+  private function sendDeleteRequestForUser(UserInterface $account, string $cancel_method) {
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';

@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\menu_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for menu_test routes.
@@ -52,6 +51,17 @@ class MenuTestController extends ControllerBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('theme.manager'),
+      $container->get('theme.negotiator'),
+      $container->get('current_route_match')
+    );
+  }
+
+  /**
    * Some known placeholder content which can be used for testing.
    *
    * @return string
@@ -74,8 +84,7 @@ class MenuTestController extends ControllerBase {
    */
   public function titleCallback(array $_title_arguments = [], $_title = '') {
     $_title_arguments += ['case_number' => '2', 'title' => $_title];
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-    return $this->t($_title_arguments['title']) . ' - Case ' . $_title_arguments['case_number'];
+    return t($_title_arguments['title']) . ' - Case ' . $_title_arguments['case_number'];
   }
 
   /**
@@ -106,7 +115,6 @@ class MenuTestController extends ControllerBase {
    * A title callback for XSS breadcrumb check.
    *
    * @return string
-   *   A string that can be used for comparison.
    */
   public function breadcrumbTitleCallback() {
     return '<script>alert(123);</script>';

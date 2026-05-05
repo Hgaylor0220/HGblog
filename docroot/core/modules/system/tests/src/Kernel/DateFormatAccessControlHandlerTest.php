@@ -9,20 +9,13 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\system\DateFormatAccessControlHandler;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Prophecy\Prophet;
 
 /**
- * Tests Drupal\system\DateFormatAccessControlHandler.
+ * @coversDefaultClass \Drupal\system\DateFormatAccessControlHandler
+ * @group system
  */
-#[CoversClass(DateFormatAccessControlHandler::class)]
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class DateFormatAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
@@ -54,12 +47,10 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * Tests access.
-   *
-   * @legacy-covers ::checkAccess
-   * @legacy-covers ::checkCreateAccess
+   * @covers ::checkAccess
+   * @covers ::checkCreateAccess
+   * @dataProvider testAccessProvider
    */
-  #[DataProvider('providerTestAccess')]
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
 
     $user = $this->drupalCreateUser($permissions);
@@ -79,15 +70,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
     static::assertEquals($create_access_result, $this->accessControlHandler->createAccess(NULL, $user, [], TRUE));
   }
 
-  /**
-   * Provides test cases for access control based on user permissions and entity lock status.
-   *
-   * @return array
-   *   An array of test cases.
-   */
-  public static function providerTestAccess(): array {
-    $originalContainer = \Drupal::hasContainer() ? \Drupal::getContainer() : NULL;
-
+  public static function testAccessProvider() {
     $c = new ContainerBuilder();
     $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
@@ -95,8 +78,8 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
     $c->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($c);
 
-    $data = [
-      'No permission + unlocked' => [
+    return [
+      'permissionless + unlocked' => [
         [],
         'unlocked',
         AccessResult::allowed(),
@@ -105,7 +88,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required.")->addCacheTags(['rendered']),
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required."),
       ],
-      'no permission + locked' => [
+      'permissionless + locked' => [
         [],
         'locked',
         AccessResult::allowed(),
@@ -133,13 +116,6 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
         AccessResult::allowed()->addCacheContexts(['user.permissions']),
       ],
     ];
-
-    // Restore the original container if needed.
-    if ($originalContainer) {
-      \Drupal::setContainer($originalContainer);
-    }
-
-    return $data;
   }
 
 }

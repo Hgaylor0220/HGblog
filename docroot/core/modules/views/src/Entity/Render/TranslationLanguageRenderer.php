@@ -42,9 +42,8 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
    *
    * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
    *   The query being executed.
-   * @param string|null $relationship
-   *   The relationship used by the entity type. NULL if there is no
-   *   relationship.
+   * @param string $relationship
+   *   The relationship used by the entity type.
    *
    * @return string
    *   A table name.
@@ -61,9 +60,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
     // use the revision table or the revision data table, depending on which one
     // is being used as query base table.
     if ($this->entityType->isRevisionable()) {
-      // $relationship is not always set, so a default value is used to fallback
-      // to the view's base table.
-      $query_base_table = $query->relationships[$relationship ?? '']['base'] ??
+      $query_base_table = $query->relationships[$relationship]['base'] ??
         $this->view->storage->get('base_table');
       $revision_table = $storage->getRevisionTable();
       $revision_data_table = $storage->getRevisionDataTable();

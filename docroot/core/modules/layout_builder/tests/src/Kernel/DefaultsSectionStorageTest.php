@@ -9,24 +9,18 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage.
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage
+ *
+ * @group layout_builder
  */
-#[CoversClass(DefaultsSectionStorage::class)]
-#[Group('layout_builder')]
-#[RunTestsInSeparateProcesses]
 class DefaultsSectionStorageTest extends KernelTestBase {
 
   /**
@@ -37,6 +31,8 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     'layout_builder',
     'layout_builder_defaults_test',
     'entity_test',
+    'field',
+    'system',
     'user',
   ];
 
@@ -53,7 +49,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    EntityTestHelper::createBundle('bundle_with_extra_fields');
+    entity_test_create_bundle('bundle_with_extra_fields');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
     $this->installConfig(['layout_builder_defaults_test']);
@@ -80,7 +76,8 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * Tests access.
+   * @covers ::access
+   * @dataProvider providerTestAccess
    *
    * @param bool $expected
    *   The expected outcome of ::access().
@@ -91,7 +88,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
    * @param array $section_data
    *   Data to store as the sections value for Layout Builder.
    */
-  #[DataProvider('providerTestAccess')]
   public function testAccess($expected, $operation, $is_enabled, array $section_data): void {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
@@ -140,7 +136,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * Tests get contexts.
+   * @covers ::getContexts
    */
   public function testGetContexts(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -160,7 +156,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * Tests get contexts during preview.
+   * @covers ::getContextsDuringPreview
    */
   public function testGetContextsDuringPreview(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -190,7 +186,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * Tests get tempstore key.
+   * @covers ::getTempstoreKey
    */
   public function testGetTempstoreKey(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -226,22 +222,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $section_storage_manager = $this->container->get('plugin.manager.layout_builder.section_storage');
     $section_storage = $section_storage_manager->load('defaults', $contexts);
     $this->assertInstanceOf(DefaultsSectionStorage::class, $section_storage);
-  }
-
-  /**
-   * @legacy-covers ::isSupported
-   */
-  public function testIsSupported(): void {
-    $display = LayoutBuilderEntityViewDisplay::create([
-      'targetEntityType' => 'entity_test',
-      'bundle' => 'entity_test',
-      'mode' => 'default',
-      'status' => TRUE,
-    ]);
-    $display->enableLayoutBuilder()->save();
-    $this->assertTrue($this->plugin->isSupported('entity_test', 'entity_test', 'default'));
-    $display->disableLayoutBuilder()->save();
-    $this->assertFalse($this->plugin->isSupported('entity_test', 'entity_test', 'default'));
   }
 
 }

@@ -10,14 +10,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\Date handler.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class FilterDateTest extends ViewTestBase {
   use SchemaCheckTestTrait;
 
@@ -110,7 +108,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests the general offset functionality.
    */
-  protected function _testOffset(): void {
+  protected function _testOffset() {
     $view = Views::getView('test_filter_date_between');
 
     // Test offset for simple operator.
@@ -141,7 +139,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests the filter operator between/not between.
    */
-  protected function _testBetween(): void {
+  protected function _testBetween() {
     $view = Views::getView('test_filter_date_between');
 
     // Test between with min and max.
@@ -197,7 +195,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Make sure the validation callbacks works.
    */
-  protected function _testUiValidation(): void {
+  protected function _testUiValidation() {
 
     $this->drupalLogin($this->drupalCreateUser([
       'administer views',
@@ -217,7 +215,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests date filter UI.
    */
-  protected function _testFilterDateUI(): void {
+  protected function _testFilterDateUI() {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     $this->submitForm([], 'Expose filter');
@@ -308,7 +306,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests datetime grouped filter UI.
    */
-  protected function _testFilterDatetimeUI(): void {
+  protected function _testFilterDatetimeUI() {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_filter_date_between/default/filter');
     $this->submitForm([

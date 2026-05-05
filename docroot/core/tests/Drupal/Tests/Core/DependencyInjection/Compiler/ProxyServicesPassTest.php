@@ -8,15 +8,12 @@ use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
- * Tests Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass.
+ * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass
+ * @group DependencyInjection
  */
-#[CoversClass(ProxyServicesPass::class)]
-#[Group('DependencyInjection')]
 class ProxyServicesPassTest extends UnitTestCase {
 
   /**
@@ -36,46 +33,40 @@ class ProxyServicesPassTest extends UnitTestCase {
   }
 
   /**
-   * Tests container without lazy services.
-   *
-   * @legacy-covers ::process
+   * @covers ::process
    */
   public function testContainerWithoutLazyServices(): void {
     $container = new ContainerBuilder();
-    $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
+    $container->register('plugin_cache_clearer', 'Drupal\Core\Plugin\CachedDiscoveryClearer');
 
     $this->proxyServicesPass->process($container);
 
     $this->assertCount(2, $container->getDefinitions());
-    $this->assertEquals('Drupal\Core\Lock\DatabaseLockBackend', $container->getDefinition('lock')->getClass());
+    $this->assertEquals('Drupal\Core\Plugin\CachedDiscoveryClearer', $container->getDefinition('plugin_cache_clearer')->getClass());
   }
 
   /**
-   * Tests container with lazy services.
-   *
-   * @legacy-covers ::process
+   * @covers ::process
    */
   public function testContainerWithLazyServices(): void {
     $container = new ContainerBuilder();
-    $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend')
+    $container->register('plugin_cache_clearer', 'Drupal\Core\Plugin\CachedDiscoveryClearer')
       ->setLazy(TRUE);
 
     $this->proxyServicesPass->process($container);
 
     $this->assertCount(3, $container->getDefinitions());
 
-    $non_proxy_definition = $container->getDefinition('drupal.proxy_original_service.lock');
-    $this->assertEquals('Drupal\Core\Lock\DatabaseLockBackend', $non_proxy_definition->getClass());
+    $non_proxy_definition = $container->getDefinition('drupal.proxy_original_service.plugin_cache_clearer');
+    $this->assertEquals('Drupal\Core\Plugin\CachedDiscoveryClearer', $non_proxy_definition->getClass());
     $this->assertFalse($non_proxy_definition->isLazy());
     $this->assertTrue($non_proxy_definition->isPublic());
 
-    $this->assertEquals('Drupal\Core\ProxyClass\Lock\DatabaseLockBackend', $container->getDefinition('lock')->getClass());
+    $this->assertEquals('Drupal\Core\ProxyClass\Plugin\CachedDiscoveryClearer', $container->getDefinition('plugin_cache_clearer')->getClass());
   }
 
   /**
-   * Tests container with lazy services without proxy class.
-   *
-   * @legacy-covers ::process
+   * @covers ::process
    */
   public function testContainerWithLazyServicesWithoutProxyClass(): void {
     $container = new ContainerBuilder();

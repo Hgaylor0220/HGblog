@@ -6,15 +6,11 @@ use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
  * Defines a generic configuration element that contains multiple properties.
- *
- * @implements \IteratorAggregate<string, \Drupal\Core\TypedData\TypedDataInterface>
  */
 abstract class ArrayElement extends Element implements \IteratorAggregate, TypedConfigInterface, ComplexDataInterface {
 
   /**
    * Parsed elements.
-   *
-   * @var array<string, \Drupal\Core\TypedData\TypedDataInterface>
    */
   protected $elements;
 
@@ -70,7 +66,6 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   Property name or index of the element.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
-   *   The data definition object for the property.
    */
   abstract protected function getElementDefinition($key);
 
@@ -136,12 +131,10 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   }
 
   /**
-   * Retrieves the iterator for the object.
-   *
-   * @return \ArrayIterator<string, \Drupal\Core\TypedData\TypedDataInterface>
-   *   The iterator.
+   * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->getElements());
   }
 
@@ -157,7 +150,6 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   The key of the contained element.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   A typed data object created from the given parameters.
    */
   protected function createElement($definition, $value, $key) {
     return $this->getTypedDataManager()->create($definition, $value, $key, $this);
@@ -169,13 +161,12 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * @param array $definition
    *   The base type definition array, for which a data definition should be
    *   created.
-   * @param mixed $value
+   * @param $value
    *   The value of the configuration element.
    * @param string $key
    *   The key of the contained element.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
-   *   A data definition object for the given parameters.
    */
   protected function buildDataDefinition($definition, $value, $key) {
     return $this->getTypedDataManager()->buildDataDefinition($definition, $value, $key, $this);

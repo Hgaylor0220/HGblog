@@ -7,16 +7,14 @@ namespace Drupal\Tests\image\Kernel;
 use Drupal\Core\Form\FormState;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Form\ImageEffectEditForm;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Traits\Core\Image\ToolkitTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests image effects.
+ *
+ * @group image
  */
-#[Group('image')]
-#[RunTestsInSeparateProcesses]
 class ImageEffectsTest extends KernelTestBase {
 
   use ToolkitTestTrait;
@@ -32,10 +30,10 @@ class ImageEffectsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
     'image',
     'image_module_test',
     'image_test',
+    'system',
   ];
 
   /**
@@ -43,7 +41,6 @@ class ImageEffectsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installConfig('system');
     $this->imageEffectPluginManager = $this->container->get('plugin.manager.image.effect');
   }
 
@@ -90,7 +87,7 @@ class ImageEffectsTest extends KernelTestBase {
     // @todo Test also keyword offsets in #3040887.
     // @see https://www.drupal.org/project/drupal/issues/3040887
     $this->assertImageEffect(['crop'], 'image_crop', [
-      'anchor' => 'top-left',
+      'anchor' => 'top-1',
       'width' => 3,
       'height' => 4,
     ]);
@@ -100,7 +97,7 @@ class ImageEffectsTest extends KernelTestBase {
     // X was passed correctly.
     $this->assertEquals(0, $calls['crop'][0][0]);
     // Y was passed correctly.
-    $this->assertEquals(0, $calls['crop'][0][1]);
+    $this->assertEquals(1, $calls['crop'][0][1]);
     // Width was passed correctly.
     $this->assertEquals(3, $calls['crop'][0][2]);
     // Height was passed correctly.
@@ -123,32 +120,6 @@ class ImageEffectsTest extends KernelTestBase {
   }
 
   /**
-   * Tests the 'image_convert_avif' effect when avif is supported.
-   */
-  public function testConvertAvifEffect(): void {
-    $this->container->get('keyvalue')->get('image_test')->set('avif_enabled', TRUE);
-    $this->assertImageEffect(['convert'], 'image_convert_avif', [
-      'extension' => 'webp',
-    ]);
-
-    $calls = $this->imageTestGetAllCalls();
-    $this->assertEquals('avif', $calls['convert'][0][0]);
-  }
-
-  /**
-   * Tests the 'image_convert_avif' effect with webp fallback.
-   */
-  public function testConvertAvifEffectFallback(): void {
-    $this->config('system.image')->set('toolkit', 'test')->save();
-    $this->assertImageEffect(['convert'], 'image_convert_avif', [
-      'extension' => 'webp',
-    ]);
-
-    $calls = $this->imageTestGetAllCalls();
-    $this->assertEquals('webp', $calls['convert'][0][0]);
-  }
-
-  /**
    * Tests the 'image_scale_and_crop' effect.
    */
   public function testScaleAndCropEffect(): void {
@@ -160,7 +131,7 @@ class ImageEffectsTest extends KernelTestBase {
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
     // X was computed and passed correctly.
-    $this->assertEquals(8, $calls['scale_and_crop'][0][0]);
+    $this->assertEquals(7.5, $calls['scale_and_crop'][0][0]);
     // Y was computed and passed correctly.
     $this->assertEquals(0, $calls['scale_and_crop'][0][1]);
     // Width was computed and passed correctly.
@@ -174,7 +145,7 @@ class ImageEffectsTest extends KernelTestBase {
    */
   public function testScaleAndCropEffectWithAnchor(): void {
     $this->assertImageEffect(['scale_and_crop'], 'image_scale_and_crop', [
-      'anchor' => 'top-left',
+      'anchor' => 'top-1',
       'width' => 5,
       'height' => 10,
     ]);
@@ -184,7 +155,7 @@ class ImageEffectsTest extends KernelTestBase {
     // X was computed and passed correctly.
     $this->assertEquals(0, $calls['scale_and_crop'][0][0]);
     // Y was computed and passed correctly.
-    $this->assertEquals(0, $calls['scale_and_crop'][0][1]);
+    $this->assertEquals(1, $calls['scale_and_crop'][0][1]);
     // Width was computed and passed correctly.
     $this->assertEquals(5, $calls['scale_and_crop'][0][2]);
     // Height was computed and passed correctly.
@@ -258,7 +229,7 @@ class ImageEffectsTest extends KernelTestBase {
       'name' => 'foo',
       'label' => 'Foo',
     ]);
-    $effect_id = $image_style->addImageEffect(['id' => 'image_scale', 'weight' => 0]);
+    $effect_id = $image_style->addImageEffect(['id' => 'image_scale']);
     $image_style->save();
 
     $form = new ImageEffectEditForm();
@@ -271,30 +242,6 @@ class ImageEffectsTest extends KernelTestBase {
     $this->assertCount(1, $errors);
     $error = reset($errors);
     $this->assertEquals('Width and height can not both be blank.', $error);
-  }
-
-  /**
-   * Tests uninstalling the module of an effect in a style.
-   */
-  public function testImageStyleEffectDependencyRemoval(): void {
-    /** @var \Drupal\image\ImageStyleInterface $image_style */
-    $image_style = ImageStyle::create([
-      'name' => 'foo',
-      'label' => 'Foo',
-    ]);
-    $image_style->addImageEffect(['id' => 'image_module_test_null', 'weight' => 0]);
-    $image_style->addImageEffect(['id' => 'image_scale', 'weight' => 1]);
-    $image_style->save();
-    $this->assertCount(2, $image_style->getEffects());
-
-    // Uninstall the module that provides the 'image_module_test_null' effect.
-    \Drupal::service('module_installer')->uninstall(['image_module_test']);
-    // Confirm that image style was not deleted and the dependency on the
-    // 'image_module_test' module was handled by removing the
-    // 'image_module_test_null' effect.
-    $image_style = ImageStyle::load('foo');
-    $this->assertNotNull($image_style);
-    $this->assertCount(1, $image_style->getEffects());
   }
 
 }

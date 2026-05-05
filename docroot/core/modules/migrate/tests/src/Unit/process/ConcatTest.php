@@ -6,12 +6,12 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Concat;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the concat process plugin.
+ *
+ * @group migrate
  */
-#[Group('migrate')]
 class ConcatTest extends MigrateProcessTestCase {
 
   /**
@@ -49,9 +49,6 @@ class ConcatTest extends MigrateProcessTestCase {
 
 }
 
-/**
- * Mock class for the concat process plugin.
- */
 class TestConcat extends Concat {
 
   public function __construct() {
@@ -63,7 +60,7 @@ class TestConcat extends Concat {
    * @param string $delimiter
    *   The new delimiter.
    */
-  public function setDelimiter($delimiter): void {
+  public function setDelimiter($delimiter) {
     $this->configuration['delimiter'] = $delimiter;
   }
 

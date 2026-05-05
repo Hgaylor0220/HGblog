@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Color;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests Color utility class conversions.
+ *
+ * @group Utility
  */
-#[Group('Utility')]
 class ColorTest extends TestCase {
 
   /**
+   * @covers \Drupal\Component\Utility\Color::validateHex
    *
    * @param bool $expected
    *   The expected result of validation.
    * @param string $value
    *   The hex color value.
-   * @legacy-covers \Drupal\Component\Utility\Color::validateHex
+   *
+   * @dataProvider providerTestValidateHex
    */
-  #[DataProvider('providerTestValidateHex')]
   public function testValidateHex($expected, $value): void {
     $this->assertSame($expected, Color::validateHex($value));
   }
@@ -31,7 +31,7 @@ class ColorTest extends TestCase {
   /**
    * Provides data for testValidateHex().
    */
-  public static function providerTestValidateHex(): array {
+  public static function providerTestValidateHex() {
     return [
       // Tests length.
       [FALSE, ''],
@@ -77,8 +77,9 @@ class ColorTest extends TestCase {
    *   The expected rgb color value.
    * @param bool $invalid
    *   Whether this value is invalid and exception should be expected.
+   *
+   * @dataProvider providerTestHexToRgb
    */
-  #[DataProvider('providerTestHexToRgb')]
   public function testHexToRgb($value, $expected, $invalid = FALSE): void {
     if ($invalid) {
       $this->expectException('InvalidArgumentException');
@@ -97,7 +98,7 @@ class ColorTest extends TestCase {
    *     - The rgb color array value.
    *     - (optional) Boolean indicating invalid status. Defaults to FALSE.
    */
-  public static function providerTestHexToRgb(): array {
+  public static function providerTestHexToRgb() {
     $invalid = [];
     // Any invalid arguments should throw an exception.
     foreach (['', '-1', '1', '12', '12345', '1234567', '123456789', '123456789a', 'foo'] as $value) {
@@ -137,8 +138,9 @@ class ColorTest extends TestCase {
    *   The rgb color value.
    * @param string $expected
    *   The expected hex color value.
+   *
+   * @dataProvider providerTestRbgToHex
    */
-  #[DataProvider('providerTestRbgToHex')]
   public function testRgbToHex($value, $expected): void {
     $this->assertSame($expected, Color::rgbToHex($value));
   }
@@ -161,7 +163,7 @@ class ColorTest extends TestCase {
       [['red' => 119, 'green' => 119, 'blue' => 119], '#777777'],
       [['red' => 1, 'green' => 2, 'blue' => 3], '#010203'],
     ];
-    // Input using indexed RGB array (e.g.: [10, 10, 10]).
+    // Input using indexed RGB array (e.g.: array(10, 10, 10)).
     foreach ($tests as $test) {
       $tests[] = [array_values($test[0]), $test[1]];
     }
@@ -182,7 +184,7 @@ class ColorTest extends TestCase {
    *     - The hex color value.
    *     - The 6 character length hex color value.
    */
-  public static function providerTestNormalizeHexLength(): array {
+  public static function providerTestNormalizeHexLength() {
     $data = [
       ['#000', '#000000'],
       ['#FFF', '#FFFFFF'],
@@ -203,8 +205,9 @@ class ColorTest extends TestCase {
    *   The input hex color value.
    * @param string $expected
    *   The expected normalized hex color value.
+   *
+   * @dataProvider providerTestNormalizeHexLength
    */
-  #[DataProvider('providerTestNormalizeHexLength')]
   public function testNormalizeHexLength($value, $expected): void {
     $this->assertSame($expected, Color::normalizeHexLength($value));
   }

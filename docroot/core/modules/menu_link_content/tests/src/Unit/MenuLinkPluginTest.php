@@ -6,20 +6,16 @@ namespace Drupal\Tests\menu_link_content\Unit;
 
 use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\menu_link_content\Plugin\Menu\MenuLinkContent.
+ * @coversDefaultClass \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent
+ *
+ * @group Menu
  */
-#[CoversClass(MenuLinkContent::class)]
-#[Group('Menu')]
 class MenuLinkPluginTest extends UnitTestCase {
 
   /**
-   * Tests get instance reflection.
-   *
-   * @legacy-covers ::getUuid
+   * @covers ::getUuid
    */
   public function testGetInstanceReflection(): void {
     /** @var \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent $menu_link_content_plugin */

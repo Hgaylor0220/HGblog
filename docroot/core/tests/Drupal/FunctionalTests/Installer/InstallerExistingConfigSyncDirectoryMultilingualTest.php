@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore Anónimo Aplicar
+
 /**
  * Verifies that installing from existing configuration works.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConfigDirectoryTestBase {
 
   /**
@@ -51,7 +50,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Place custom local translations in the translations directory and fix up
     // configuration.

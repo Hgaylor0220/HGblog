@@ -10,7 +10,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 /**
  * Tests the Layout Builder UI.
  */
-abstract class LayoutBuilderTestBase extends BrowserTestBase {
+class LayoutBuilderTestBase extends BrowserTestBase {
 
   use FieldUiTestTrait;
 
@@ -56,7 +56,6 @@ abstract class LayoutBuilderTestBase extends BrowserTestBase {
           'value' => 'The first node body',
         ],
       ],
-      'promote' => TRUE,
     ]);
     $this->createNode([
       'type' => 'bundle_with_section_field',
@@ -66,7 +65,6 @@ abstract class LayoutBuilderTestBase extends BrowserTestBase {
           'value' => 'The second node body',
         ],
       ],
-      'promote' => TRUE,
     ]);
   }
 

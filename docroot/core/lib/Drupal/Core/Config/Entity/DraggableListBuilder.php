@@ -10,9 +10,6 @@ use Drupal\Core\Form\FormInterface;
 
 /**
  * Defines a class to build a draggable listing of configuration entities.
- *
- * To enable this feature, the entity type must define a "weight" key in its
- * entity keys annotation.
  */
 abstract class DraggableListBuilder extends ConfigEntityListBuilder implements FormInterface {
 
@@ -27,12 +24,10 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     // Do not inject the form builder for backwards-compatibility.
     $this->formBuilder = \Drupal::formBuilder();
 
-    // Check if the entity type supports weighting and store the key.
+    // Check if the entity type supports weighting.
     if ($this->entityType->hasKey('weight')) {
       $this->weightKey = $this->entityType->getKey('weight');
     }
-
-    // Disable limit to load all entities for full drag-and-drop support.
     $this->limit = FALSE;
   }
 

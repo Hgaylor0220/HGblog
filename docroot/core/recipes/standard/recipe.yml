@@ -6,6 +6,7 @@ recipes:
   - basic_shortcuts
   - article_comment
   - article_tags
+  - feedback_contact_form
   - article_content_type
   - page_content_type
   - basic_html_format_editor
@@ -58,6 +59,7 @@ config:
       - block.block.olivero_help
       - block.block.olivero_search_form_narrow
       - block.block.olivero_search_form_wide
+      - block.block.olivero_syndicate
     user:
       - core.entity_view_mode.user.compact
       - search.page.user_search
@@ -100,5 +102,5 @@ config:
     user.settings:
       simpleConfigUpdate:
         verify_mail: true
-        register: admin_only
+        register: visitors_admin_approval
         cancel_method: user_cancel_block

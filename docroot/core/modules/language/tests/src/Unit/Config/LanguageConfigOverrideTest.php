@@ -7,15 +7,12 @@ namespace Drupal\Tests\language\Unit\Config;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\language\Config\LanguageConfigOverride;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\language\Config\LanguageConfigOverride.
+ * @coversDefaultClass \Drupal\language\Config\LanguageConfigOverride
+ * @group Config
+ * @group language
  */
-#[CoversClass(LanguageConfigOverride::class)]
-#[Group('Config')]
-#[Group('language')]
 class LanguageConfigOverrideTest extends UnitTestCase {
 
   /**
@@ -71,7 +68,7 @@ class LanguageConfigOverrideTest extends UnitTestCase {
   }
 
   /**
-   * Tests save new.
+   * @covers ::save
    */
   public function testSaveNew(): void {
     $this->cacheTagsInvalidator->expects($this->once())
@@ -82,7 +79,7 @@ class LanguageConfigOverrideTest extends UnitTestCase {
   }
 
   /**
-   * Tests save existing.
+   * @covers ::save
    */
   public function testSaveExisting(): void {
     $this->cacheTagsInvalidator->expects($this->once())
@@ -93,7 +90,7 @@ class LanguageConfigOverrideTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete.
+   * @covers ::delete
    */
   public function testDelete(): void {
     $this->cacheTagsInvalidator->expects($this->once())

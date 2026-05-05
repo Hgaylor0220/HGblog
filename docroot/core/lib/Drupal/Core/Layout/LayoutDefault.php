@@ -2,17 +2,18 @@
 
 namespace Drupal\Core\Layout;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginTrait;
-use Drupal\Core\Plugin\ConfigurablePluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 
 /**
  * Provides a default class for Layout plugins.
  */
-class LayoutDefault extends ConfigurablePluginBase implements LayoutInterface, PluginFormInterface, PreviewAwarePluginInterface {
+class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInterface, PreviewAwarePluginInterface {
 
   use ContextAwarePluginAssignmentTrait;
   use ContextAwarePluginTrait;
@@ -30,6 +31,14 @@ class LayoutDefault extends ConfigurablePluginBase implements LayoutInterface, P
    * @var \Drupal\Core\Layout\LayoutDefinition
    */
   protected $pluginDefinition;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setConfiguration($configuration);
+  }
 
   /**
    * {@inheritdoc}
@@ -55,6 +64,20 @@ class LayoutDefault extends ConfigurablePluginBase implements LayoutInterface, P
   /**
    * {@inheritdoc}
    */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return [
       'label' => '',
@@ -72,7 +95,6 @@ class LayoutDefault extends ConfigurablePluginBase implements LayoutInterface, P
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Layout\LayoutDefinition
-   *   The layout plugin definition for this plugin.
    */
   public function getPluginDefinition() {
     return parent::getPluginDefinition();

@@ -8,14 +8,12 @@ use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * A test for contextual filters exposed as block context.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class ContextualFiltersBlockContextTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
@@ -124,7 +122,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
       'provider' => 'views',
       'label_display' => 'visible',
       'views_label' => '',
-      'items_per_page' => NULL,
+      'items_per_page' => 'none',
       'context_mapping' => ['nid' => '@node.node_route_context:node'],
     ];
     $this->assertEquals($expected_settings, $block->getPlugin()->getConfiguration(), 'Block settings are correct.');

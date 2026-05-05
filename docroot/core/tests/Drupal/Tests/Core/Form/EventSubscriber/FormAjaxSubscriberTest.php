@@ -12,8 +12,6 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -21,10 +19,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Tests Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber.
+ * @coversDefaultClass \Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber
+ * @group EventSubscriber
  */
-#[CoversClass(FormAjaxSubscriber::class)]
-#[Group('EventSubscriber')]
 class FormAjaxSubscriberTest extends UnitTestCase {
 
   /**
@@ -77,7 +74,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception.
+   * @covers ::onException
    */
   public function testOnException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -102,7 +99,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception new build id.
+   * @covers ::onException
    */
   public function testOnExceptionNewBuildId(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -127,7 +124,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception other class.
+   * @covers ::onException
    */
   public function testOnExceptionOtherClass(): void {
     $request = new Request();
@@ -140,7 +137,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception response builder exception.
+   * @covers ::onException
    */
   public function testOnExceptionResponseBuilderException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -163,7 +160,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception broken post request.
+   * @covers ::onException
    */
   public function testOnExceptionBrokenPostRequest(): void {
     $this->formAjaxResponseBuilder->expects($this->never())
@@ -209,10 +206,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception nested exception.
-   *
-   * @legacy-covers ::onException
-   * @legacy-covers ::getFormAjaxException
+   * @covers ::onException
+   * @covers ::getFormAjaxException
    */
   public function testOnExceptionNestedException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
@@ -236,9 +231,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests on exception nested wrong exception.
-   *
-   * @legacy-covers ::getFormAjaxException
+   * @covers ::getFormAjaxException
    */
   public function testOnExceptionNestedWrongException(): void {
     $nested_exception = new \Exception();

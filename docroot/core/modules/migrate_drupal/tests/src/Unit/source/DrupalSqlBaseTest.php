@@ -5,18 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Unit\source;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
-use Drupal\Tests\migrate\Unit\MigrateTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase.
+ * @coversDefaultClass \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
+ * @group migrate_drupal
  */
-#[CoversClass(DrupalSqlBase::class)]
-#[Group('migrate_drupal')]
 class DrupalSqlBaseTest extends MigrateTestCase {
 
   /**
@@ -29,8 +25,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   ];
 
   /**
-   * The DrupalSqlBase object.
-   *
    * @var \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
    */
   protected $base;
@@ -85,9 +79,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   }
 
   /**
-   * Tests source provider not active.
-   *
-   * @legacy-covers ::checkRequirements
+   * @covers ::checkRequirements
    */
   public function testSourceProviderNotActive(): void {
     $plugin = new TestDrupalSqlBase([], 'placeholder_id', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
@@ -106,9 +98,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   }
 
   /**
-   * Tests source database error.
-   *
-   * @legacy-covers ::checkRequirements
+   * @covers ::checkRequirements
    */
   public function testSourceDatabaseError(): void {
     $plugin = new TestDrupalSqlBase([], 'test', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
@@ -118,7 +108,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   }
 
   /**
-   * Tests minimum version.
+   * @covers ::checkRequirements
    *
    * @param bool $success
    *   True if this test will not throw an exception.
@@ -127,9 +117,8 @@ class DrupalSqlBaseTest extends MigrateTestCase {
    * @param string $schema_version
    *   The schema version for the source module declared in a source plugin.
    *
-   * @legacy-covers ::checkRequirements
+   * @dataProvider providerMinimumVersion
    */
-  #[DataProvider('providerMinimumVersion')]
   public function testMinimumVersion($success, $minimum_version, $schema_version): void {
     $this->pluginDefinition['minimum_version'] = $minimum_version;
     $this->databaseContents['system'][0]['status'] = 1;
@@ -213,7 +202,7 @@ class TestDrupalSqlBase extends DrupalSqlBase {
    *
    * @see \Drupal\Tests\migrate\Unit\MigrateSourceSqlTestCase
    */
-  public function setDatabase(Connection $database): void {
+  public function setDatabase(Connection $database) {
     $this->database = $database;
   }
 

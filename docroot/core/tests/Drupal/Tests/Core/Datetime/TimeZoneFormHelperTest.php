@@ -7,14 +7,11 @@ namespace Drupal\Tests\Core\Datetime;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Datetime\TimeZoneFormHelper.
+ * @coversDefaultClass \Drupal\Core\Datetime\TimeZoneFormHelper
+ * @group Datetime
  */
-#[CoversClass(TimeZoneFormHelper::class)]
-#[Group('Datetime')]
 class TimeZoneFormHelperTest extends UnitTestCase {
 
   /**
@@ -29,10 +26,8 @@ class TimeZoneFormHelperTest extends UnitTestCase {
   }
 
   /**
-   * Tests get list.
-   *
-   * @legacy-covers ::getOptionsList
-   * @legacy-covers ::getOptionsListByRegion
+   * @covers ::getOptionsList
+   * @covers ::getOptionsListByRegion
    */
   public function testGetList(): void {
     // Test the default parameters for getOptionsList().
@@ -46,16 +41,14 @@ class TimeZoneFormHelperTest extends UnitTestCase {
     $ungrouped_count = count(TimeZoneFormHelper::getOptionsList());
     $grouped_result = TimeZoneFormHelper::getOptionsListByRegion();
     $grouped_count = 0;
-    array_walk_recursive($grouped_result, function () use (&$grouped_count): void {
+    array_walk_recursive($grouped_result, function () use (&$grouped_count) {
       $grouped_count++;
     });
     $this->assertEquals($ungrouped_count, $grouped_count);
   }
 
   /**
-   * Tests get grouped list.
-   *
-   * @legacy-covers ::getOptionsListByRegion
+   * @covers ::getOptionsListByRegion
    */
   public function testGetGroupedList(): void {
     // Tests time zone grouping.

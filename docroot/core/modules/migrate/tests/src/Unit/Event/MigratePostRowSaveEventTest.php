@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\Event;
 
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Event\MigratePostRowSaveEvent.
+ * @coversDefaultClass \Drupal\migrate\Event\MigratePostRowSaveEvent
+ * @group migrate
  */
-#[CoversClass(MigratePostRowSaveEvent::class)]
-#[Group('migrate')]
 class MigratePostRowSaveEventTest extends EventBaseTest {
 
   /**
    * Tests getDestinationIdValues method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDestinationIdValues
+   * @covers ::__construct
+   * @covers ::getDestinationIdValues
    */
   public function testGetDestinationIdValues(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
@@ -32,8 +29,8 @@ class MigratePostRowSaveEventTest extends EventBaseTest {
   /**
    * Tests getRow method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getRow
+   * @covers ::__construct
+   * @covers ::getRow
    */
   public function testGetRow(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

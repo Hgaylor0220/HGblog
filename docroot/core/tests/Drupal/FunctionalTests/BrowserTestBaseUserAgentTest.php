@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests BrowserTestBase functionality.
+ *
+ * @group browsertestbase
  */
-#[Group('browsertestbase')]
-#[RunTestsInSeparateProcesses]
 class BrowserTestBaseUserAgentTest extends BrowserTestBase {
 
   /**
@@ -64,7 +62,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareRequest(): void {
+  protected function prepareRequest() {
     $session = $this->getSession();
     if ($this->agent) {
       $session->setCookie('SIMPLETEST_USER_AGENT', $this->agent);

@@ -8,26 +8,22 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\ParamConverter\EntityConverter.
+ * @coversDefaultClass \Drupal\Core\ParamConverter\EntityConverter
+ * @group ParamConverter
+ * @group Entity
  */
-#[CoversClass(EntityConverter::class)]
-#[Group('ParamConverter')]
-#[Group('Entity')]
 class EntityConverterTest extends UnitTestCase {
 
   /**
@@ -69,7 +65,7 @@ class EntityConverterTest extends UnitTestCase {
    * @param object[] $service_map
    *   An associative array of service instances keyed by service name.
    */
-  protected function setUpMocks($service_map = []): void {
+  protected function setUpMocks($service_map = []) {
     $entity = $this->createMock(ContentEntityInterface::class);
     $entity->expects($this->any())
       ->method('getEntityTypeId')
@@ -147,8 +143,11 @@ class EntityConverterTest extends UnitTestCase {
 
   /**
    * Tests the applies() method.
+   *
+   * @dataProvider providerTestApplies
+   *
+   * @covers ::applies
    */
-  #[DataProvider('providerTestApplies')]
   public function testApplies(array $definition, $name, Route $route, $applies): void {
     $this->entityTypeManager->expects($this->any())
       ->method('hasDefinition')
@@ -161,52 +160,25 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Provides test data for testApplies()
    */
-  public static function providerTestApplies(): array {
+  public static function providerTestApplies() {
     $data = [];
-    $data[] = [
-      ['type' => 'entity:foo'],
-      'foo',
-      new Route('/test/{foo}/bar'),
-      FALSE,
-    ];
-    $data[] = [
-      ['type' => 'entity:entity_test'],
-      'foo',
-      new Route('/test/{foo}/bar'),
-      TRUE,
-    ];
-    $data[] = [
-      ['type' => 'entity:entity_test'],
-      'entity_test',
-      new Route('/test/{entity_test}/bar'),
-      TRUE,
-    ];
-    $data[] = [
-      ['type' => 'entity:{entity_test}'],
-      'entity_test',
-      new Route('/test/{entity_test}/bar'),
-      FALSE,
-    ];
-    $data[] = [
-      ['type' => 'entity:{entity_type}'],
-      'entity_test',
-      new Route('/test/{entity_type}/{entity_test}/bar'),
-      TRUE,
-    ];
-    $data[] = [
-      ['type' => 'foo'],
-      'entity_test',
-      new Route('/test/{entity_type}/{entity_test}/bar'),
-      FALSE,
-    ];
+    $data[] = [['type' => 'entity:foo'], 'foo', new Route('/test/{foo}/bar'), FALSE];
+    $data[] = [['type' => 'entity:entity_test'], 'foo', new Route('/test/{foo}/bar'), TRUE];
+    $data[] = [['type' => 'entity:entity_test'], 'entity_test', new Route('/test/{entity_test}/bar'), TRUE];
+    $data[] = [['type' => 'entity:{entity_test}'], 'entity_test', new Route('/test/{entity_test}/bar'), FALSE];
+    $data[] = [['type' => 'entity:{entity_type}'], 'entity_test', new Route('/test/{entity_type}/{entity_test}/bar'), TRUE];
+    $data[] = [['type' => 'foo'], 'entity_test', new Route('/test/{entity_type}/{entity_test}/bar'), FALSE];
 
     return $data;
   }
 
   /**
    * Tests the convert() method.
+   *
+   * @dataProvider providerTestConvert
+   *
+   * @covers ::convert
    */
-  #[DataProvider('providerTestConvert')]
   public function testConvert($value, array $definition, array $defaults, $expected_result): void {
     $this->setUpMocks();
 
@@ -222,29 +194,14 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Provides test data for testConvert.
    */
-  public static function providerTestConvert(): array {
+  public static function providerTestConvert() {
     $data = [];
     // Existing entity type.
-    $data[] = [
-      'valid_id',
-      ['type' => 'entity:entity_test'],
-      ['foo' => 'valid_id'],
-      (object) ['id' => 'valid_id'],
-    ];
+    $data[] = ['valid_id', ['type' => 'entity:entity_test'], ['foo' => 'valid_id'], (object) ['id' => 'valid_id']];
     // Invalid ID.
-    $data[] = [
-      'invalid_id',
-      ['type' => 'entity:entity_test'],
-      ['foo' => 'invalid_id'],
-      NULL,
-    ];
+    $data[] = ['invalid_id', ['type' => 'entity:entity_test'], ['foo' => 'invalid_id'], NULL];
     // Entity type placeholder.
-    $data[] = [
-      'valid_id',
-      ['type' => 'entity:{entity_type}'],
-      ['foo' => 'valid_id', 'entity_type' => 'entity_test'],
-      (object) ['id' => 'valid_id'],
-    ];
+    $data[] = ['valid_id', ['type' => 'entity:{entity_type}'], ['foo' => 'valid_id', 'entity_type' => 'entity_test'], (object) ['id' => 'valid_id']];
 
     return $data;
   }

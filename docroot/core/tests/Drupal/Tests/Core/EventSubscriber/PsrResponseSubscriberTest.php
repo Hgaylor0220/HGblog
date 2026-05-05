@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\EventSubscriber;
 
-use Drupal\Core\EventSubscriber\PsrResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\EventSubscriber\PsrResponseSubscriber;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Tests Drupal\Core\EventSubscriber\PsrResponseSubscriber.
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\PsrResponseSubscriber
+ * @group EventSubscriber
  */
-#[CoversClass(PsrResponseSubscriber::class)]
-#[Group('EventSubscriber')]
 class PsrResponseSubscriberTest extends UnitTestCase {
 
   /**
@@ -56,7 +53,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
   /**
    * Tests altering and finished event.
    *
-   * @legacy-covers ::onKernelView
+   * @covers ::onKernelView
    */
   public function testConvertsControllerResult(): void {
     $event = $this->createEvent($this->createMock('Psr\Http\Message\ResponseInterface'));
@@ -67,7 +64,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
   /**
    * Tests altering and finished event.
    *
-   * @legacy-covers ::onKernelView
+   * @covers ::onKernelView
    */
   public function testDoesNotConvertControllerResult(): void {
     $event = $this->createEvent([]);
@@ -88,7 +85,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * @return \Symfony\Component\HttpKernel\Event\ViewEvent
    *   A ViewEvent object to test.
    */
-  protected function createEvent($controller_result): ViewEvent {
+  protected function createEvent($controller_result) {
     return new ViewEvent(
       $this->createMock(HttpKernelInterface::class),
       $this->createMock(Request::class),

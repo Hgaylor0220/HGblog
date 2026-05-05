@@ -6,14 +6,12 @@ namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the block theme suggestions.
+ * Tests the block_theme_suggestions_block() function.
+ *
+ * @group block
  */
-#[Group('block')]
-#[RunTestsInSeparateProcesses]
 class BlockTemplateSuggestionsTest extends KernelTestBase {
 
   /**
@@ -25,7 +23,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
   ];
 
   /**
-   * Tests template suggestions from the block module.
+   * Tests template suggestions from block_theme_suggestions_block().
    */
   public function testBlockThemeHookSuggestions(): void {
     $this->installConfig(['system']);
@@ -46,8 +44,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
     $variables['elements']['#base_plugin_id'] = $plugin->getBaseId();
     $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = [];
-    $module_handler = $this->container->get('module_handler');
-    $suggestions = $module_handler->invoke('block', 'theme_suggestions_block', [$variables]);
+    $suggestions = block_theme_suggestions_block($variables);
     $this->assertSame([
       'block__system',
       'block__system_menu_block',

@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\destination;
 
 use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\migrate\Plugin\migrate\destination\Config;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\migrate\destination\Config;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Plugin\migrate\destination\Config.
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\Config
+ * @group migrate
  */
-#[CoversClass(Config::class)]
-#[Group('migrate')]
 class ConfigTest extends UnitTestCase {
 
   /**

@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\EntityViewTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests loading and rendering orphan comments.
+ *
+ * @group comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class CommentOrphanTest extends EntityKernelTestBase {
 
   use EntityViewTrait;
@@ -39,8 +36,9 @@ class CommentOrphanTest extends EntityKernelTestBase {
 
   /**
    * Test loading/deleting/rendering orphaned comments.
+   *
+   * @dataProvider providerTestOrphan
    */
-  #[DataProvider('providerTestOrphan')]
   public function testOrphan($property): void {
 
     DateFormat::create([
@@ -79,7 +77,7 @@ class CommentOrphanTest extends EntityKernelTestBase {
       'label' => 'Comment',
     ])->save();
 
-    // Make two comments.
+    // Make two comments
     $comment1 = $comment_storage->create([
       'field_name' => 'comment',
       'comment_body' => 'test',

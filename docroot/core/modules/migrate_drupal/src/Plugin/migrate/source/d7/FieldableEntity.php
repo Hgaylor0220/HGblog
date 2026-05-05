@@ -10,7 +10,6 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Field values are collected from the Field API.
  *
  * Refer to the existing implementations for examples:
- *
  * @see \Drupal\node\Plugin\migrate\source\d7\Node
  * @see \Drupal\user\Plugin\migrate\source\d7\User
  *
@@ -135,7 +134,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    * @param int $entity_id
    *   The entity ID.
    *
-   * @return string|false
+   * @return string|bool
    *   The entity source language or FALSE if no source language was found.
    */
   protected function getEntityTranslationSourceLanguage($entity_type, $entity_id) {
@@ -149,7 +148,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
         ->fetchField();
     }
     // The table might not exist.
-    catch (\Exception) {
+    catch (\Exception $e) {
       return FALSE;
     }
   }

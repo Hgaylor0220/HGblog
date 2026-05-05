@@ -21,14 +21,11 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler.
+ * @coversDefaultClass \Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler
+ * @group Entity
  */
-#[CoversClass(EntityFormDisplayAccessControlHandler::class)]
-#[Group('Entity')]
 class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
 
   /**
@@ -215,10 +212,8 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests access.
-   *
-   * @legacy-covers ::access
-   * @legacy-covers ::checkAccess
+   * @covers ::access
+   * @covers ::checkAccess
    */
   public function testAccess(): void {
     $this->assertAllowOperations([], $this->anon);

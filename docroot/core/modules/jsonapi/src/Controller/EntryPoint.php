@@ -14,6 +14,7 @@ use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
@@ -52,6 +53,16 @@ class EntryPoint extends ControllerBase {
   public function __construct(ResourceTypeRepositoryInterface $resource_type_repository, AccountInterface $user) {
     $this->resourceTypeRepository = $resource_type_repository;
     $this->user = $user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('jsonapi.resource_type.repository'),
+      $container->get('current_user')
+    );
   }
 
   /**
@@ -107,7 +118,7 @@ class EntryPoint extends ControllerBase {
         // itself and the currently authenticated user.
         $cacheability = $cacheability->merge($me_url);
       }
-      catch (RouteNotFoundException) {
+      catch (RouteNotFoundException $e) {
         // Do not add the link if the route is disabled or marked as internal.
       }
     }

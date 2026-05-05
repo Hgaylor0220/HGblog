@@ -7,21 +7,18 @@ namespace Drupal\Tests\Core\Routing;
 use Drupal\Core\Routing\PathChangedHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\Core\Routing\PathChangedHelper.
+ * @coversDefaultClass \Drupal\Core\Routing\PathChangedHelper
+ * @group Routing
  */
-#[CoversClass(PathChangedHelper::class)]
-#[Group('Routing')]
 class PathChangedHelperTest extends UnitTestCase {
 
   /**
    * Tests that the constructor validates its arguments.
    *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testPathChangedHelperException(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the language settings on block config appears correctly.
+ *
+ * @group language
  */
-#[Group('language')]
-#[RunTestsInSeparateProcesses]
 class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
 
   /**
@@ -25,9 +23,6 @@ class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * Tests languages displayed in the language switcher.
-   */
   public function testUnnecessaryLanguageSettingsVisibility(): void {
     $admin_user = $this->drupalCreateUser([
       'administer languages',

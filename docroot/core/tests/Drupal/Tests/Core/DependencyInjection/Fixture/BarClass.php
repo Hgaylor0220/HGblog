@@ -27,7 +27,7 @@ class BarClass {
    * @param \Drupal\Tests\Core\DependencyInjection\Fixture\BazClass $baz
    *   A BazClass object to store.
    */
-  public function setBaz(BazClass $baz): void {
+  public function setBaz(BazClass $baz) {
     $this->baz = $baz;
   }
 

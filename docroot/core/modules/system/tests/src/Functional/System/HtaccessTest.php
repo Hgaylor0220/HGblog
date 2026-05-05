@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests .htaccess is working correctly.
+ *
+ * @group system
  */
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class HtaccessTest extends BrowserTestBase {
 
   /**
@@ -99,6 +97,7 @@ class HtaccessTest extends BrowserTestBase {
 
     // Ensure web server configuration files cannot be accessed.
     $file_paths["$path/.htaccess"] = 403;
+    $file_paths["$path/web.config"] = 403;
 
     return $file_paths;
   }

@@ -10,16 +10,11 @@ use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\Core\Plugin\Context\ContextDefinition.
+ * @coversDefaultClass \Drupal\Core\Plugin\Context\ContextDefinition
+ * @group Plugin
  */
-#[CoversClass(ContextDefinition::class)]
-#[Group('Plugin')]
-#[RunTestsInSeparateProcesses]
 class ContextDefinitionTest extends KernelTestBase {
 
   /**
@@ -28,7 +23,7 @@ class ContextDefinitionTest extends KernelTestBase {
   protected static $modules = ['entity_test', 'user'];
 
   /**
-   * Tests is satisfied by.
+   * @covers ::isSatisfiedBy
    */
   public function testIsSatisfiedBy(): void {
     $this->installEntitySchema('user');
@@ -54,9 +49,7 @@ class ContextDefinitionTest extends KernelTestBase {
   }
 
   /**
-   * Tests entity context definition assert.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testEntityContextDefinitionAssert(): void {
     $this->expectException(\AssertionError::class);
@@ -65,7 +58,7 @@ class ContextDefinitionTest extends KernelTestBase {
   }
 
   /**
-   * Tests create with entity data type.
+   * @covers ::create
    */
   public function testCreateWithEntityDataType(): void {
     $this->assertInstanceOf(EntityContextDefinition::class, ContextDefinition::create('entity:user'));

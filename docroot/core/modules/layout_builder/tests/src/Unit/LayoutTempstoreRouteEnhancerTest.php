@@ -9,20 +9,18 @@ use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer.
+ * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer
+ *
+ * @group layout_builder
  */
-#[CoversClass(LayoutTempstoreRouteEnhancer::class)]
-#[Group('layout_builder')]
 class LayoutTempstoreRouteEnhancerTest extends UnitTestCase {
 
   /**
-   * Tests enhance.
+   * @covers ::enhance
    */
   public function testEnhance(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);

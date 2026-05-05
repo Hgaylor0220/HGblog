@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Entity\Enhancer;
 
 use Drupal\Core\Entity\Enhancer\EntityRouteEnhancer;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Entity\Enhancer\EntityRouteEnhancer.
+ * @coversDefaultClass \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
+ * @group Entity
  */
-#[CoversClass(EntityRouteEnhancer::class)]
-#[Group('Entity')]
 class EntityRouteEnhancerTest extends UnitTestCase {
 
   /**

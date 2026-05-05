@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\comment\Entity\Comment;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the default views provided by views.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class DefaultViewsTest extends ViewTestBase {
 
   use CommentTestTrait;
@@ -52,7 +50,7 @@ class DefaultViewsTest extends ViewTestBase {
    * @var array
    */
   protected $viewArgMap = [
-    'backlink' => [1],
+    'backlinks' => [1],
     'taxonomy_term' => [1],
     'glossary' => ['all'],
   ];
@@ -88,7 +86,7 @@ class DefaultViewsTest extends ViewTestBase {
       ],
       'auto_create' => TRUE,
     ];
-    $this->createEntityReferenceField('node', 'page', $field_name, '', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField('node', 'page', $field_name, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Create a time in the past for the archive.
     $time = \Drupal::time()->getRequestTime() - 3600;

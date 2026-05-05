@@ -11,14 +11,11 @@ use Drupal\Core\Session\CalculatedPermissionsItem;
 use Drupal\Core\Session\PermissionChecker;
 use Drupal\Core\Session\RefinableCalculatedPermissions;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Session\PermissionChecker.
+ * @coversDefaultClass \Drupal\Core\Session\PermissionChecker
+ * @group Session
  */
-#[CoversClass(PermissionChecker::class)]
-#[Group('Session')]
 class PermissionCheckerTest extends UnitTestCase {
 
   /**

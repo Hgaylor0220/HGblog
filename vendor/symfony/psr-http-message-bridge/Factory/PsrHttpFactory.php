@@ -85,7 +85,12 @@ class PsrHttpFactory implements HttpMessageFactoryInterface
         }
 
         $body = $this->streamFactory->createStreamFromResource($symfonyRequest->getContent(true));
-        $format = $symfonyRequest->getContentTypeFormat();
+
+        if (method_exists(Request::class, 'getContentTypeFormat')) {
+            $format = $symfonyRequest->getContentTypeFormat();
+        } else {
+            $format = $symfonyRequest->getContentType();
+        }
 
         if ('json' === $format) {
             $parsedBody = json_decode($symfonyRequest->getContent(), true, 512, \JSON_BIGINT_AS_STRING);
@@ -167,11 +172,8 @@ class PsrHttpFactory implements HttpMessageFactoryInterface
                     return '';
                 }, 1);
 
-                try {
-                    $symfonyResponse->sendContent();
-                } finally {
-                    ob_end_clean();
-                }
+                $symfonyResponse->sendContent();
+                ob_end_clean();
             } else {
                 $stream->write($symfonyResponse->getContent());
             }
@@ -181,7 +183,7 @@ class PsrHttpFactory implements HttpMessageFactoryInterface
 
         $headers = $symfonyResponse->headers->all();
         $cookies = $symfonyResponse->headers->getCookies();
-        if ($cookies) {
+        if (!empty($cookies)) {
             $headers['Set-Cookie'] = [];
 
             foreach ($cookies as $cookie) {
@@ -198,7 +200,8 @@ class PsrHttpFactory implements HttpMessageFactoryInterface
         }
 
         $protocolVersion = $symfonyResponse->getProtocolVersion();
+        $response = $response->withProtocolVersion($protocolVersion);
 
-        return $response->withProtocolVersion($protocolVersion);
+        return $response;
     }
 }

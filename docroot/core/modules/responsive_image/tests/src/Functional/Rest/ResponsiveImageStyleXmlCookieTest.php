@@ -6,14 +6,10 @@ namespace Drupal\Tests\responsive_image\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Responsive Image Style Xml Cookie.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class ResponsiveImageStyleXmlCookieTest extends ResponsiveImageStyleResourceTestBase {
 
   use CookieResourceTestTrait;

@@ -6,7 +6,7 @@
  *
  * This class is a near-copy of Doctrine\Common\Annotations\DocLexer, which is
  * part of the Doctrine project: <http://www.doctrine-project.org>. It was
- * copied from version 2.0.2.
+ * copied from version 1.14.4.
  *
  * Original copyright:
  *
@@ -93,13 +93,15 @@ final class DocLexer extends AbstractLexer
     {
         return $this->token === null
             || ($this->lookahead !== null
-                && ($this->lookahead->position - $this->token->position) === strlen($this->token->value));
+                && ($this->lookahead['position'] - $this->token['position']) === strlen($this->token['value']));
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return string[]
      */
-    protected function getCatchablePatterns(): array
+    protected function getCatchablePatterns()
     {
         return [
             '[a-z_\\\][a-z0-9_\:\\\]*[a-z_][a-z0-9_]*',
@@ -110,16 +112,20 @@ final class DocLexer extends AbstractLexer
 
     /**
      * {@inheritDoc}
+     *
+     * @return string[]
      */
-    protected function getNonCatchablePatterns(): array
+    protected function getNonCatchablePatterns()
     {
         return ['\s+', '\*+', '(.)'];
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return T|null
      */
-    protected function getType(&$value): int
+    protected function getType(&$value)
     {
         $type = self::T_NONE;
 
@@ -150,5 +156,17 @@ final class DocLexer extends AbstractLexer
         }
 
         return $type;
+    }
+
+    /** @return array{value: int|string, type:self::T_*|null, position:int} */
+    public function peek(): ?array
+    {
+        $token = parent::peek();
+
+        if ($token === null) {
+            return null;
+        }
+
+        return (array) $token;
     }
 }

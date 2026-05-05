@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentInterface;
-use Drupal\comment\CommentManagerInterface;
-use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\comment\CommentInterface;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Basic comment links tests to ensure markup present.
+ *
+ * @group comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class CommentLinksTest extends CommentTestBase {
 
   /**

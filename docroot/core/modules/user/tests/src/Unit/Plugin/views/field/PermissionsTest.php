@@ -14,14 +14,11 @@ use Drupal\user\Plugin\views\field\Permissions;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\user\Plugin\views\field\Permissions.
+ * @coversDefaultClass \Drupal\user\Plugin\views\field\Permissions
+ * @group user
  */
-#[CoversClass(Permissions::class)]
-#[Group('user')]
 class PermissionsTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -40,6 +37,8 @@ class PermissionsTest extends UnitTestCase {
 
   /**
    * Tests the preRender method when getEntity returns NULL.
+   *
+   * @covers ::preRender
    */
   public function testPreRenderNullEntity(): void {
     $values = [new ResultRow()];

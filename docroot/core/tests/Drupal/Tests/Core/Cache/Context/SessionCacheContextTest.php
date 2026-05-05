@@ -6,16 +6,13 @@ namespace Drupal\Tests\Core\Cache\Context;
 
 use Drupal\Core\Cache\Context\SessionCacheContext;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests Drupal\Core\Cache\Context\SessionCacheContext.
+ * @coversDefaultClass \Drupal\Core\Cache\Context\SessionCacheContext
+ * @group Cache
  */
-#[CoversClass(SessionCacheContext::class)]
-#[Group('Cache')]
 class SessionCacheContextTest extends UnitTestCase {
 
   /**
@@ -55,9 +52,7 @@ class SessionCacheContextTest extends UnitTestCase {
   }
 
   /**
-   * Tests same context for same session.
-   *
-   * @legacy-covers ::getContext
+   * @covers ::getContext
    */
   public function testSameContextForSameSession(): void {
     $this->request->setSession($this->session);
@@ -76,9 +71,7 @@ class SessionCacheContextTest extends UnitTestCase {
   }
 
   /**
-   * Tests different context for different session.
-   *
-   * @legacy-covers ::getContext
+   * @covers ::getContext
    */
   public function testDifferentContextForDifferentSession(): void {
     $this->request->setSession($this->session);

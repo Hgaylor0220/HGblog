@@ -9,17 +9,13 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
- * Tests Drupal\Component\Gettext\PoStreamWriter.
+ * @coversDefaultClass \Drupal\Component\Gettext\PoStreamWriter
+ * @group Gettext
  */
-#[CoversClass(PoStreamWriter::class)]
-#[Group('Gettext')]
 class PoStreamWriterTest extends TestCase {
 
   use ProphecyTrait;
@@ -55,7 +51,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getURI
+   * @covers ::getURI
    */
   public function testGetUriException(): void {
     $this->expectException(\Exception::class);
@@ -65,9 +61,9 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * Tests write item.
+   * @covers ::writeItem
+   * @dataProvider providerWriteData
    */
-  #[DataProvider('providerWriteData')]
   public function testWriteItem($poContent, $expected, $long): void {
     if ($long) {
       $this->expectException(\Exception::class);
@@ -94,7 +90,7 @@ class PoStreamWriterTest extends TestCase {
    *   - Written content.
    *   - Content longer than 10 bytes.
    */
-  public static function providerWriteData(): array {
+  public static function providerWriteData() {
     // cSpell:disable
     return [
       ['', '', FALSE],
@@ -109,7 +105,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * Tests close exception.
+   * @covers ::close
    */
   public function testCloseException(): void {
     $this->expectException(\Exception::class);

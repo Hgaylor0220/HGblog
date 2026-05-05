@@ -7,16 +7,14 @@ namespace Drupal\Tests\file\Kernel\Views;
 use Drupal\Core\Render\RenderContext;
 use Drupal\file\Entity\File;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the core Drupal\file\Plugin\views\field\Extension handler.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class ExtensionViewsFieldTest extends ViewsKernelTestBase {
 
   /**

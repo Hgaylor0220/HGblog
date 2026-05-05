@@ -6,14 +6,12 @@ namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests image style deletion using the UI.
+ *
+ * @group image
  */
-#[Group('image')]
-#[RunTestsInSeparateProcesses]
 class ImageStyleDeleteTest extends ImageFieldTestBase {
 
   /**

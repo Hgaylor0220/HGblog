@@ -6,22 +6,18 @@ namespace Drupal\Tests\Component\FileSystem;
 
 use Drupal\Component\FileSystem\RegexDirectoryIterator;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\FileSystem\RegexDirectoryIterator.
+ * @coversDefaultClass \Drupal\Component\FileSystem\RegexDirectoryIterator
+ * @group FileSystem
  */
-#[CoversClass(RegexDirectoryIterator::class)]
-#[Group('FileSystem')]
 class RegexDirectoryIteratorTest extends TestCase {
 
   /**
-   * @legacy-covers ::accept
+   * @covers ::accept
+   * @dataProvider providerTestRegexDirectoryIterator
    */
-  #[DataProvider('providerTestRegexDirectoryIterator')]
   public function testRegexDirectoryIterator(array $directory, $regex, array $expected): void {
     vfsStream::setup('root', NULL, $directory);
     $iterator = new RegexDirectoryIterator(vfsStream::url('root'), $regex);
@@ -37,7 +33,7 @@ class RegexDirectoryIteratorTest extends TestCase {
   /**
    * Provider for self::testRegexDirectoryIterator().
    */
-  public static function providerTestRegexDirectoryIterator(): array {
+  public static function providerTestRegexDirectoryIterator() {
     return [
       [
         [

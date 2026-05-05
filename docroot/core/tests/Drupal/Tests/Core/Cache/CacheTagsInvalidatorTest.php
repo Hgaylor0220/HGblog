@@ -8,18 +8,15 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidator;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Cache\CacheTagsInvalidator.
+ * @coversDefaultClass \Drupal\Core\Cache\CacheTagsInvalidator
+ * @group Cache
  */
-#[CoversClass(CacheTagsInvalidator::class)]
-#[Group('Cache')]
 class CacheTagsInvalidatorTest extends UnitTestCase {
 
   /**
-   * Tests invalidate tags with invalid tags.
+   * @covers ::invalidateTags
    */
   public function testInvalidateTagsWithInvalidTags(): void {
     $cache_tags_invalidator = new CacheTagsInvalidator();
@@ -28,11 +25,9 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests invalidate tags.
-   *
-   * @legacy-covers ::invalidateTags
-   * @legacy-covers ::addInvalidator
-   * @legacy-covers ::addBin
+   * @covers ::invalidateTags
+   * @covers ::addInvalidator
+   * @covers ::addBin
    */
   public function testInvalidateTags(): void {
     $cache_tags_invalidator = new CacheTagsInvalidator();
@@ -60,7 +55,4 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
 
 }
 
-/**
- * Test interface for testing the cache tags validator.
- */
 interface InvalidatingCacheBackendInterface extends CacheTagsInvalidatorInterface, CacheBackendInterface {}

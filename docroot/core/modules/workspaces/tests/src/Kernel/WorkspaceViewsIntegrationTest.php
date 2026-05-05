@@ -17,15 +17,13 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\workspaces\Entity\Workspace;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the views integration for workspaces.
+ *
+ * @group views
+ * @group workspaces
  */
-#[Group('views')]
-#[Group('workspaces')]
-#[RunTestsInSeparateProcesses]
 class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -75,7 +73,7 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
     $this->installConfig(['filter', 'node', 'system', 'language', 'content_translation']);
 
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
+    $this->installSchema('workspaces', ['workspace_association']);
 
     $language = ConfigurableLanguage::createFromLangcode('ro');
     $language->save();
@@ -102,8 +100,8 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
   /**
    * Tests workspace query alter for views.
    *
-   * @legacy-covers \Drupal\workspaces\Hook\ViewsOperations::alterQueryForEntityType
-   * @legacy-covers \Drupal\workspaces\Hook\ViewsOperations::getRevisionTableJoin
+   * @covers \Drupal\workspaces\ViewsQueryAlter::alterQueryForEntityType
+   * @covers \Drupal\workspaces\ViewsQueryAlter::getRevisionTableJoin
    */
   public function testViewsQueryAlter(): void {
     // Create a test entity and two nodes.
@@ -116,13 +114,11 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
       'body' => 'node 1',
       'created' => $this->createdTimestamp++,
       'field_reference' => $test_entity->id(),
-      'promote' => TRUE,
     ]);
     $node_2 = $this->createNode([
       'title' => 'node - live - 2',
       'body' => 'node 2',
       'created' => $this->createdTimestamp++,
-      'promote' => TRUE,
     ]);
 
     // Create a new workspace and activate it.

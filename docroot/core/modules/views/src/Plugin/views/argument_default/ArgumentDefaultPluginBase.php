@@ -46,8 +46,7 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   /**
    * Return the default argument.
    *
-   * This needs to be overridden by every default argument handler to properly
-   * do what is needed.
+   * This needs to be overridden by every default argument handler to properly do what is needed.
    */
   public function getArgument() {}
 
@@ -96,8 +95,8 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
    * If we don't have access to the form but are showing it anyway, ensure that
    * the form is safe and cannot be changed from user input.
    *
-   * This is only called by child objects if specified in the
-   * buildOptionsForm(), so it will not always be used.
+   * This is only called by child objects if specified in the buildOptionsForm(),
+   * so it will not always be used.
    */
   protected function checkAccess(&$form, $option_name) {
     if (!$this->access()) {

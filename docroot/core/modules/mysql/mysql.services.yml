@@ -1,2 +1,4 @@
-parameters:
-  mysql.skip_procedural_hook_scan: true
+services:
+  mysql.views.cast_sql:
+    class: Drupal\mysql\Plugin\views\query\MysqlCastSql
+    public: false

@@ -22,7 +22,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * The namespaces within which to find plugin classes.
    *
-   * @var array<string, list<string>>
+   * @var string[]
    */
   protected $pluginNamespaces;
 
@@ -60,12 +60,12 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * Constructs a new instance.
    *
-   * @param array<string, list<string>> $plugin_namespaces
+   * @param string[] $plugin_namespaces
    *   (optional) An array of namespace that may contain plugin implementations.
    *   Defaults to an empty array.
    * @param string $plugin_definition_annotation_name
-   *   (optional) The name of the annotation that contains the plugin
-   *   definition. Defaults to 'Drupal\Component\Annotation\Plugin'.
+   *   (optional) The name of the annotation that contains the plugin definition.
+   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $annotation_namespaces
    *   (optional) Additional namespaces to be scanned for annotation classes.
    */
@@ -111,6 +111,8 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
 
     // Clear the annotation loaders of any previous annotation classes.
     AnnotationRegistry::reset();
+    // Register the namespaces of classes that can be used for annotations.
+    AnnotationRegistry::registerLoader('class_exists');
 
     // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
@@ -123,8 +125,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
             if ($fileinfo->getExtension() == 'php') {
               if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
                 if (isset($cached['id'])) {
-                  // Explicitly unserialize this to create a new object
-                  // instance.
+                  // Explicitly unserialize this to create a new object instance.
                   $definitions[$cached['id']] = unserialize($cached['content']);
                 }
                 continue;
@@ -181,8 +182,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * Gets an array of PSR-4 namespaces to search for plugin classes.
    *
-   * @return array<string, list<string>>
-   *   The PSR-4 namespaces for the plugin class.
+   * @return string[]
    */
   protected function getPluginNamespaces() {
     return $this->pluginNamespaces;

@@ -11,8 +11,8 @@
  .
  */
 
-.social-bar {
-  @media (min-width: 75rem) {
+@media (min-width: 75rem) {
+  .social-bar {
     flex-shrink: 0;
     width: var(--content-left);
     background-color: var(--color--gray-100);
@@ -24,48 +24,52 @@
   padding-block: var(--sp0-5);
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
+}
 
-  @media (min-width: 75rem) {
+@media (min-width: 75rem) {
+  .social-bar__inner {
     position: relative;
     width: var(--content-left);
     padding-block: var(--sp5);
     padding-inline-start: 0;
     padding-inline-end: 0;
+  }
 
-    &.is-fixed {
-      position: fixed;
-      inset-block-start: var(--sp6);
-      inset-inline-start: 0;
-      height: calc(100vh - var(--sp6));
-    }
+  .social-bar__inner.is-fixed {
+    position: fixed;
+    inset-block-start: var(--sp6);
+    inset-inline-start: 0;
+    height: calc(100vh - var(--sp6));
   }
 }
 
-.rotate {
-  & > * {
-    margin-block-end: var(--sp2);
+.rotate > * {
+  margin-block-end: var(--sp2);
+}
 
-    @media (min-width: 75rem) {
-      display: flex;
-      align-items: center;
-      margin-block-end: 0;
-
-      &:not(:first-child) {
-        margin-inline-end: var(--sp2);
-      }
-    }
+@media (min-width: 75rem) {
+  .rotate > * {
+    display: flex;
+    align-items: center;
+    margin-block-end: 0;
   }
 
-  & .contextual {
-    @media (min-width: 75rem) {
-      inset-inline: 100% auto;
-      transform: rotate(90deg); /* LTR */
-      transform-origin: top left; /* LTR */
+  .rotate > *:not(:first-child) {
+    margin-inline-end: var(--sp2);
+  }
+}
 
-      & .trigger {
-        float: left; /* LTR */
+@media (min-width: 75rem) {
+  .rotate .contextual {
+    inset-inline: 100% auto;
+    transform: rotate(90deg); /* LTR */
+    transform-origin: top left; /* LTR */
+  }
 
-        /**
+  .rotate .contextual .trigger {
+    float: left; /* LTR */
+
+    /**
          * Chromium and Webkit do not yet support flow relative logical properties,
          * such as float: inline-end. However, PostCSS Logical does not compile this
          * value, so we accommodate by not using these.
@@ -73,14 +77,14 @@
          * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
          * @see https://github.com/csstools/postcss-plugins/issues/632
          */
-        &:dir(rtl) {
-          float: right;
-        }
-      }
-    }
   }
+  [dir="rtl"] .rotate .contextual .trigger {
+    float: right;
+  }
+}
 
-  @media (min-width: 75rem) {
+@media (min-width: 75rem) {
+  .rotate {
     position: absolute;
     inset-inline-start: 50%;
     display: flex;
@@ -88,23 +92,23 @@
     width: 100vh;
     transform: rotate(-90deg) translateX(-100%); /* LTR */
     transform-origin: left; /* LTR */
+  }
 
-    @supports (width: max-content) {
+  @supports (width: max-content) {
+    .rotate {
       width: max-content;
     }
   }
 }
 
-[dir="rtl"] {
-  @media (min-width: 75rem) {
-    & .rotate {
-      transform: rotate(90deg) translateX(100%);
-      transform-origin: right;
+@media (min-width: 75rem) {
+  [dir="rtl"] .rotate {
+    transform: rotate(90deg) translateX(100%);
+    transform-origin: right;
+  }
 
-      & .contextual {
-        transform: rotate(-90deg);
-        transform-origin: top right;
-      }
-    }
+  [dir="rtl"] .rotate .contextual {
+    transform: rotate(-90deg);
+    transform-origin: top right;
   }
 }

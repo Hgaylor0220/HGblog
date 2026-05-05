@@ -7,14 +7,12 @@ namespace Drupal\Tests\node\Kernel\Migrate\d7;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node revision migrations.
+ *
+ * @group node
  */
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;
@@ -34,6 +32,8 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
     'comment',
     'datetime',
     'datetime_range',
+    'file',
+    'filter',
     'image',
     'language',
     'link',
@@ -76,7 +76,7 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFileMigrationInfo(): array {
+  protected function getFileMigrationInfo() {
     return [
       'path' => 'public://sites/default/files/cube.jpeg',
       'size' => 3620,

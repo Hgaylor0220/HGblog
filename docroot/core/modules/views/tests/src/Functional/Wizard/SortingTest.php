@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional\Wizard;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests the ability of the views wizard to create views with sorts.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class SortingTest extends WizardTestBase {
 
   /**

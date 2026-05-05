@@ -6,17 +6,13 @@ namespace Drupal\Tests\Composer\Plugin\ProjectMessage;
 
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\ProjectMessage\Message;
-use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
- * Tests Drupal\Composer\Plugin\ProjectMessage\Message.
+ * @coversDefaultClass Drupal\Composer\Plugin\ProjectMessage\Message
+ * @group ProjectMessage
  */
-#[CoversClass(Message::class)]
-#[Group('ProjectMessage')]
 class ConfigTest extends TestCase {
 
   public static function setUpBeforeClass(): void {
@@ -28,7 +24,7 @@ class ConfigTest extends TestCase {
     ]);
   }
 
-  public static function provideGetMessageText(): array {
+  public static function provideGetMessageText() {
     return [
       [[], []],
       [
@@ -60,11 +56,9 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * Tests get message text.
-   *
-   * @legacy-covers ::getText
+   * @dataProvider provideGetMessageText
+   * @covers ::getText
    */
-  #[DataProvider('provideGetMessageText')]
   public function testGetMessageText($expected, $config): void {
     // Root package has our config.
     $root = $this->createMock(RootPackageInterface::class);
@@ -78,9 +72,7 @@ class ConfigTest extends TestCase {
   }
 
   /**
-   * Tests default file.
-   *
-   * @legacy-covers ::getText
+   * @covers ::getText
    */
   public function testDefaultFile(): void {
     // Root package has no extra field.

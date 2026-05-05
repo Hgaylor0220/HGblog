@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests updating an entity.
+ *
+ * @group editor
  */
-#[Group('editor')]
-#[RunTestsInSeparateProcesses]
 class EntityUpdateTest extends EntityKernelTestBase {
 
   /**

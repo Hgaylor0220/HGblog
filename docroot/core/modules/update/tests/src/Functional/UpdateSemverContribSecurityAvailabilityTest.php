@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
- * Tests Update Status with a security update available for a contrib project.
+ * Tests Update Manager with a security update available for a contrib project.
+ *
+ * @group update
  */
-#[Group('update')]
-#[RunTestsInSeparateProcesses]
 class UpdateSemverContribSecurityAvailabilityTest extends UpdateSemverContribTestBase {
 
   use UpdateSemverTestSecurityAvailabilityTrait;

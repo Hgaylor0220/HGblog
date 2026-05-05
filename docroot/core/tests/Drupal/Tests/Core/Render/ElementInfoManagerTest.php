@@ -8,15 +8,11 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Render\ElementInfoManager;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Render\ElementInfoManager.
+ * @coversDefaultClass \Drupal\Core\Render\ElementInfoManager
+ * @group Render
  */
-#[CoversClass(ElementInfoManager::class)]
-#[Group('Render')]
 class ElementInfoManagerTest extends UnitTestCase {
 
   /**
@@ -57,7 +53,7 @@ class ElementInfoManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -73,10 +69,11 @@ class ElementInfoManagerTest extends UnitTestCase {
   /**
    * Tests the getInfo() method when render element plugins are used.
    *
-   * @legacy-covers ::getInfo
-   * @legacy-covers ::buildInfo
+   * @covers ::getInfo
+   * @covers ::buildInfo
+   *
+   * @dataProvider providerTestGetInfoElementPlugin
    */
-  #[DataProvider('providerTestGetInfoElementPlugin')]
   public function testGetInfoElementPlugin($plugin_class, $expected_info): void {
     $this->moduleHandler->expects($this->once())
       ->method('alter')
@@ -91,13 +88,7 @@ class ElementInfoManagerTest extends UnitTestCase {
       ]);
 
     $element_info = $this->getMockBuilder('Drupal\Core\Render\ElementInfoManager')
-      ->setConstructorArgs([
-        new \ArrayObject(),
-        $this->cache,
-        $this->themeHandler,
-        $this->moduleHandler,
-        $this->themeManager,
-      ])
+      ->setConstructorArgs([new \ArrayObject(), $this->cache, $this->themeHandler, $this->moduleHandler, $this->themeManager])
       ->onlyMethods(['getDefinitions', 'createInstance'])
       ->getMock();
 
@@ -122,9 +113,8 @@ class ElementInfoManagerTest extends UnitTestCase {
    * Provides tests data for testGetInfoElementPlugin().
    *
    * @return array
-   *   An array of test data for testGetInfoElementPlugin().
    */
-  public static function providerTestGetInfoElementPlugin(): array {
+  public static function providerTestGetInfoElementPlugin() {
     $data = [];
     $data[] = [
       'Drupal\Core\Render\Element\ElementInterface',
@@ -149,7 +139,7 @@ class ElementInfoManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests get info property.
+   * @covers ::getInfoProperty
    */
   public function testGetInfoProperty(): void {
     $this->themeManager

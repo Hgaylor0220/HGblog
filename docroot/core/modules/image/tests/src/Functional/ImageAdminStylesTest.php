@@ -11,14 +11,12 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
+ *
+ * @group image
  */
-#[Group('image')]
-#[RunTestsInSeparateProcesses]
 class ImageAdminStylesTest extends ImageFieldTestBase {
 
   use TestFileCreationTrait {
@@ -536,7 +534,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style->save();
 
     // Build the derivative preview image file with the Image Style.
-    // @see \Drupal\image\Hook\ImageThemeHooks::preprocessImageStylePreview()
+    // @see template_preprocess_image_style_preview()
     $preview_file = $style->buildUri($original_path);
     $style->createDerivative($original_path, $preview_file);
 

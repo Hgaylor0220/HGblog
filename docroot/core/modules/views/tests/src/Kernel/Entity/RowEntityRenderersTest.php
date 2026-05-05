@@ -12,16 +12,13 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity row renderers.
  *
+ * @group views
  * @see \Drupal\views\Entity\Render\RendererBase
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class RowEntityRenderersTest extends ViewsKernelTestBase {
 
   /**
@@ -29,7 +26,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'field',
+    'filter',
+    'text',
     'node',
+    'user',
     'language',
     'views_test_language',
   ];
@@ -210,7 +210,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *   associated with language keys appropriate for the translation of that
    *   node.
    */
-  protected function checkLanguageRenderers($display, $values): void {
+  protected function checkLanguageRenderers($display, $values) {
     $expected = [
       $values[0]['en'],
       $values[0]['en'],
@@ -294,7 +294,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *   associated with language keys appropriate for the translation of that
    *   node.
    */
-  protected function checkLanguageRenderersRelationship($display, $values): void {
+  protected function checkLanguageRenderersRelationship($display, $values) {
     $expected = [
       $values[1]['en'],
       $values[1]['en'],

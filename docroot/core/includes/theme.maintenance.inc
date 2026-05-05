@@ -17,7 +17,7 @@ use Drupal\Core\Site\Settings;
  * operations, but this can be overridden by setting a "maintenance_theme" key
  * in the $settings variable in settings.php.
  */
-function _drupal_maintenance_theme(): void {
+function _drupal_maintenance_theme() {
   // If the theme is already set, assume the others are set too, and do nothing.
   if (\Drupal::theme()->hasActiveTheme()) {
     return;
@@ -27,8 +27,7 @@ function _drupal_maintenance_theme(): void {
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/module.inc';
 
-  // Install and update pages are treated differently to prevent theming
-  // overrides.
+  // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
     if (InstallerKernel::installationAttempted()) {
       $custom_theme = $GLOBALS['install_state']['theme'];
@@ -47,7 +46,7 @@ function _drupal_maintenance_theme(): void {
         $custom_theme = $config->get('default');
       }
     }
-    catch (\Exception) {
+    catch (\Exception $e) {
       // Whatever went wrong (often a database connection problem), we are
       // about to fall back to a sensible theme so there is no need for special
       // handling.
@@ -96,4 +95,40 @@ function _drupal_maintenance_theme(): void {
   \Drupal::theme()->setActiveTheme($theme_init->getActiveTheme($themes[$custom_theme], $base_themes));
   // Prime the theme registry.
   Drupal::service('theme.registry');
+}
+
+/**
+ * Prepares variables for authorize.php operation report templates.
+ *
+ * This report displays the results of an operation run via authorize.php.
+ *
+ * Default template: authorize-report.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - messages: An array of result messages.
+ */
+function template_preprocess_authorize_report(&$variables) {
+  $messages = [];
+  if (!empty($variables['messages'])) {
+    foreach ($variables['messages'] as $heading => $logs) {
+      $items = [];
+      foreach ($logs as $number => $log_message) {
+        if ($number === '#abort') {
+          continue;
+        }
+        $class = 'authorize-results__' . ($log_message['success'] ? 'success' : 'failure');
+        $items[] = [
+          '#wrapper_attributes' => ['class' => [$class]],
+          '#markup' => $log_message['message'],
+        ];
+      }
+      $messages[] = [
+        '#theme' => 'item_list',
+        '#items' => $items,
+        '#title' => $heading,
+      ];
+    }
+  }
+  $variables['messages'] = $messages;
 }

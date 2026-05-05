@@ -5,31 +5,28 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Block;
 
 use Drupal\block_test\Plugin\Block\TestBlockInstantiation;
-use Drupal\Core\Block\BlockBase;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore adminlabel
+
 /**
- * Tests Drupal\Core\Block\BlockBase.
+ * @coversDefaultClass \Drupal\Core\Block\BlockBase
+ * @group block
  */
-#[CoversClass(BlockBase::class)]
-#[Group('block')]
 class BlockBaseTest extends UnitTestCase {
 
   /**
    * Tests the machine name suggestion.
+   *
+   * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion()
    *
    * @param string $label
    *   The block label.
    * @param string $expected
    *   The expected machine name.
    *
-   * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion()
+   * @dataProvider providerTestGetMachineNameSuggestion
    */
-  #[DataProvider('providerTestGetMachineNameSuggestion')]
   public function testGetMachineNameSuggestion($label, $expected): void {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PhpTransliteration')
@@ -50,7 +47,7 @@ class BlockBaseTest extends UnitTestCase {
   /**
    * Provides data for testGetMachineNameSuggestion().
    */
-  public static function providerTestGetMachineNameSuggestion(): array {
+  public static function providerTestGetMachineNameSuggestion() {
     return [
       ['Admin label', 'adminlabel'],
       // cspell:disable-next-line

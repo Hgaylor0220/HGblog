@@ -12,25 +12,25 @@ default:
       target_id: 1
   status:
     -
-      value: false
+      value: true
   uid:
     -
       entity: 94503467-be7f-406c-9795-fc25baa22203
   title:
     -
       value: 'Lost in translation'
+  created:
+    -
+      value: 1711976268
   promote:
     -
       value: true
   sticky:
     -
       value: false
-  revision_translation_affected:
-    -
-      value: true
   path:
     -
-      alias: null
+      alias: ''
       langcode: en
   content_translation_source:
     -
@@ -43,35 +43,32 @@ default:
       value: "Here's the English version."
       format: plain_text
       summary: ''
-  moderation_state:
-    -
-      value: draft
 translations:
   fr:
     status:
       -
-        value: false
+        value: true
     uid:
       -
         target_id: 1
     title:
       -
         value: 'Perdu en traduction'
+    created:
+      -
+        value: 1711976291
     promote:
       -
         value: true
     sticky:
       -
         value: false
-    revision_uid:
-      -
-        target_id: 1
     revision_translation_affected:
       -
         value: true
     path:
       -
-        alias: null
+        alias: ''
         langcode: fr
     content_translation_source:
       -
@@ -84,6 +81,3 @@ translations:
         value: "Içi c'est la version français."
         format: plain_text
         summary: ''
-    moderation_state:
-      -
-        value: draft

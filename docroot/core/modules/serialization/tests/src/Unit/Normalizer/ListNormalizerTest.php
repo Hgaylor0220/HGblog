@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
-use Drupal\serialization\Normalizer\ListNormalizer;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\serialization\Normalizer\ListNormalizer;
+use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Tests Drupal\serialization\Normalizer\ListNormalizer.
+ * @coversDefaultClass \Drupal\serialization\Normalizer\ListNormalizer
+ * @group serialization
  */
-#[CoversClass(ListNormalizer::class)]
-#[Group('serialization')]
 class ListNormalizerTest extends UnitTestCase {
 
   /**
@@ -61,8 +58,8 @@ class ListNormalizerTest extends UnitTestCase {
       ->method('getPropertyInstance')
       ->willReturn($this->typedData);
 
-    // Set up a mock container as ItemList() will call for the
-    // 'typed_data_manager' service.
+    // Set up a mock container as ItemList() will call for the 'typed_data_manager'
+    // service.
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->onlyMethods(['get'])
       ->getMock();

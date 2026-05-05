@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\FileCache;
 
 use Drupal\Component\FileCache\FileCache;
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\NullFileCache;
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Random;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\FileCache\FileCacheFactory.
+ * @coversDefaultClass \Drupal\Component\FileCache\FileCacheFactory
+ * @group FileCache
  */
-#[CoversClass(FileCacheFactory::class)]
-#[Group('FileCache')]
 class FileCacheFactoryTest extends TestCase {
 
   /**
@@ -40,7 +36,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * Tests get.
+   * @covers ::get
    */
   public function testGet(): void {
     $file_cache = FileCacheFactory::get('test_foo_settings', []);
@@ -61,7 +57,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * Tests get no prefix.
+   * @covers ::get
    */
   public function testGetNoPrefix(): void {
     FileCacheFactory::setPrefix(NULL);
@@ -71,7 +67,7 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * Tests get disabled file cache.
+   * @covers ::get
    */
   public function testGetDisabledFileCache(): void {
     // Ensure the returned FileCache is an instance of FileCache::class.
@@ -88,9 +84,10 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * Tests get configuration overrides.
+   * @covers ::get
+   *
+   * @dataProvider configurationDataProvider
    */
-  #[DataProvider('configurationDataProvider')]
   public function testGetConfigurationOverrides($configuration, $arguments, $class): void {
     FileCacheFactory::setConfiguration($configuration);
 
@@ -101,7 +98,7 @@ class FileCacheFactoryTest extends TestCase {
   /**
    * Data provider for testGetConfigurationOverrides().
    */
-  public static function configurationDataProvider(): array {
+  public static function configurationDataProvider() {
     $data = [];
 
     // Test fallback configuration.
@@ -157,8 +154,8 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getConfiguration
-   * @legacy-covers ::setConfiguration
+   * @covers ::getConfiguration
+   * @covers ::setConfiguration
    */
   public function testGetSetConfiguration(): void {
     $configuration = FileCacheFactory::getConfiguration();
@@ -169,8 +166,8 @@ class FileCacheFactoryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getPrefix
-   * @legacy-covers ::setPrefix
+   * @covers ::getPrefix
+   * @covers ::setPrefix
    */
   public function testGetSetPrefix(): void {
     // Random generator.
@@ -183,7 +180,4 @@ class FileCacheFactoryTest extends TestCase {
 
 }
 
-/**
- * Class to help test the file cache class.
- */
 class CustomFileCache extends FileCache {}

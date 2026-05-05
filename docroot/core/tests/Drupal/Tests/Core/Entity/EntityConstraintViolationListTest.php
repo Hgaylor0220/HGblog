@@ -6,23 +6,19 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Plugin\Validation\Constraint\EntityTestCompositeConstraint;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * Tests Drupal\Core\Entity\EntityConstraintViolationList.
+ * @coversDefaultClass \Drupal\Core\Entity\EntityConstraintViolationList
+ * @group entity
  */
-#[CoversClass(EntityConstraintViolationList::class)]
-#[Group('entity')]
 class EntityConstraintViolationListTest extends UnitTestCase {
 
   /**
-   * Tests filter by fields.
+   * @covers ::filterByFields
    */
   public function testFilterByFields(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -33,16 +29,11 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
     $this->assertSame($constraint_list->filterByFields(['name']), $constraint_list);
     $this->assertCount(4, $constraint_list);
-    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [
-      $violations[2],
-      $violations[3],
-      $violations[4],
-      $violations[5],
-    ]);
+    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [$violations[2], $violations[3], $violations[4], $violations[5]]);
   }
 
   /**
-   * Tests filter by fields with composite constraints.
+   * @covers ::filterByFields
    */
   public function testFilterByFieldsWithCompositeConstraints(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -53,16 +44,11 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
     $this->assertSame($constraint_list->filterByFields(['name']), $constraint_list);
     $this->assertCount(4, $constraint_list);
-    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [
-      $violations[2],
-      $violations[3],
-      $violations[4],
-      $violations[5],
-    ]);
+    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [$violations[2], $violations[3], $violations[4], $violations[5]]);
   }
 
   /**
-   * Tests filter by field access.
+   * @covers ::filterByFieldAccess
    */
   public function testFilterByFieldAccess(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -73,16 +59,11 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
     $this->assertSame($constraint_list->filterByFieldAccess($account), $constraint_list);
     $this->assertCount(4, $constraint_list);
-    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [
-      $violations[2],
-      $violations[3],
-      $violations[4],
-      $violations[5],
-    ]);
+    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [$violations[2], $violations[3], $violations[4], $violations[5]]);
   }
 
   /**
-   * Tests filter by field access with composite constraint.
+   * @covers ::filterByFieldAccess
    */
   public function testFilterByFieldAccessWithCompositeConstraint(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -93,16 +74,11 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
     $this->assertSame($constraint_list->filterByFieldAccess($account), $constraint_list);
     $this->assertCount(4, $constraint_list);
-    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [
-      $violations[2],
-      $violations[3],
-      $violations[4],
-      $violations[5],
-    ]);
+    $this->assertEquals(array_values(iterator_to_array($constraint_list)), [$violations[2], $violations[3], $violations[4], $violations[5]]);
   }
 
   /**
-   * Tests find by codes.
+   * @covers ::findByCodes
    */
   public function testFindByCodes(): void {
     $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
@@ -123,27 +99,29 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   An account.
    *
-   * @return \Drupal\Core\Entity\FieldableEntityInterface
+   * @return \Drupal\Core\Field\FieldItemListInterface
    *   A fieldable entity.
    */
-  protected function setupEntity(AccountInterface $account): FieldableEntityInterface {
-    $name_field_item_list = $this->prophesize(FieldItemListInterface::class);
-    $name_field_item_list->access('edit', $account)
+  protected function setupEntity(AccountInterface $account) {
+    $prophecy = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
+    $prophecy->access('edit', $account)
       ->willReturn(FALSE);
+    $name_field_item_list = $prophecy->reveal();
 
-    $type_field_item_list = $this->prophesize(FieldItemListInterface::class);
-    $type_field_item_list->access('edit', $account)
+    $prophecy = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
+    $prophecy->access('edit', $account)
       ->willReturn(TRUE);
+    $type_field_item_list = $prophecy->reveal();
 
-    $prophecy = $this->prophesize(FieldableEntityInterface::class);
+    $prophecy = $this->prophesize('\Drupal\Core\Entity\FieldableEntityInterface');
     $prophecy->hasField('name')
       ->willReturn(TRUE);
     $prophecy->hasField('type')
       ->willReturn(TRUE);
     $prophecy->get('name')
-      ->willReturn($name_field_item_list->reveal());
+      ->willReturn($name_field_item_list);
     $prophecy->get('type')
-      ->willReturn($type_field_item_list->reveal());
+      ->willReturn($type_field_item_list);
 
     return $prophecy->reveal();
   }
@@ -157,7 +135,7 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityConstraintViolationList
    *   The entity constraint violation list.
    */
-  protected function setupConstraintListWithoutCompositeConstraint(FieldableEntityInterface $entity): EntityConstraintViolationList {
+  protected function setupConstraintListWithoutCompositeConstraint(FieldableEntityInterface $entity) {
     $violations = [];
 
     // Add two violations to two specific fields.
@@ -183,7 +161,7 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityConstraintViolationList
    *   The entity constraint violation list.
    */
-  protected function setupConstraintListWithCompositeConstraint(FieldableEntityInterface $entity): EntityConstraintViolationList {
+  protected function setupConstraintListWithCompositeConstraint(FieldableEntityInterface $entity) {
     $violations = [];
 
     // Add two violations to two specific fields.

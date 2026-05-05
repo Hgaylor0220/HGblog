@@ -6,14 +6,12 @@ namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the sessionStorage state set by the toolbar.
+ *
+ * @group toolbar
  */
-#[Group('toolbar')]
-#[RunTestsInSeparateProcesses]
 class ToolbarStoredStateTest extends WebDriverTestBase {
 
   /**
@@ -26,9 +24,6 @@ class ToolbarStoredStateTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * Tests different states of the toolbar.
-   */
   public function testToolbarStoredState(): void {
     $admin_user = $this->drupalCreateUser([
       'access toolbar',

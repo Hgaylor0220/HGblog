@@ -20,8 +20,6 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  */
 class ServiceClosureArgument implements ArgumentInterface
 {
-    use ArgumentTrait;
-
     private array $values;
 
     public function __construct(mixed $value)
@@ -34,7 +32,10 @@ class ServiceClosureArgument implements ArgumentInterface
         return $this->values;
     }
 
-    public function setValues(array $values): void
+    /**
+     * @return void
+     */
+    public function setValues(array $values)
     {
         if ([0] !== array_keys($values)) {
             throw new InvalidArgumentException('A ServiceClosureArgument must hold one and only one value.');

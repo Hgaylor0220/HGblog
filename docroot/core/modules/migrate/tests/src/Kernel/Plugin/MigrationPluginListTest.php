@@ -8,19 +8,15 @@ use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
-use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration plugin manager.
+ *
+ * @coversDefaultClass \Drupal\migrate\Plugin\MigratePluginManager
+ * @group migrate
  */
-#[CoversClass(MigratePluginManager::class)]
-#[Group('migrate')]
-#[RunTestsInSeparateProcesses]
 class MigrationPluginListTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -31,10 +27,11 @@ class MigrationPluginListTest extends KernelTestBase {
   protected static $modules = [
     'migrate',
     // Test with all modules containing Drupal migrations.
-    // @todo Remove Ban in https://www.drupal.org/project/drupal/issues/3488827
     'ban',
     'block',
     'block_content',
+    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
+    'book',
     'comment',
     'contact',
     'content_translation',
@@ -42,6 +39,8 @@ class MigrationPluginListTest extends KernelTestBase {
     'field',
     'file',
     'filter',
+    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
+    'forum',
     'image',
     'language',
     'locale',
@@ -52,10 +51,14 @@ class MigrationPluginListTest extends KernelTestBase {
     'path',
     'search',
     'shortcut',
+    // @todo Remove statistics in https://www.drupal.org/project/drupal/issues/3341092
+    'statistics',
     'syslog',
     'system',
     'taxonomy',
     'text',
+    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
+    'tracker',
     'update',
     'user',
   ];
@@ -70,7 +73,7 @@ class MigrationPluginListTest extends KernelTestBase {
   }
 
   /**
-   * Tests get definitions.
+   * @covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     // Create an entity reference field to make sure that migrations derived by
@@ -101,7 +104,6 @@ class MigrationPluginListTest extends KernelTestBase {
 
     // Enable migrate_drupal to test that the plugins can now be discovered.
     $this->enableModules(['migrate_drupal']);
-    $this->installConfig(['migrate_drupal']);
 
     // Make sure retrieving these migration plugins in the absence of a database
     // connection does not throw any errors.
@@ -117,7 +119,7 @@ class MigrationPluginListTest extends KernelTestBase {
         try {
           $source_plugin->checkRequirements();
         }
-        catch (RequirementsException) {
+        catch (RequirementsException $e) {
           unset($source_plugins[$id]);
         }
       }

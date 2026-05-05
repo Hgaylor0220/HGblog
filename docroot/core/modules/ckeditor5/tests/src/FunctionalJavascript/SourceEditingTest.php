@@ -5,34 +5,23 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginManager;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversMethod;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use Symfony\Component\Validator\ConstraintViolationInterface;
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore gramma sourceediting
 
 /**
- * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing.
- *
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+ * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
+ * @group ckeditor5
  * @internal
  */
-#[Group('ckeditor5')]
-#[CoversClass(SourceEditing::class)]
-#[CoversMethod(CKEditor5PluginManager::class, 'getCKEditor5PluginConfig')]
-#[RunTestsInSeparateProcesses]
 class SourceEditingTest extends SourceEditingTestBase {
 
   /**
-   * Tests source editing settings form.
-   *
-   * @legacy-covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
    */
   public function testSourceEditingSettingsForm(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer filters']));
@@ -106,7 +95,7 @@ JS;
 
       // Verify the text format and editor are still a valid pair.
       $this->assertSame([], array_map(
-        function (ConstraintViolationInterface $v) {
+        function (ConstraintViolation $v) {
           return (string) $v->getMessage();
         },
         iterator_to_array(CKEditor5::validatePair(
@@ -240,6 +229,39 @@ JS;
 
       // Edge case: `style`.
       // @todo https://www.drupal.org/project/drupal/issues/3304832
+
+      // Edge case: `type` attribute on lists.
+      // @todo Remove in https://www.drupal.org/project/drupal/issues/3274635.
+      'no numberedList-related additions to the Source Editing configuration' => [
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol><li>foo</li><li>bar</li></ol>',
+        '',
+      ],
+      '<ol type>' => [
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type>',
+      ],
+      '<ol type="A">' => [
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type="A">',
+      ],
+      'no bulletedList-related additions to the Source Editing configuration' => [
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul><li>foo</li><li>bar</li></ul>',
+        '',
+      ],
+      '<ul type>' => [
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type>',
+      ],
+      '<ul type="circle">' => [
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type="circle">',
+      ],
     ];
   }
 

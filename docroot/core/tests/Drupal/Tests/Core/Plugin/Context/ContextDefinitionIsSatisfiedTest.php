@@ -16,16 +16,12 @@ use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\Core\Plugin\Fixtures\InheritedContextDefinition;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\Core\Plugin\Context\ContextDefinition.
+ * @coversDefaultClass \Drupal\Core\Plugin\Context\ContextDefinition
+ * @group Plugin
  */
-#[CoversClass(ContextDefinition::class)]
-#[Group('Plugin')]
 class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
 
   /**
@@ -71,12 +67,13 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
    * @param mixed $value
    *   (optional) The value to set on the context, defaults to NULL.
    *
-   * @legacy-covers ::isSatisfiedBy
-   * @legacy-covers ::dataTypeMatches
-   * @legacy-covers ::getSampleValues
-   * @legacy-covers ::getConstraintObjects
+   * @covers ::isSatisfiedBy
+   * @covers ::dataTypeMatches
+   * @covers ::getSampleValues
+   * @covers ::getConstraintObjects
+   *
+   * @dataProvider providerTestIsSatisfiedBy
    */
-  #[DataProvider('providerTestIsSatisfiedBy')]
   public function testIsSatisfiedBy($expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL): void {
     $context = new Context($definition, $value);
     $this->assertSame($expected, $requirement->isSatisfiedBy($context));

@@ -9,18 +9,15 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\MemoryStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Config\ExtensionInstallStorage.
+ * @coversDefaultClass \Drupal\Core\Config\ExtensionInstallStorage
+ * @group Config
  */
-#[CoversClass(ExtensionInstallStorage::class)]
-#[Group('Config')]
 class ExtensionInstallStorageTest extends UnitTestCase {
 
   /**
-   * Tests create collection.
+   * @covers ::createCollection
    */
   public function testCreateCollection(): void {
     $memory = new MemoryStorage();

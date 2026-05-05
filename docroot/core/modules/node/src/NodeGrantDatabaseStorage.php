@@ -3,13 +3,11 @@
 namespace Drupal\node;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a storage handler class that handles the node grants system.
@@ -21,22 +19,40 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
   /**
-   * Indicates if any module implements hook_node_grants().
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
-  protected readonly bool $hasNodeGrantsImplementations;
+  protected $database;
 
-  public function __construct(
-    protected readonly Connection $database,
-    protected readonly ModuleHandlerInterface $moduleHandler,
-    protected readonly LanguageManagerInterface $languageManager,
-    #[Autowire(service: 'node.view_all_nodes_memory_cache')]
-    protected MemoryCacheInterface $memoryCache,
-  ) {
-    if (!$memoryCache) {
-      @trigger_error('Calling NodeGrantDatabaseStorage::__construct() without the $memoryCache argument is deprecated in drupal:11.3.0 and the $memoryCache argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
-      $this->memoryCache = \Drupal::service('node.view_all_nodes_memory_cache');
-    }
-    $this->hasNodeGrantsImplementations = $this->moduleHandler->hasImplementations('node_grants');
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * Constructs a NodeGrantDatabaseStorage object.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   */
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+    $this->database = $database;
+    $this->moduleHandler = $module_handler;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -50,7 +66,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
-    if (!$this->hasNodeGrantsImplementations || $node->isNew()) {
+    if (!$this->moduleHandler->hasImplementations('node_grants') || $node->isNew()) {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
@@ -96,13 +112,6 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if (count($grants) > 0) {
       $query->condition($grants);
     }
-    if ($query->execute()->fetchField()) {
-      $access_result = AccessResult::allowed();
-    }
-    else {
-      $access_result = AccessResult::neutral();
-    }
-    $access_result->addCacheContexts(['user.node_grants:' . $operation]);
 
     // Only the 'view' node grant can currently be cached; the others currently
     // don't have any cacheability metadata. Hopefully, we can add that in the
@@ -110,26 +119,26 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // cases. For now, this must remain marked as uncacheable, even when it is
     // theoretically cacheable, because we don't have the necessary metadata to
     // know it for a fact.
-    if ($operation !== 'view') {
-      $access_result->setCacheMaxAge(0);
+    $set_cacheability = function (AccessResult $access_result) use ($operation) {
+      $access_result->addCacheContexts(['user.node_grants:' . $operation]);
+      if ($operation !== 'view') {
+        $access_result->setCacheMaxAge(0);
+      }
+      return $access_result;
+    };
+
+    if ($query->execute()->fetchField()) {
+      return $set_cacheability(AccessResult::allowed());
     }
-    return $access_result;
+    else {
+      return $set_cacheability(AccessResult::neutral());
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function checkAll(AccountInterface $account) {
-    // If no modules implement the node access system, access is always 1.
-    if (!$this->hasNodeGrantsImplementations) {
-      return 1;
-    }
-
-    $cacheItem = $this->memoryCache->get($account->id());
-    if ($cacheItem) {
-      return $cacheItem->data;
-    }
-
     $query = $this->database->select('node_access');
     $query->addExpression('COUNT(*)');
     $query
@@ -141,9 +150,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if (count($grants) > 0) {
       $query->condition($grants);
     }
-    $access = $query->execute()->fetchField();
-    $this->memoryCache->set($account->id(), $access);
-    return $access;
+    return $query->execute()->fetchField();
   }
 
   /**
@@ -224,7 +231,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       $query->execute();
     }
     // Only perform work when node_access modules are active.
-    if (!empty($grants) && $this->hasNodeGrantsImplementations) {
+    if (!empty($grants) && $this->moduleHandler->hasImplementations('node_grants')) {
       $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.
@@ -264,7 +271,6 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function delete() {
     $this->database->truncate('node_access')->execute();
-    $this->memoryCache->deleteAll();
   }
 
   /**

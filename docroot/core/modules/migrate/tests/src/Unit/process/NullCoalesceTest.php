@@ -6,21 +6,20 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\NullCoalesce;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the null_coalesce process plugin.
+ *
+ * @group migrate
+ *
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\NullCoalesce
  */
-#[CoversClass(NullCoalesce::class)]
-#[Group('migrate')]
 class NullCoalesceTest extends MigrateProcessTestCase {
 
   /**
    * Tests that an exception is thrown for a non-array value.
    *
-   * @legacy-covers ::transform
+   * @covers ::transform
    */
   public function testExceptionOnInvalidValue(): void {
     $this->expectException(MigrateException::class);
@@ -35,9 +34,12 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    * @param mixed $expected_result
    *   The expected result.
    *
+   * @covers ::transform
+   *
+   * @dataProvider transformDataProvider
+   *
    * @throws \Drupal\migrate\MigrateException
    */
-  #[DataProvider('transformDataProvider')]
   public function testTransform(array $source, $expected_result): void {
     $plugin = new NullCoalesce([], 'null_coalesce', []);
     $result = $plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
@@ -86,9 +88,12 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    * @param mixed $expected_result
    *   The expected result.
    *
+   * @covers ::transform
+   *
+   * @dataProvider transformWithDefaultProvider
+   *
    * @throws \Drupal\migrate\MigrateException
    */
-  #[DataProvider('transformWithDefaultProvider')]
   public function testTransformWithDefault(array $source, $default_value, $expected_result): void {
     $plugin = new NullCoalesce(['default_value' => $default_value], 'null_coalesce', []);
     $result = $plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');

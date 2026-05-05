@@ -8,11 +8,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
-use PHPUnit\Framework\Attributes\Before;
 
-/**
- * Resource test base for the user entity.
- */
 abstract class UserResourceTestBase extends EntityResourceTestBase {
 
   /**
@@ -54,8 +50,9 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
   /**
    * Marks some tests as skipped because XML cannot be deserialized.
+   *
+   * @before
    */
-  #[Before]
   public function userResourceTestBaseSkipTests(): void {
     if (in_array($this->name(), ['testPatchDxForSecuritySensitiveBaseFields', 'testPatchSecurityOtherUser'], TRUE)) {
       if (static::$format === 'xml') {
@@ -174,10 +171,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     /** @var \Drupal\user\UserInterface $user */
     $user = static::$auth ? $this->account : User::load(0);
     // @todo Remove the array_diff_key() call in https://www.drupal.org/node/2821077.
-    $original_normalization = array_diff_key(
-      $this->serializer->normalize($user, static::$format),
-      ['created' => TRUE, 'changed' => TRUE, 'name' => TRUE],
-    );
+    $original_normalization = array_diff_key($this->serializer->normalize($user, static::$format), ['created' => TRUE, 'changed' => TRUE, 'name' => TRUE]);
 
     // Since this test must be performed by the user that is being modified,
     // we cannot use $this->getUrl().

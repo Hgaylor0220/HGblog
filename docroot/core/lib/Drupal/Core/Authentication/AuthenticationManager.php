@@ -46,16 +46,13 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    */
   public function authenticate(Request $request) {
     $provider_id = $this->getProvider($request);
-    if ($provider_id === NULL) {
-      return NULL;
-    }
-
     $provider = $this->authCollector->getProvider($provider_id);
-    if ($provider === NULL) {
-      return NULL;
+
+    if ($provider) {
+      return $provider->authenticate($request);
     }
 
-    return $provider->authenticate($request);
+    return NULL;
   }
 
   /**

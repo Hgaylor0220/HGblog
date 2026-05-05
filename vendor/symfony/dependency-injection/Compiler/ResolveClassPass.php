@@ -20,7 +20,10 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  */
 class ResolveClassPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         foreach ($container->getDefinitions() as $id => $definition) {
             if ($definition->isSynthetic()
@@ -30,16 +33,9 @@ class ResolveClassPass implements CompilerPassInterface
             ) {
                 continue;
             }
-            if ($container->getReflectionClass($id, false)) {
-                $definition->setClass($id);
-                continue;
+            if ($definition instanceof ChildDefinition && !class_exists($id)) {
+                throw new InvalidArgumentException(\sprintf('Service definition "%s" has a parent but no class, and its name looks like an FQCN. Either the class is missing or you want to inherit it from the parent service. To resolve this ambiguity, please rename this service to a non-FQCN (e.g. using dots), or create the missing class.', $id));
             }
-            if ($definition instanceof ChildDefinition) {
-                throw new InvalidArgumentException(\sprintf('Service definition "%s" has a parent but no class, and its name looks like a FQCN. Either the class is missing or you want to inherit it from the parent service. To resolve this ambiguity, please rename this service to a non-FQCN (e.g. using dots), or create the missing class.', $id));
-            }
-
-            trigger_deprecation('symfony/dependency-injection', '7.4', 'Service id "%s" looks like a FQCN but no corresponding class or interface exists. To resolve this ambiguity, please rename this service to a non-FQCN (e.g. using dots), or create the missing class or interface.', $id);
-            // throw new InvalidArgumentException(\sprintf('Service id "%s" looks like a FQCN but no corresponding class or interface exists. To resolve this ambiguity, please rename this service to a non-FQCN (e.g. using dots), or create the missing class or interface.'), $id);
             $definition->setClass($id);
         }
     }

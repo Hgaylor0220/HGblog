@@ -11,16 +11,11 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\jsonapi\Controller\FileUpload.
+ * @coversDefaultClass \Drupal\jsonapi\Controller\FileUpload
+ * @group jsonapi
  */
-#[CoversClass(FileUpload::class)]
-#[Group('jsonapi')]
-#[RunTestsInSeparateProcesses]
 class FileUploadTest extends JsonapiKernelTestBase {
 
   /**
@@ -29,6 +24,7 @@ class FileUploadTest extends JsonapiKernelTestBase {
   protected static $modules = [
     'node',
     'field',
+    'jsonapi',
     'serialization',
     'system',
     'user',
@@ -91,7 +87,7 @@ class FileUploadTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * Tests check file upload access with base field.
+   * @covers ::checkFileUploadAccess
    */
   public function testCheckFileUploadAccessWithBaseField(): void {
     // Create a set of users for access testing.

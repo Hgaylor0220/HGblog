@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ComponentPluginManager;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
 
 /**
  * Tests the correct rendering of components.
+ *
+ * @group sdc
  */
-#[Group('sdc')]
-#[RunTestsInSeparateProcesses]
 class ComponentRenderTest extends ComponentKernelTestBase {
 
   use StringTranslationTrait;
@@ -32,9 +30,27 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   protected static $themes = ['sdc_theme_test'];
 
   /**
+   * Test that components render correctly.
+   */
+  public function testRender(): void {
+    $this->checkIncludeDefaultContent();
+    $this->checkIncludeDataMapping();
+    $this->checkEmbedWithNested();
+    $this->checkPropValidation();
+    $this->checkArrayObjectTypeCast();
+    $this->checkNonExistingComponent();
+    $this->checkLibraryOverrides();
+    $this->checkAttributeMerging();
+    $this->checkRenderElementAlters();
+    $this->checkSlots();
+    $this->checkInvalidSlot();
+    $this->checkEmptyProps();
+  }
+
+  /**
    * Check using a component with an include and default context.
    */
-  public function testRenderIncludeDefaultContent(): void {
+  protected function checkIncludeDefaultContent(): void {
     $build = [
       '#type' => 'inline_template',
       '#template' => "{% embed('sdc_theme_test_base:my-card-no-schema') %}{% block card_body %}Foo bar{% endblock %}{% endembed %}",
@@ -49,7 +65,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
    * This covers passing a render array to a 'string' prop, and mapping the
    * prop to a context variable.
    */
-  public function testRenderIncludeDataMapping(): void {
+  protected function checkIncludeDataMapping(): void {
     $content = [
       'label' => [
         '#type' => 'html_tag',
@@ -69,7 +85,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Render a card with slots that include a CTA component.
    */
-  public function testRenderEmbedWithNested(): void {
+  protected function checkEmbedWithNested(): void {
     $content = [
       'heading' => [
         '#type' => 'html_tag',
@@ -80,7 +96,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $build = [
       '#type' => 'inline_template',
       '#context' => ['content' => $content],
-      '#template' => "{% embed 'sdc_theme_test:my-card' with { variant: 'horizontal', header: 'Card header', content: content } only %}{% block card_body %}This is a card with a CTA {{ include('sdc_test:my-cta', { text: content.heading, href: 'https://www.example.org', target: '_blank' }, with_context = false) }}{% endblock %}{% endembed %}",
+      '#template' => "{% embed 'sdc_theme_test:my-card' with { header: 'Card header', content: content } only %}{% block card_body %}This is a card with a CTA {{ include('sdc_test:my-cta', { text: content.heading, href: 'https://www.example.org', target: '_blank' }, with_context = false) }}{% endblock %}{% endembed %}",
     ];
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"] h2.component--my-card__header:contains("Card header")'));
@@ -93,8 +109,8 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       '#type' => 'component',
       '#component' => 'sdc_test:my-banner',
       '#props' => [
-        'heading' => 'I am a banner',
-        'ctaText' => 'Click me',
+        'heading' => $this->t('I am a banner'),
+        'ctaText' => $this->t('Click me'),
         'ctaHref' => 'https://www.example.org',
         'ctaTarget' => '',
       ],
@@ -102,7 +118,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
         'banner_body' => [
           '#type' => 'html_tag',
           '#tag' => 'p',
-          '#value' => 'This is the contents of the banner body.',
+          '#value' => $this->t('This is the contents of the banner body.'),
         ],
       ],
     ];
@@ -114,7 +130,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Check using the libraryOverrides.
    */
-  public function testRenderLibraryOverrides(): void {
+  protected function checkLibraryOverrides(): void {
     $build = [
       '#type' => 'inline_template',
       '#template' => "{{ include('sdc_theme_test:lib-overrides') }}",
@@ -127,7 +143,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures the schema violations are reported properly.
    */
-  public function testRenderPropValidation(): void {
+  protected function checkPropValidation(): void {
     // 1. Violates the minLength for the text property.
     $content = ['label' => '1'];
     $build = [
@@ -139,7 +155,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->fail('Invalid prop did not cause an exception');
     }
-    catch (\Throwable) {
+    catch (\Throwable $e) {
       $this->addToAssertionCount(1);
     }
 
@@ -153,7 +169,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->fail('Invalid prop did not cause an exception');
     }
-    catch (\Throwable) {
+    catch (\Throwable $e) {
       $this->addToAssertionCount(1);
     }
   }
@@ -161,7 +177,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure fuzzy coercing of arrays and objects works properly.
    */
-  public function testRenderArrayObjectTypeCast(): void {
+  protected function checkArrayObjectTypeCast(): void {
     $content = ['test' => []];
     $build = [
       '#type' => 'inline_template',
@@ -172,7 +188,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->addToAssertionCount(1);
     }
-    catch (\Throwable) {
+    catch (\Throwable $e) {
       $this->fail('Empty array was not converted to object');
     }
   }
@@ -180,7 +196,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures that including an invalid component creates an error.
    */
-  public function testRenderNonExistingComponent(): void {
+  protected function checkNonExistingComponent(): void {
     $build = [
       '#type' => 'inline_template',
       '#context' => [],
@@ -190,7 +206,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->fail('Invalid prop did not cause an exception');
     }
-    catch (\Throwable) {
+    catch (\Throwable $e) {
       $this->addToAssertionCount(1);
     }
   }
@@ -198,7 +214,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensures the attributes are merged properly.
    */
-  public function testRenderAttributeMerging(): void {
+  protected function checkAttributeMerging(): void {
     $content = ['label' => 'I am a labels'];
     // 1. Check that if it exists Attribute object in the 'attributes' prop, you
     // get them merged.
@@ -238,211 +254,30 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   }
 
   /**
-   * Ensures the element and prop attributes are merged properly.
-   */
-  public function testCheckElementAttributesAndPropAttributesMerging(): void {
-    // Test no attributes.
-    // Prop: no. Element: no.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"]'), $crawler->outerHtml());
-    $this->assertEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][bar="fpo"]'), $crawler->outerHtml());
-
-    // Test for just prop attributes.
-    // Prop: object. Element: no.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => new Attribute([
-          'foo' => 'bar',
-        ]),
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"]'), $crawler->outerHtml());
-
-    // Test for prop attributes and element attributes as Attribute object.
-    // Prop: object. Element: object.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => new Attribute([
-          'foo' => 'bar',
-        ]),
-      ],
-      '#attributes' => new Attribute([
-        'bar' => 'foo',
-      ]),
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"][bar="foo"]'), $crawler->outerHtml());
-
-    // Test for no prop attributes and element attributes as Attribute object.
-    // Prop: no. Element: object.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-      ],
-      '#attributes' => new Attribute([
-        'bar' => 'foo',
-      ]),
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][bar="foo"]'), $crawler->outerHtml());
-
-    // Test for prop attributes and element attributes as Attribute array.
-    // Prop: object. Element: array.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => new Attribute([
-          'foo' => 'bar',
-        ]),
-      ],
-      '#attributes' => [
-        'bar' => 'foo',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"][bar="foo"]'), $crawler->outerHtml());
-
-    // Test for no prop attributes and element attributes as array.
-    // Prop: no. Element: array.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-      ],
-      '#attributes' => [
-        'bar' => 'foo',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][bar="foo"]'), $crawler->outerHtml());
-
-    // Prop: array. Element: no.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => [
-          'foo' => 'bar',
-        ],
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"]'), $crawler->outerHtml());
-
-    // Prop: array. Element: object.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => [
-          'foo' => 'bar',
-        ],
-      ],
-      '#attributes' => new Attribute([
-        'bar' => 'foo',
-      ]),
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"][bar="foo"]'), $crawler->outerHtml());
-
-    // Prop: array. Element: array.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => [
-          'foo' => 'bar',
-        ],
-      ],
-      '#attributes' => [
-        'bar' => 'foo',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"][bar="foo"]'), $crawler->outerHtml());
-
-    // Test overlapping attributes.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => new Attribute([
-          'foo' => 'bar',
-        ]),
-      ],
-      '#attributes' => [
-        'foo' => 'baz',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"]'), $crawler->outerHtml());
-
-    // Test array properties attributes.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_theme_test:my-card',
-      '#props' => [
-        'header' => 'Drupal.org',
-        'attributes' => new Attribute([
-          'class' => ['foo', 'bar'],
-        ]),
-      ],
-      '#attributes' => [
-        'class' => ['baz'],
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][class="baz foo bar"]'), $crawler->outerHtml());
-  }
-
-  /**
    * Ensures the alter callbacks work properly.
    */
-  public function testRenderElementAlters(): void {
+  public function checkRenderElementAlters(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-banner',
       '#props' => [
-        'heading' => 'I am a banner',
-        'ctaText' => 'Click me',
+        'heading' => $this->t('I am a banner'),
+        'ctaText' => $this->t('Click me'),
         'ctaHref' => 'https://www.example.org',
         'ctaTarget' => '',
       ],
       '#propsAlter' => [
-        fn ($props): array => [...$props, 'heading' => 'I am another banner'],
+        fn ($props) => [...$props, 'heading' => $this->t('I am another banner')],
       ],
       '#slots' => [
         'banner_body' => [
           '#type' => 'html_tag',
           '#tag' => 'p',
-          '#value' => 'This is the contents of the banner body.',
+          '#value' => $this->t('This is the contents of the banner body.'),
         ],
       ],
       '#slotsAlter' => [
-        static fn ($slots): array => [...$slots, 'banner_body' => ['#markup' => '<h2>Just something else.</h2>']],
+        static fn ($slots) => [...$slots, 'banner_body' => ['#markup' => '<h2>Just something else.</h2>']],
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
@@ -453,7 +288,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that the slots allow a render array or a scalar when using the render element.
    */
-  public function testRenderSlots(): void {
+  public function checkSlots(): void {
     $slots = [
       'This is the contents of the banner body.',
       [
@@ -465,8 +300,8 @@ class ComponentRenderTest extends ComponentKernelTestBase {
         '#type' => 'component',
         '#component' => 'sdc_test:my-banner',
         '#props' => [
-          'heading' => 'I am a banner',
-          'ctaText' => 'Click me',
+          'heading' => $this->t('I am a banner'),
+          'ctaText' => $this->t('Click me'),
           'ctaHref' => 'https://www.example.org',
           'ctaTarget' => '',
         ],
@@ -482,13 +317,13 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that the slots throw an error for invalid slots.
    */
-  public function testRenderInvalidSlot(): void {
+  public function checkInvalidSlot(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-banner',
       '#props' => [
-        'heading' => 'I am a banner',
-        'ctaText' => 'Click me',
+        'heading' => $this->t('I am a banner'),
+        'ctaText' => $this->t('Click me'),
         'ctaHref' => 'https://www.example.org',
         'ctaTarget' => '',
       ],
@@ -504,7 +339,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that components can have 0 props.
    */
-  public function testRenderEmptyProps(): void {
+  public function checkEmptyProps(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:no-props',
@@ -515,36 +350,6 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $crawler->filter('#sdc-wrapper')->innerText(),
       'This is a test string.'
     );
-  }
-
-  /**
-   * Ensure that components variants render.
-   */
-  public function testVariants(): void {
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_test:my-cta',
-      '#variant' => 'primary',
-      '#props' => [
-        'text' => 'Test link',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="primary"][class*="my-cta-primary"]'));
-
-    // If there were an existing prop named variant, we don't override that for BC reasons.
-    $build = [
-      '#type' => 'component',
-      '#component' => 'sdc_test:my-cta-with-variant-prop',
-      '#variant' => 'tertiary',
-      '#props' => [
-        'text' => 'Test link',
-        'variant' => 'secondary',
-      ],
-    ];
-    $crawler = $this->renderComponentRenderArray($build);
-    $this->assertEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="tertiary"]'));
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="secondary"]'));
   }
 
   /**

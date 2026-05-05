@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionTrait;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
-use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Cache\NullBackend;
@@ -21,16 +21,12 @@ use Drupal\Core\Test\TestKernel;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\Core\Plugin\Context\ContextHandler.
+ * @coversDefaultClass \Drupal\Core\Plugin\Context\ContextHandler
+ * @group Plugin
  */
-#[CoversClass(ContextHandler::class)]
-#[Group('Plugin')]
 class ContextHandlerTest extends UnitTestCase {
 
   /**
@@ -70,9 +66,10 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests check requirements.
+   * @covers ::checkRequirements
+   *
+   * @dataProvider providerTestCheckRequirements
    */
-  #[DataProvider('providerTestCheckRequirements')]
   public function testCheckRequirements($contexts, $requirements, $expected): void {
     $contexts = array_map(function ($context) {
       $mock = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -88,7 +85,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * Provides data for testCheckRequirements().
    */
-  public static function providerTestCheckRequirements(): array {
+  public static function providerTestCheckRequirements() {
     $requirement_optional = new ContextDefinition();
     $requirement_optional->setRequired(FALSE);
 
@@ -120,9 +117,10 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests get matching contexts.
+   * @covers ::getMatchingContexts
+   *
+   * @dataProvider providerTestGetMatchingContexts
    */
-  #[DataProvider('providerTestGetMatchingContexts')]
   public function testGetMatchingContexts($contexts, $requirement, $expected = NULL): void {
     $contexts = array_map(function ($context) {
       $mock = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -141,7 +139,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * Provides data for testGetMatchingContexts().
    */
-  public static function providerTestGetMatchingContexts(): array {
+  public static function providerTestGetMatchingContexts() {
     $requirement_any = new ContextDefinition();
 
     $requirement_specific = new ContextDefinition('string');
@@ -170,9 +168,10 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests filter plugin definitions by contexts.
+   * @covers ::filterPluginDefinitionsByContexts
+   *
+   * @dataProvider providerTestFilterPluginDefinitionsByContexts
    */
-  #[DataProvider('providerTestFilterPluginDefinitionsByContexts')]
   public function testFilterPluginDefinitionsByContexts($has_context, $definitions, $expected): void {
     if ($has_context) {
       $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -192,7 +191,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * Provides data for testFilterPluginDefinitionsByContexts().
    */
-  public static function providerTestFilterPluginDefinitionsByContexts(): array {
+  public static function providerTestFilterPluginDefinitionsByContexts() {
     $data = [];
 
     $plugins = [];
@@ -298,7 +297,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMapping(): void {
     $context_hit = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -339,7 +338,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping missing required.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMappingMissingRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -376,7 +375,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping missing not required.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMappingMissingNotRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -411,7 +410,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping no value required.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMappingNoValueRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -446,7 +445,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping no value non required.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMappingNoValueNonRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -479,7 +478,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping configurable assigned.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMappingConfigurableAssigned(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -518,7 +517,7 @@ class ContextHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests apply context mapping configurable assigned miss.
+   * @covers ::applyContextMapping
    */
   public function testApplyContextMappingConfigurableAssignedMiss(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -548,16 +547,10 @@ class ContextHandlerTest extends UnitTestCase {
 
 }
 
-/**
- * Test interface used for creating mock classes in tests.
- */
 interface TestConfigurableContextAwarePluginInterface extends ContextAwarePluginInterface, ConfigurableInterface, DependentPluginInterface {
 
 }
 
-/**
- * Test class of context aware plugin definition.
- */
 class ContextAwarePluginDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
   use ContextAwarePluginDefinitionTrait;
 

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests built-in table theme functions.
+ *
+ * @group Theme
  */
-#[Group('Theme')]
-#[RunTestsInSeparateProcesses]
 class TableTest extends KernelTestBase {
 
   /**

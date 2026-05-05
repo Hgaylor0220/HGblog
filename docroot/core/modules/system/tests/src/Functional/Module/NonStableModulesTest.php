@@ -6,16 +6,13 @@ namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installation of deprecated and experimental modules.
+ *
+ * @group Module
+ * @group #slow
  */
-#[Group('Module')]
-#[Group('#slow')]
-#[RunTestsInSeparateProcesses]
 class NonStableModulesTest extends BrowserTestBase {
 
   /**
@@ -116,7 +113,7 @@ class NonStableModulesTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The following module is experimental: Experimental Dependency Test');
 
     // There should be a message about enabling dependencies.
-    $this->assertSession()->pageTextContains('You must install the following module to install Experimental Dependency Test:Experimental Test');
+    $this->assertSession()->pageTextContains('You must install the Experimental Test module to install Experimental Dependency Test');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -176,8 +173,9 @@ class NonStableModulesTest extends BrowserTestBase {
 
   /**
    * Tests installing deprecated modules and dependencies in the UI.
+   *
+   * @group legacy
    */
-  #[IgnoreDeprecations]
   public function testDeprecatedConfirmForm(): void {
     // Test installing a deprecated module with no dependencies. There should be
     // a confirmation form with a deprecated warning, but no list of
@@ -238,7 +236,7 @@ class NonStableModulesTest extends BrowserTestBase {
     $assert->pageTextNotContains('The Deprecated module dependency module is deprecated');
 
     // There should be a message about enabling dependencies.
-    $assert->pageTextContains('You must install the following module to install Deprecated module dependency:Deprecated module');
+    $assert->pageTextContains('You must install the Deprecated module module to install Deprecated module dependency');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -277,7 +275,7 @@ class NonStableModulesTest extends BrowserTestBase {
     $assert->pageTextNotContains('The Drupal system listing compatible test module is deprecated');
 
     // There should be a message about enabling dependencies.
-    $assert->pageTextContains('You must install the following module to install Deprecated module with non deprecated dependency:Drupal system listing compatible test');
+    $assert->pageTextContains('You must install the Drupal system listing compatible test module to install Deprecated module with non deprecated dependency.');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -353,8 +351,9 @@ class NonStableModulesTest extends BrowserTestBase {
 
   /**
    * Tests installing deprecated and experimental modules at the same time.
+   *
+   * @group legacy
    */
-  #[IgnoreDeprecations]
   public function testDeprecatedAndExperimentalConfirmForm(): void {
     $edit = [];
     $edit["modules[deprecated_module][enable]"] = TRUE;

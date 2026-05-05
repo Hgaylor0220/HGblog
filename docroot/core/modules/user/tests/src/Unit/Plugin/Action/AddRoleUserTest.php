@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Unit\Plugin\Action;
 
 use Drupal\user\Plugin\Action\AddRoleUser;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\user\Plugin\Action\AddRoleUser.
+ * @coversDefaultClass \Drupal\user\Plugin\Action\AddRoleUser
+ * @group user
  */
-#[CoversClass(AddRoleUser::class)]
-#[Group('user')]
 class AddRoleUserTest extends RoleUserTestBase {
 
   /**

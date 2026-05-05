@@ -6,14 +6,12 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the presence of JavaScript at update.php.
+ *
+ * @group Update
  */
-#[Group('Update')]
-#[RunTestsInSeparateProcesses]
 class UpdatePathTestJavaScriptTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 
@@ -42,7 +40,7 @@ class UpdatePathTestJavaScriptTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest(): void {
+  protected function doSelectionTest() {
     // Ensure that at least one JS script has drupalSettings in there.
     $scripts = $this->xpath('//script');
     $found = FALSE;
@@ -52,7 +50,7 @@ class UpdatePathTestJavaScriptTest extends BrowserTestBase {
       }
       // Source is a root-relative URL. Transform it to an absolute URL to allow
       // file_get_contents() to access the file.
-      $src = preg_replace('#^' . $GLOBALS['base_path'] . '(.*)#i', $GLOBALS['base_url'] . '/${1}', $script->getAttribute('src'));
+      $src = preg_replace('#^' . $GLOBALS['base_path'] . '(.*)#i', $GLOBALS['base_url'] . '/' . '${1}', $script->getAttribute('src'));
       $file_content = file_get_contents($src);
 
       if (str_contains($file_content, 'window.drupalSettings =')) {

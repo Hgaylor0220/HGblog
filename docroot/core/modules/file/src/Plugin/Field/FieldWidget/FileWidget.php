@@ -551,10 +551,9 @@ class FileWidget extends WidgetBase {
   /**
    * Form submission handler for upload/remove button of formElement().
    *
-   * This runs in addition to and after
-   * \Drupal\file\Element\ManagedFile::submit().
+   * This runs in addition to and after file_managed_file_submit().
    *
-   * @see \Drupal\file\Element\ManagedFile::submit()
+   * @see file_managed_file_submit()
    */
   public static function submit($form, FormStateInterface $form_state) {
     // During the form rebuild, formElement() will create field item widget

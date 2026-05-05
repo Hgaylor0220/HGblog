@@ -7,18 +7,13 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin.
- *
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
+ * @group ckeditor5
  * @internal
  */
-#[CoversClass(ListPlugin::class)]
-#[Group('ckeditor5')]
 class ListPluginTest extends UnitTestCase {
 
   /**
@@ -31,7 +26,6 @@ class ListPluginTest extends UnitTestCase {
           'properties' => [
             'reversed' => TRUE,
             'startIndex' => FALSE,
-            'styles' => TRUE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -40,9 +34,7 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => FALSE,
-              'styles' => [
-                'useAttribute' => TRUE,
-              ],
+              'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
@@ -53,7 +45,6 @@ class ListPluginTest extends UnitTestCase {
           'properties' => [
             'reversed' => FALSE,
             'startIndex' => TRUE,
-            'styles' => TRUE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -62,40 +53,17 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => FALSE,
               'startIndex' => TRUE,
-              'styles' => [
-                'useAttribute' => TRUE,
-              ],
-            ],
-            'multiBlock' => TRUE,
-          ],
-        ],
-      ],
-      'styles is false' => [
-        [
-          'properties' => [
-            'reversed' => TRUE,
-            'startIndex' => TRUE,
-            'styles' => FALSE,
-          ],
-          'multiBlock' => TRUE,
-        ],
-        [
-          'list' => [
-            'properties' => [
-              'reversed' => TRUE,
-              'startIndex' => TRUE,
               'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
         ],
       ],
-      'all disabled' => [
+      'both disabled' => [
         [
           'properties' => [
             'reversed' => FALSE,
             'startIndex' => FALSE,
-            'styles' => FALSE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -110,12 +78,11 @@ class ListPluginTest extends UnitTestCase {
           ],
         ],
       ],
-      'all enabled' => [
+      'both enabled' => [
         [
           'properties' => [
             'reversed' => TRUE,
             'startIndex' => TRUE,
-            'styles' => TRUE,
           ],
           'multiBlock' => TRUE,
         ],
@@ -124,9 +91,7 @@ class ListPluginTest extends UnitTestCase {
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => TRUE,
-              'styles' => [
-                'useAttribute' => TRUE,
-              ],
+              'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
@@ -136,9 +101,10 @@ class ListPluginTest extends UnitTestCase {
   }
 
   /**
-   * Tests get dynamic plugin config.
+   * @covers ::getDynamicPluginConfig
+   *
+   * @dataProvider providerGetDynamicPluginConfig
    */
-  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     // Read the CKEditor 5 plugin's static configuration from YAML.
     $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');

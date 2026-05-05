@@ -6,14 +6,12 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that the password reset behaves as expected with form elements.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class UserAccountFormPasswordResetTest extends KernelTestBase {
 
   /**

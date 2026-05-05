@@ -8,23 +8,19 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\State;
 use Drupal\workflows\WorkflowTypeInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\workflows\State.
+ * @coversDefaultClass \Drupal\workflows\State
+ *
+ * @group workflows
  */
-#[CoversClass(State::class)]
-#[Group('workflows')]
 class StateTest extends UnitTestCase {
 
   /**
-   * Tests getters.
-   *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::id
-   * @legacy-covers ::label
-   * @legacy-covers ::weight
+   * @covers ::__construct
+   * @covers ::id
+   * @covers ::label
+   * @covers ::weight
    */
   public function testGetters(): void {
     $state = new State(
@@ -39,7 +35,7 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * Tests can transition to.
+   * @covers ::canTransitionTo
    */
   public function testCanTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
@@ -56,7 +52,7 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transition to.
+   * @covers ::getTransitionTo
    */
   public function testGetTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
@@ -70,7 +66,7 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transition to exception.
+   * @covers ::getTransitionTo
    */
   public function testGetTransitionToException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -82,7 +78,7 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * Tests get transitions.
+   * @covers ::getTransitions
    */
   public function testGetTransitions(): void {
     $workflow_type = new TestType([], '', []);
@@ -101,7 +97,7 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * Tests label callback.
+   * @covers ::labelCallback
    */
   public function testLabelCallback(): void {
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class)->reveal();

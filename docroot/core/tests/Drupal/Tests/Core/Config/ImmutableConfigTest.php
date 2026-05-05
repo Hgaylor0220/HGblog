@@ -7,14 +7,11 @@ namespace Drupal\Tests\Core\Config;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Config\ImmutableConfigException;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Config\ImmutableConfig.
+ * @coversDefaultClass \Drupal\Core\Config\ImmutableConfig
+ * @group Config
  */
-#[CoversClass(ImmutableConfig::class)]
-#[Group('Config')]
 class ImmutableConfigTest extends UnitTestCase {
 
   /**
@@ -36,7 +33,7 @@ class ImmutableConfigTest extends UnitTestCase {
   }
 
   /**
-   * Tests set.
+   * @covers ::set
    */
   public function testSet(): void {
     $this->expectException(ImmutableConfigException::class);
@@ -45,7 +42,7 @@ class ImmutableConfigTest extends UnitTestCase {
   }
 
   /**
-   * Tests clear.
+   * @covers ::clear
    */
   public function testClear(): void {
     $this->expectException(ImmutableConfigException::class);
@@ -54,7 +51,7 @@ class ImmutableConfigTest extends UnitTestCase {
   }
 
   /**
-   * Tests save.
+   * @covers ::save
    */
   public function testSave(): void {
     $this->expectException(ImmutableConfigException::class);
@@ -63,7 +60,7 @@ class ImmutableConfigTest extends UnitTestCase {
   }
 
   /**
-   * Tests delete.
+   * @covers ::delete
    */
   public function testDelete(): void {
     $this->expectException(ImmutableConfigException::class);

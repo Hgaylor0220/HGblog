@@ -5,7 +5,6 @@ namespace Drupal\workspaces;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\user\EntityOwnerInterface;
-use Drupal\workspaces\Provider\WorkspaceProviderInterface;
 
 /**
  * Defines an interface for the workspace entity type.
@@ -42,13 +41,5 @@ interface WorkspaceInterface extends ContentEntityInterface, EntityChangedInterf
    *   TRUE if the workspace has a parent, FALSE otherwise.
    */
   public function hasParent();
-
-  /**
-   * Gets the provider of this workspace.
-   *
-   * @return \Drupal\workspaces\Provider\WorkspaceProviderInterface
-   *   The workspace provider.
-   */
-  public function getProvider(): WorkspaceProviderInterface;
 
 }

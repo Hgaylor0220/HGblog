@@ -146,23 +146,12 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // Display a list of required modules that have to be installed as well
       // but were not manually selected.
       foreach ($this->modules['dependencies'] as $module => $dependencies) {
-        $items[] = [
-          [
-            '#markup' => $this->formatPlural(
-              count($dependencies),
-              'You must install the following module to install @module:',
-              'You must install the following modules to install @module:',
-              [
-                '@module' => $this->modules['install'][$module],
-              ]
-            ),
-          ],
-          [
-            '#theme' => 'item_list',
-            '#list_type' => 'ul',
-            '#items' => $dependencies,
-          ],
-        ];
+        $items[] = $this->formatPlural(count($dependencies), 'You must install the @required module to install @module.', 'You must install the @required modules to install @module.', [
+          '@module' => $this->modules['install'][$module],
+          // It is safe to implode this because module names are not translated
+          // markup and so will not be double-escaped.
+          '@required' => implode(', ', $dependencies),
+        ]);
       }
     }
     return $items;

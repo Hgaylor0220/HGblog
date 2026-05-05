@@ -5,18 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Unit\process;
 
 use Drupal\language\Plugin\migrate\process\LanguageTypes;
-use Drupal\migrate\MigrateException;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use Drupal\migrate\MigrateException;
 
 /**
- * Tests Drupal\language\Plugin\migrate\process\LanguageTypes.
+ * @coversDefaultClass \Drupal\language\Plugin\migrate\process\LanguageTypes
+ * @group language
  */
-#[CoversClass(LanguageTypes::class)]
-#[Group('language')]
-#[IgnoreDeprecations]
 class LanguageTypesTest extends MigrateProcessTestCase {
 
   /**

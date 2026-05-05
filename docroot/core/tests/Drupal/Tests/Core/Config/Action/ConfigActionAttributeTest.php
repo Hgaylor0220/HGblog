@@ -7,20 +7,15 @@ namespace Drupal\Tests\Core\Config\Action;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Config\Action\Attribute\ConfigAction.
+ * @coversDefaultClass \Drupal\Core\Config\Action\Attribute\ConfigAction
+ * @group Config
  */
-#[CoversClass(ConfigAction::class)]
-#[Group('Config')]
 class ConfigActionAttributeTest extends UnitTestCase {
 
   /**
-   * Tests no label no deriver.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testNoLabelNoDeriver(): void {
     $this->expectException(InvalidPluginDefinitionException::class);

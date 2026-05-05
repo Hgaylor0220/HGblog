@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Default Format.
+ * @group routing
  */
-#[Group('routing')]
-#[RunTestsInSeparateProcesses]
 class DefaultFormatTest extends BrowserTestBase {
 
   /**

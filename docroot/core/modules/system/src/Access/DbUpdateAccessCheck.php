@@ -13,10 +13,7 @@ use Drupal\Core\Site\Settings;
 class DbUpdateAccessCheck implements AccessInterface {
 
   /**
-   * Checks access to update.php.
-   *
-   * Grants access if 'update_free_access' is set in settings.php.
-   * Otherwise, requires the 'administer software updates' permission.
+   * Checks access for update routes.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.

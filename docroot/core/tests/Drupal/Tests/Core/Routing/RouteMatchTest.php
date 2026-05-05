@@ -7,17 +7,14 @@ namespace Drupal\Tests\Core\Routing;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Routing\RouteMatch.
+ * @coversDefaultClass \Drupal\Core\Routing\RouteMatch
+ * @group Routing
  */
-#[CoversClass(RouteMatch::class)]
-#[Group('Routing')]
 class RouteMatchTest extends RouteMatchTestBase {
 
   /**
@@ -28,10 +25,8 @@ class RouteMatchTest extends RouteMatchTestBase {
   }
 
   /**
-   * Tests route match from request.
-   *
-   * @legacy-covers ::createFromRequest
-   * @legacy-covers ::__construct
+   * @covers ::createFromRequest
+   * @covers ::__construct
    */
   public function testRouteMatchFromRequest(): void {
     $request = new Request();

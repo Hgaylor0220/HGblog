@@ -45,33 +45,18 @@ interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBun
   /**
    * Gets the preview mode.
    *
-   * phpcs:disable Drupal.Commenting
-   * @todo Uncomment new method parameters before drupal:12.0.0.
-   * @see https://www.drupal.org/project/drupal/issues/3539662
-   *
-   * @param bool $returnAsInt
-   *   (deprecated) Whether to return an integer or enum value. The $returnAsInt
-   *   parameter is deprecated in drupal:11.3.0 and is removed from
-   *   drupal:13.0.0.
-   * phpcs:enable
-   *
-   * @return \Drupal\node\NodePreviewMode|int
-   *   Returns the enum case if $returnAsInt is FALSE, otherwise returns the
-   *   integer equivalent.
+   * @return int
+   *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
    */
-  public function getPreviewMode(/* bool $returnAsInt = TRUE  */);
+  public function getPreviewMode();
 
   /**
    * Sets the preview mode.
    *
-   * @param \Drupal\node\NodePreviewMode|int $preview_mode
-   *   A NodePreviewMode case, or the integer equivalent. Passing an integer
-   *   is deprecated.
-   *
-   * @todo Uncomment parameters type declarations before drupal:12.0.0.
-   * @see https://www.drupal.org/project/drupal/issues/3539662
+   * @param int $preview_mode
+   *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
    */
-  public function setPreviewMode(/* \Drupal\node\NodePreviewMode|int */ $preview_mode);
+  public function setPreviewMode($preview_mode);
 
   /**
    * Gets the help information.

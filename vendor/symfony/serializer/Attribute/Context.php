@@ -14,25 +14,28 @@ namespace Symfony\Component\Serializer\Attribute;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
+ * Annotation class for @Context().
+ *
+ * @Annotation
+ * @NamedArgumentConstructor
+ * @Target({"PROPERTY", "METHOD"})
+ *
  * @author Maxime Steinhausser <maxime.steinhausser@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Context
 {
-    public readonly array $groups;
+    private array $groups;
 
     /**
-     * @param array<string, mixed> $context                The common context to use when serializing or deserializing
-     * @param array<string, mixed> $normalizationContext   The context to use when serializing
-     * @param array<string, mixed> $denormalizationContext The context to use when deserializing
-     * @param string|string[]      $groups                 The groups to use when serializing or deserializing
+     * @param string|string[] $groups
      *
      * @throws InvalidArgumentException
      */
     public function __construct(
-        public readonly array $context = [],
-        public readonly array $normalizationContext = [],
-        public readonly array $denormalizationContext = [],
+        private readonly array $context = [],
+        private readonly array $normalizationContext = [],
+        private readonly array $denormalizationContext = [],
         string|array $groups = [],
     ) {
         if (!$context && !$normalizationContext && !$denormalizationContext) {
@@ -48,25 +51,21 @@ class Context
         }
     }
 
-    #[\Deprecated('Use the "context" property instead', 'symfony/serializer:7.4')]
     public function getContext(): array
     {
         return $this->context;
     }
 
-    #[\Deprecated('Use the "normalizationContext" property instead', 'symfony/serializer:7.4')]
     public function getNormalizationContext(): array
     {
         return $this->normalizationContext;
     }
 
-    #[\Deprecated('Use the "denormalizationContext" property instead', 'symfony/serializer:7.4')]
     public function getDenormalizationContext(): array
     {
         return $this->denormalizationContext;
     }
 
-    #[\Deprecated('Use the "groups" property instead', 'symfony/serializer:7.4')]
     public function getGroups(): array
     {
         return $this->groups;

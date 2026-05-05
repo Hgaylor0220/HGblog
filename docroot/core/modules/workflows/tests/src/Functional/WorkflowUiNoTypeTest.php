@@ -6,14 +6,12 @@ namespace Drupal\Tests\workflows\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests workflow UI when there are no types.
+ *
+ * @group workflows
  */
-#[Group('workflows')]
-#[RunTestsInSeparateProcesses]
 class WorkflowUiNoTypeTest extends BrowserTestBase {
 
   /**

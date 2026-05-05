@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Version;
 
 use Drupal\Component\Version\Constraint;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Version\Constraint.
+ * @coversDefaultClass \Drupal\Component\Version\Constraint
+ * @group Version
  */
-#[CoversClass(Constraint::class)]
-#[Group('Version')]
 class ConstraintTest extends TestCase {
 
   /**
-   * Tests is compatible.
+   * @covers ::isCompatible
+   * @dataProvider providerIsCompatible
    */
-  #[DataProvider('providerIsCompatible')]
   public function testIsCompatible(Constraint $version_info, string $current_version, bool $result): void {
     $this->assertSame($result, $version_info->isCompatible($current_version));
   }

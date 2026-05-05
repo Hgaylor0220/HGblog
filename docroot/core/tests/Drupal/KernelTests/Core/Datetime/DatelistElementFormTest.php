@@ -12,15 +12,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Datelist functionality.
+ *
+ * @group Form
  */
-#[Group('Form')]
-#[RunTestsInSeparateProcesses]
 class DatelistElementFormTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
 
   /**
@@ -29,16 +26,23 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   protected static $modules = ['datetime', 'system'];
 
   /**
+   * Sets up the test.
+   */
+  protected function setUp(): void {
+    parent::setUp();
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public function getFormId() {
     return 'test_datelist_element';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datelistDateCallbackTrusted(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL): void {
+  public function datelistDateCallbackTrusted(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL) {
     $element['datelistDateCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -48,7 +52,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datelistDateCallback(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL): void {
+  public function datelistDateCallback(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL) {
     $element['datelistDateCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -58,7 +62,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $date_callback = 'datelistDateCallbackTrusted'): array {
+  public function buildForm(array $form, FormStateInterface $form_state, string $date_callback = 'datelistDateCallbackTrusted') {
 
     $form['datelist_element'] = [
       '#title' => 'datelist test',
@@ -79,7 +83,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => 'Submit',
+      '#value' => t('Submit'),
     ];
 
     return $form;
@@ -114,38 +118,19 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
 
   /**
    * Tests that exceptions are raised if untrusted callbacks are used.
+   *
+   * @group legacy
    */
-  #[IgnoreDeprecations]
   public function testDatelistElementUntrustedCallbacks() : void {
     $this->expectException(UntrustedCallbackException::class);
-    $this->expectExceptionMessage(sprintf(
-      'Datelist element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966',
-      Variable::callableToString([$this, 'datelistDateCallback'])
-    ));
-    \Drupal::formBuilder()->getForm($this, 'datelistDateCallback');
-  }
-
-  /**
-   * Tests proper timezone handling of the Datelist element.
-   */
-  public function testTimezoneHandling(): void {
-    // Render the form once with the site's timezone.
-    $form = \Drupal::formBuilder()->getForm($this);
-    $this->render($form);
-    $this->assertEquals('Australia/Sydney', $form['datelist_element']['#date_timezone']);
-
-    // Mimic a user with a different timezone than Australia/Sydney.
-    date_default_timezone_set('UTC');
-
-    $form = \Drupal::formBuilder()->getForm($this);
-    $this->render($form);
-    $this->assertEquals('UTC', $form['datelist_element']['#date_timezone']);
+    $this->expectExceptionMessage(sprintf('Datelist element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datelistDateCallback'])));
+    $form = \Drupal::formBuilder()->getForm($this, 'datelistDateCallback');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks(): array {
+  public static function trustedCallbacks() {
     return [
       'datelistDateCallbackTrusted',
     ];

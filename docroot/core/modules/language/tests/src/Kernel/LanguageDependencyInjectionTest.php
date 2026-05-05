@@ -6,14 +6,12 @@ namespace Drupal\Tests\language\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that a language object can be injected.
+ *
+ * @group language
  */
-#[Group('language')]
-#[RunTestsInSeparateProcesses]
 class LanguageDependencyInjectionTest extends LanguageTestBase {
 
   /**
@@ -49,7 +47,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
       $fr->delete();
       $this->fail('Expected DeleteDefaultLanguageException thrown.');
     }
-    catch (DeleteDefaultLanguageException) {
+    catch (DeleteDefaultLanguageException $e) {
       // Expected exception; just continue testing.
     }
 

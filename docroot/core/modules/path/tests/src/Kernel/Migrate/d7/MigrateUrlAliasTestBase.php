@@ -9,6 +9,8 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Tests URL alias migration.
+ *
+ * @group path
  */
 abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
 

@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests the node setting for displaying author and date information.
+ *
+ * @group node
  */
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class NodePostSettingsTest extends NodeTestBase {
 
   /**

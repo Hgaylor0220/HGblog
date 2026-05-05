@@ -35,7 +35,7 @@ abstract class LanguageTestBase extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig(['system', 'language']);
+    $this->installConfig(['language']);
 
     $this->state = $this->container->get('state');
 

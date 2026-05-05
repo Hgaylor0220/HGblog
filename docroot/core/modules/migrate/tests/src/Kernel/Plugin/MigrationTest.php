@@ -7,18 +7,13 @@ namespace Drupal\Tests\migrate\Kernel\Plugin;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
-use Drupal\migrate\Plugin\Migration;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the migration plugin.
+ *
+ * @coversDefaultClass \Drupal\migrate\Plugin\Migration
+ * @group migrate
  */
-#[CoversClass(Migration::class)]
-#[Group('migrate')]
-#[RunTestsInSeparateProcesses]
 class MigrationTest extends KernelTestBase {
 
   /**
@@ -28,6 +23,8 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getProcessPlugins()
+   *
+   * @covers ::getProcessPlugins
    */
   public function testGetProcessPlugins(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
@@ -36,6 +33,8 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getProcessPlugins() throws an exception.
+   *
+   * @covers ::getProcessPlugins
    */
   public function testGetProcessPluginsException(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
@@ -49,8 +48,11 @@ class MigrationTest extends KernelTestBase {
    *
    * @param array $process
    *   The migration process pipeline.
+   *
+   * @covers ::getProcessPlugins
+   *
+   * @dataProvider getProcessPluginsExceptionMessageProvider
    */
-  #[DataProvider('getProcessPluginsExceptionMessageProvider')]
   public function testGetProcessPluginsExceptionMessage(array $process): void {
     // Test with an invalid process pipeline.
     $plugin_definition = [
@@ -78,6 +80,8 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getMigrationDependencies()
+   *
+   * @covers ::getMigrationDependencies
    */
   public function testGetMigrationDependencies(): void {
     $plugin_manager = \Drupal::service('plugin.manager.migration');
@@ -128,11 +132,13 @@ class MigrationTest extends KernelTestBase {
       ],
     ];
     $migration = $plugin_manager->createStubMigration($plugin_definition);
-    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getMigrationDependencies());
+    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getMigrationDependencies(TRUE));
   }
 
   /**
    * Tests Migration::getDestinationIds()
+   *
+   * @covers ::getDestinationIds
    */
   public function testGetDestinationIds(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration(['destinationIds' => ['foo' => 'bar']]);
@@ -142,7 +148,27 @@ class MigrationTest extends KernelTestBase {
   }
 
   /**
+   * Tests Migration::getTrackLastImported()
+   *
+   * @covers ::getTrackLastImported
+   * @covers ::isTrackLastImported
+   *
+   * @group legacy
+   */
+  public function testGetTrackLastImported(): void {
+    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::setTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
+    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::getTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
+    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::isTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
+    $migration->setTrackLastImported(TRUE);
+    $this->assertEquals(TRUE, $migration->getTrackLastImported());
+    $this->assertEquals(TRUE, $migration->isTrackLastImported());
+  }
+
+  /**
    * Tests Migration::getDestinationPlugin()
+   *
+   * @covers ::getDestinationPlugin
    */
   public function testGetDestinationPlugin(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration(['destination' => ['no_stub' => TRUE]]);

@@ -6,23 +6,18 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Test\TestDatabase.
+ * @coversDefaultClass \Drupal\Core\Test\TestDatabase
+ *
+ * @group Test
+ * @group simpletest
+ * @group Template
  */
-#[CoversClass(TestDatabase::class)]
-#[Group('Test')]
-#[Group('simpletest')]
-#[Group('Template')]
 class TestDatabaseTest extends UnitTestCase {
 
   /**
-   * Tests constructor exception.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -31,14 +26,13 @@ class TestDatabaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests constructor.
+   * @covers ::__construct
+   * @covers ::getDatabasePrefix
+   * @covers ::getTestSitePath
+   * @covers ::getPhpErrorLogPath
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDatabasePrefix
-   * @legacy-covers ::getTestSitePath
-   * @legacy-covers ::getPhpErrorLogPath
+   * @dataProvider providerTestConstructor
    */
-  #[DataProvider('providerTestConstructor')]
   public function testConstructor($db_prefix, $expected_db_prefix, $expected_site_path): void {
     $test_db = new TestDatabase($db_prefix);
     $this->assertEquals($expected_db_prefix, $test_db->getDatabasePrefix());
@@ -49,7 +43,7 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * Data provider for self::testConstructor()
    */
-  public static function providerTestConstructor(): array {
+  public static function providerTestConstructor() {
     return [
       ['test1234', 'test1234', 'sites/simpletest/1234'],
       ['test123456test234567', 'test123456test234567', 'sites/simpletest/234567'],
@@ -59,10 +53,10 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * Verify that a test lock is generated if there is no provided prefix.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDatabasePrefix
-   * @legacy-covers ::getTestSitePath
-   * @legacy-covers ::getPhpErrorLogPath
+   * @covers ::__construct
+   * @covers ::getDatabasePrefix
+   * @covers ::getTestSitePath
+   * @covers ::getPhpErrorLogPath
    */
   public function testConstructorNullPrefix(): void {
     // We use a stub class here because we can't mock getTestLock() so that it's

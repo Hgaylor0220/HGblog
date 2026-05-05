@@ -7,16 +7,13 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the sql query plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\query\Sql
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class SqlQueryTest extends ViewsKernelTestBase {
 
   /**
@@ -32,10 +29,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['table']['base']['access query tag'] = 'test_tag';
-    $data['views_test_data']['table']['base']['query metadata'] = [
-      'key1' => 'test_metadata',
-      'key2' => 'test_metadata2',
-    ];
+    $data['views_test_data']['table']['base']['query metadata'] = ['key1' => 'test_metadata', 'key2' => 'test_metadata2'];
 
     return $data;
   }
@@ -91,11 +85,11 @@ class SqlQueryTest extends ViewsKernelTestBase {
   /**
    * Tests the method \Drupal\views\Plugin\views\query\Sql::getConnection().
    *
+   * @covers \Drupal\views\Plugin\views\query\Sql::getConnection
+   *
    * This needs to be a kernel test because the tested method uses the method
    * \Drupal\Core\Database\Database::getConnection() which is a 'final' method
    * and therefore cannot be mocked.
-   *
-   * @legacy-covers \Drupal\views\Plugin\views\query\Sql::getConnection
    */
   public function testGetConnection(): void {
     $view = Views::getView('test_view');
@@ -112,7 +106,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
     $this->assertSame('default', $view->getQuery()->getConnection()->getKey());
     $this->assertSame('default', $view->getQuery()->getConnection()->getTarget());
 
-    // Test the database connection with the option 'replica' set to TRUE.
+    // Test the database connection with the option 'replica' set to TRUE;
     $view->getQuery()->options['replica'] = TRUE;
     $this->assertSame('default', $view->getQuery()->getConnection()->getKey());
     $this->assertSame('replica', $view->getQuery()->getConnection()->getTarget());

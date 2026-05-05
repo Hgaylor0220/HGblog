@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Unit\Field;
 
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Field\BaseFieldDefinition.
+ * @coversDefaultClass \Drupal\Core\Field\BaseFieldDefinition
+ * @group path
  */
-#[CoversClass(BaseFieldDefinition::class)]
-#[Group('path')]
 class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
 
   /**
@@ -26,15 +22,13 @@ class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getModuleAndPath(): array {
+  protected function getModuleAndPath() {
     return ['path', dirname(__DIR__, 4)];
   }
 
   /**
-   * Tests get columns.
-   *
-   * @legacy-covers ::getColumns
-   * @legacy-covers ::getSchema
+   * @covers ::getColumns
+   * @covers ::getSchema
    */
   public function testGetColumns(): void {
     $this->assertSame([], $this->definition->getColumns());

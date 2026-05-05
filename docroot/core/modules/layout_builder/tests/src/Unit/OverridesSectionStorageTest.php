@@ -16,19 +16,16 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage.
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
+ *
+ * @group layout_builder
+ * @group #slow
  */
-#[CoversClass(OverridesSectionStorage::class)]
-#[Group('layout_builder')]
-#[Group('#slow')]
 class OverridesSectionStorageTest extends UnitTestCase {
 
   /**
@@ -79,7 +76,9 @@ class OverridesSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests extract entity from route.
+   * @covers ::extractEntityFromRoute
+   *
+   * @dataProvider providerTestExtractEntityFromRoute
    *
    * @param bool $success
    *   Whether a successful result is expected.
@@ -90,7 +89,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
    * @param array $defaults
    *   The defaults to pass to ::extractEntityFromRoute().
    */
-  #[DataProvider('providerTestExtractEntityFromRoute')]
   public function testExtractEntityFromRoute($success, $expected_entity_type_id, $value, array $defaults): void {
     if ($expected_entity_type_id) {
       $entity_without_layout = $this->prophesize(FieldableEntityInterface::class);
@@ -161,12 +159,10 @@ class OverridesSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * Tests build routes.
-   *
-   * @legacy-covers ::buildRoutes
-   * @legacy-covers ::hasIntegerId
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
+   * @covers ::buildRoutes
+   * @covers ::hasIntegerId
+   * @covers ::getEntityTypes
+   * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
    */
   public function testBuildRoutes(): void {
     $entity_types = [];

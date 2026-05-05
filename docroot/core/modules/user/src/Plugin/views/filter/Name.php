@@ -16,11 +16,6 @@ use Drupal\views\Plugin\views\filter\InOperator;
 #[ViewsFilter("user_name")]
 class Name extends InOperator {
 
-  /**
-   * This filter is always considered multiple-valued.
-   *
-   * @var bool
-   */
   protected $alwaysMultiple = TRUE;
 
   /**
@@ -29,9 +24,6 @@ class Name extends InOperator {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected array $validated_exposed_input;
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $users = $this->value ? User::loadMultiple($this->value) : [];
     $default_value = EntityAutocomplete::getEntityLabels($users);
@@ -52,9 +44,6 @@ class Name extends InOperator {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueValidate($form, FormStateInterface $form_state) {
     $uids = [];
     if ($values = $form_state->getValue(['options', 'value'])) {
@@ -66,9 +55,6 @@ class Name extends InOperator {
     $form_state->setValue(['options', 'value'], $uids);
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function acceptExposedInput($input) {
     $rc = parent::acceptExposedInput($input);
 
@@ -82,9 +68,6 @@ class Name extends InOperator {
     return $rc;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function validateExposed(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
       return;
@@ -115,9 +98,6 @@ class Name extends InOperator {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueSubmit($form, FormStateInterface $form_state) {
     // Prevent array filter from removing our anonymous user.
   }
@@ -129,11 +109,8 @@ class Name extends InOperator {
     return $this->valueOptions;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function adminSummary() {
-    // Set up $this->valueOptions for the parent summary.
+    // Set up $this->valueOptions for the parent summary
     $this->valueOptions = [];
 
     if ($this->value) {

@@ -22,6 +22,8 @@ base:
         weight: -10
       css/components/inline-form.css:
         weight: -10
+      css/components/item-list.css:
+        weight: -10
       css/components/link.css:
         weight: -10
       css/components/links.css:
@@ -35,6 +37,8 @@ base:
       css/components/tabledrag.css:
         weight: -10
       css/components/tableselect.css:
+        weight: -10
+      css/components/tablesort.css:
         weight: -10
       css/components/tabs.css:
         weight: -10
@@ -87,18 +91,6 @@ progress:
   css:
     component:
       css/components/progress.css:
-        weight: -10
-drupal.tablesort:
-  version: VERSION
-  css:
-    component:
-      css/components/tablesort.css:
-        weight: -10
-item-list:
-  version: VERSION
-  css:
-    component:
-      css/components/item-list.css:
         weight: -10
 search-results:
   version: VERSION

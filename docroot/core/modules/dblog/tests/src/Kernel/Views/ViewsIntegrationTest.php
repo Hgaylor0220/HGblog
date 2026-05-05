@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\dblog\Kernel\Views;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Link;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the views integration of dblog module.
+ *
+ * @group dblog
  */
-#[Group('dblog')]
-#[RunTestsInSeparateProcesses]
 class ViewsIntegrationTest extends ViewsKernelTestBase {
 
   /**
@@ -68,7 +67,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       }
       $message_vars = $entry['variables'];
       unset($message_vars['link']);
-      $this->assertEquals(strtr($entry['message'], $message_vars), $view->style_plugin->getField($index, 'message'));
+      $this->assertEquals(new FormattableMarkup($entry['message'], $message_vars), $view->style_plugin->getField($index, 'message'));
       $link_field = $view->style_plugin->getField($index, 'link');
       // The 3rd entry contains some unsafe markup that needs to get filtered.
       if ($index == 2) {
@@ -179,7 +178,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
    * @return array
    *   An array of data used to create the log entries.
    */
-  protected function createLogEntries(): array {
+  protected function createLogEntries() {
     $entries = [];
     // Setup a watchdog entry without tokens.
     $entries[] = [

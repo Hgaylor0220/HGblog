@@ -6,14 +6,11 @@ namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\DependencyInjection\Container.
+ * @coversDefaultClass \Drupal\Core\DependencyInjection\Container
+ * @group DependencyInjection
  */
-#[CoversClass(Container::class)]
-#[Group('DependencyInjection')]
 class ContainerTest extends UnitTestCase {
 
   /**

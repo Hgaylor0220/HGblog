@@ -2,7 +2,7 @@
 
 namespace Drupal\workflows\Plugin;
 
-use Drupal\Core\Plugin\ConfigurablePluginBase;
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\workflows\State;
 use Drupal\workflows\StateInterface;
@@ -16,7 +16,7 @@ use Drupal\workflows\WorkflowTypeInterface;
  *
  * @see \Drupal\workflows\Annotation\WorkflowType
  */
-abstract class WorkflowTypeBase extends ConfigurablePluginBase implements WorkflowTypeInterface {
+abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterface {
 
   use PluginWithFormsTrait;
 
@@ -24,6 +24,14 @@ abstract class WorkflowTypeBase extends ConfigurablePluginBase implements Workfl
    * A regex for matching a valid state/transition machine name.
    */
   const VALID_ID_REGEX = '/[^a-z0-9_]+/';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setConfiguration($configuration);
+  }
 
   /**
    * {@inheritdoc}
@@ -52,9 +60,15 @@ abstract class WorkflowTypeBase extends ConfigurablePluginBase implements Workfl
   /**
    * {@inheritdoc}
    */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setConfiguration(array $configuration) {
     $this->configuration = $configuration + $this->defaultConfiguration();
-    return $this;
   }
 
   /**

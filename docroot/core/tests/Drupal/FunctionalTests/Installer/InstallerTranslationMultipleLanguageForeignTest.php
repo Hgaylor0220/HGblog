@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests translation files for multiple languages get imported during install.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class InstallerTranslationMultipleLanguageForeignTest extends InstallerTranslationMultipleLanguageTest {
 
   /**
@@ -29,7 +26,7 @@ class InstallerTranslationMultipleLanguageForeignTest extends InstallerTranslati
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     parent::setUpLanguage();
     $this->translations['Save and continue'] = 'Save and continue de';
   }

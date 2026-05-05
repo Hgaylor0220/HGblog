@@ -10,24 +10,18 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Plugin\PluginWithFormsTrait.
+ * @coversDefaultClass \Drupal\Core\Plugin\PluginWithFormsTrait
+ * @group Plugin
  */
-#[CoversClass(PluginWithFormsTrait::class)]
-#[Group('Plugin')]
 class PluginWithFormsTraitTest extends UnitTestCase {
 
   /**
-   * Tests get form class.
-   *
-   * @legacy-covers ::getFormClass
-   * @legacy-covers ::hasFormClass
+   * @covers ::getFormClass
+   * @covers ::hasFormClass
+   * @dataProvider providerGetFormClass
    */
-  #[DataProvider('providerGetFormClass')]
   public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class): void {
     $this->assertSame($expected_class, $block_plugin->getFormClass($operation));
     $this->assertSame($expected_class !== NULL, $block_plugin->hasFormClass($operation));
@@ -35,9 +29,8 @@ class PluginWithFormsTraitTest extends UnitTestCase {
 
   /**
    * @return array
-   *   Test cases for different block plugins and operations, mapping them to expected form classes.
    */
-  public static function providerGetFormClass(): array {
+  public static function providerGetFormClass() {
     $block_plugin_without_forms = new TestClass([], 'block_plugin_without_forms', [
       'provider' => 'block_test',
     ]);
@@ -49,48 +42,21 @@ class PluginWithFormsTraitTest extends UnitTestCase {
       ],
     ]);
     return [
-      'block plugin without forms, "configure" operation' => [
-        $block_plugin_without_forms,
-        'configure',
-        TestClass::class,
-      ],
-      'block plugin without forms, "tickle" operation' => [
-        $block_plugin_without_forms,
-        'tickle',
-        NULL,
-      ],
-      'block plugin without forms, "poke" operation' => [
-        $block_plugin_without_forms,
-        'poke',
-        NULL,
-      ],
-      'block plugin with forms, "configure" operation' => [
-        $block_plugin_with_forms,
-        'configure',
-        TestClass::class,
-      ],
-      'block plugin with forms, "tickle" operation' => [
-        $block_plugin_with_forms,
-        'tickle',
-        NULL,
-      ],
-      'block plugin with forms, "poke" operation' => [
-        $block_plugin_with_forms,
-        'poke',
-        static::class,
-      ],
+      'block plugin without forms, "configure" operation' => [$block_plugin_without_forms, 'configure', TestClass::class],
+      'block plugin without forms, "tickle" operation'    => [$block_plugin_without_forms, 'tickle', NULL],
+      'block plugin without forms, "poke" operation'      => [$block_plugin_without_forms, 'poke', NULL],
+      'block plugin with forms, "configure" operation' => [$block_plugin_with_forms, 'configure', TestClass::class],
+      'block plugin with forms, "tickle" operation'    => [$block_plugin_with_forms, 'tickle', NULL],
+      'block plugin with forms, "poke" operation'      => [$block_plugin_with_forms, 'poke', static::class],
     ];
   }
 
 }
 
-/**
- * Stub class for testing PluginWithFormsTrait.
- */
 class TestClass extends PluginBase implements PluginWithFormsInterface, PluginFormInterface {
   use PluginWithFormsTrait;
 
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     return [];
   }
 

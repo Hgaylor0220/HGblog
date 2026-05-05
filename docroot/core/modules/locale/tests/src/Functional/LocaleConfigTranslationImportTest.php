@@ -6,14 +6,12 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests translation update's effects on configuration translations.
+ *
+ * @group locale
  */
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
   /**
@@ -25,6 +23,13 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+  }
 
   /**
    * Tests update changes configuration translations if enabled after language.

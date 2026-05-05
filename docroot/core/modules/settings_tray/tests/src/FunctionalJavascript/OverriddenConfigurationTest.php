@@ -7,14 +7,12 @@ namespace Drupal\Tests\settings_tray\FunctionalJavascript;
 use Drupal\block\Entity\Block;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\user\Entity\Role;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling of configuration overrides.
+ *
+ * @group settings_tray
  */
-#[Group('settings_tray')]
-#[RunTestsInSeparateProcesses]
 class OverriddenConfigurationTest extends SettingsTrayTestBase {
 
   /**
@@ -126,7 +124,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
     $page = $this->getSession()->getPage();
     $overridden_block = $this->placeBlock('system_powered_by_block', [
       'id' => 'overridden_block',
-      'label_display' => 'visible',
+      'label_display' => 1,
       'label' => 'This will be overridden.',
     ]);
     $this->drupalGet('user');
@@ -150,7 +148,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
 
     // Test a non-overridden block does show the form in the off-canvas dialog.
     $block = $this->placeBlock('system_powered_by_block', [
-      'label_display' => 'visible',
+      'label_display' => 1,
       'label' => 'Foo label',
     ]);
     $this->drupalGet('user');

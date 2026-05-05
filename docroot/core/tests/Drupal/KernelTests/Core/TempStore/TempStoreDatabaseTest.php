@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\TempStore;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
-use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Core\TempStore\SharedTempStoreFactory;
+use Drupal\Core\Lock\DatabaseLockBackend;
+use Drupal\Core\Database\Database;
 
 /**
  * Tests the temporary object storage system.
  *
+ * @group TempStore
  * @see \Drupal\Core\TempStore\SharedTempStore
  */
-#[Group('TempStore')]
-#[RunTestsInSeparateProcesses]
 class TempStoreDatabaseTest extends KernelTestBase {
 
   /**

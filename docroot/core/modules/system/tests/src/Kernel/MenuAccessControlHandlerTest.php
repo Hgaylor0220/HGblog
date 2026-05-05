@@ -5,21 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
-use Drupal\system\MenuAccessControlHandler;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\system\MenuAccessControlHandler.
+ * @coversDefaultClass \Drupal\system\MenuAccessControlHandler
+ * @group system
  */
-#[CoversClass(MenuAccessControlHandler::class)]
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class MenuAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
@@ -51,12 +46,10 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * Tests access.
-   *
-   * @legacy-covers ::checkAccess
-   * @legacy-covers ::checkCreateAccess
+   * @covers ::checkAccess
+   * @covers ::checkCreateAccess
+   * @dataProvider testAccessProvider
    */
-  #[DataProvider('providerTestAccess')]
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
     $user = $this->drupalCreateUser($permissions);
 
@@ -74,20 +67,16 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
     static::assertEquals($create_access_result, $this->accessControlHandler->createAccess(NULL, $user, [], TRUE));
   }
 
-  /**
-   * Provides test cases for menu access control based on user permissions and menu lock status.
-   *
-   * @return array
-   *   An array of test cases.
-   */
-  public static function providerTestAccess(): array {
-    // RefinableCacheableDependencyTrait::addCacheContexts() only needs the
-    // container to perform an assertion, but we can't use the container here,
-    // so disable assertions for the purposes of this test.
-    $assertions = ini_set('zend.assertions', 0);
+  public function testAccessProvider() {
+    $c = new ContainerBuilder();
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
+    $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
+    $cache_contexts_manager->reveal();
+    $c->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($c);
 
-    $data = [
-      'no permission + unlocked' => [
+    return [
+      'permissionless + unlocked' => [
         [],
         'unlocked',
         AccessResult::allowed(),
@@ -96,7 +85,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer menu' permission is required.")->addCacheTags(['config:system.menu.llama']),
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer menu' permission is required."),
       ],
-      'no permission + locked' => [
+      'permissionless + locked' => [
         [],
         'locked',
         AccessResult::allowed(),
@@ -124,12 +113,6 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
         AccessResult::allowed()->addCacheContexts(['user.permissions']),
       ],
     ];
-
-    if ($assertions !== FALSE) {
-      ini_set('zend.assertions', $assertions);
-    }
-
-    return $data;
   }
 
 }

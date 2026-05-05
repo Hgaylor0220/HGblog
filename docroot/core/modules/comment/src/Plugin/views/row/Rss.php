@@ -48,9 +48,6 @@ class Rss extends RssPluginBase {
    */
   protected $entityTypeId = 'comment';
 
-  /**
-   * {@inheritdoc}
-   */
   public function preRender($result) {
     $cids = [];
 
@@ -66,13 +63,11 @@ class Rss extends RssPluginBase {
    */
   public function buildOptionsForm_summary_options() {
     $options = parent::buildOptionsForm_summary_options();
-    $options[$this::TITLE_VIEW_MODE] = $this->t('Title only');
+    $options['title'] = $this->t('Title only');
+    $options['default'] = $this->t('Use site default RSS settings');
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function render($row) {
     global $base_url;
 
@@ -82,6 +77,9 @@ class Rss extends RssPluginBase {
     }
 
     $view_mode = $this->options['view_mode'];
+    if ($view_mode == 'default') {
+      $view_mode = \Drupal::config('system.rss')->get('items.view_mode');
+    }
 
     // Load the specified comment and its associated node:
     /** @var \Drupal\comment\CommentInterface $comment */
@@ -109,7 +107,7 @@ class Rss extends RssPluginBase {
 
     // The comment gets built and modules add to or modify
     // $comment->rss_elements and $comment->rss_namespaces.
-    $build = $this->entityTypeManager->getViewBuilder('comment')->view($comment, $view_mode);
+    $build = $this->entityTypeManager->getViewBuilder('comment')->view($comment, 'rss');
     unset($build['#theme']);
 
     if (!empty($comment->rss_namespaces)) {
@@ -117,7 +115,7 @@ class Rss extends RssPluginBase {
     }
 
     $item = new \stdClass();
-    if ($view_mode != $this::TITLE_VIEW_MODE) {
+    if ($view_mode != 'title') {
       // We render comment contents.
       $item->description = $build;
     }

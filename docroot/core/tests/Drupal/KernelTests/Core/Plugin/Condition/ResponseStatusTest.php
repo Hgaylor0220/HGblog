@@ -6,9 +6,6 @@ namespace Drupal\KernelTests\Core\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionManager;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,9 +15,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Tests the Response Status Condition, provided by the system module.
+ *
+ * @group Plugin
  */
-#[Group('Plugin')]
-#[RunTestsInSeparateProcesses]
 class ResponseStatusTest extends KernelTestBase {
 
   /**
@@ -55,8 +52,9 @@ class ResponseStatusTest extends KernelTestBase {
 
   /**
    * Tests the request path condition.
+   *
+   * @dataProvider providerTestConditions
    */
-  #[DataProvider('providerTestConditions')]
   public function testConditions(array $status_codes, bool $negate, int $response_code, bool $expected_execute): void {
     if ($response_code === Response::HTTP_OK) {
       $request = Request::create('/my/valid/page');

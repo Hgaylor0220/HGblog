@@ -7,21 +7,17 @@ namespace Drupal\Tests\migrate_drupal\Unit;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate_drupal\MigrationConfigurationTrait.
+ * @coversDefaultClass \Drupal\migrate_drupal\MigrationConfigurationTrait
+ * @group migrate_drupal
  */
-#[CoversClass(MigrationConfigurationTrait::class)]
-#[Group('migrate_drupal')]
 class MigrationConfigurationTraitTest extends UnitTestCase {
 
   /**
-   * Tests get legacy drupal version.
+   * @covers ::getLegacyDrupalVersion
+   * @dataProvider providerTestGetLegacyDrupalVersion
    */
-  #[DataProvider('providerTestGetLegacyDrupalVersion')]
   public function testGetLegacyDrupalVersion($expected_version_string, $schema_version, $exception, $system_table_exists): void {
     if ($schema_version) {
       $statement = $this->createMock('\Drupal\Core\Database\StatementInterface');

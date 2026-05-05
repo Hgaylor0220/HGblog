@@ -9,14 +9,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity translation form.
+ *
+ * @group Entity
  */
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
@@ -31,8 +29,6 @@ class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
    * The test language codes.
-   *
-   * @var string[]
    */
   protected $langcodes;
 
@@ -95,10 +91,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
 
     // Enable language selector.
     $this->drupalGet('admin/structure/types/manage/page');
-    $edit = [
-      'language_configuration[language_alterable]' => TRUE,
-      'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ];
+    $edit = ['language_configuration[language_alterable]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");

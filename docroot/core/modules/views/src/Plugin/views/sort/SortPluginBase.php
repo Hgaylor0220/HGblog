@@ -41,9 +41,6 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -100,7 +97,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $form['expose_button'] = [
       '#prefix' => '<div class="views-expose clearfix">',
       '#suffix' => '</div>',
-      // Should always come first.
+      // Should always come first
       '#weight' => -1000,
     ];
 
@@ -181,10 +178,8 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     }
   }
 
-  // phpcs:ignore Drupal.Commenting.FunctionComment.Missing
   protected function sortValidate(&$form, FormStateInterface $form_state) {}
 
-  // phpcs:ignore Drupal.Commenting.FunctionComment.Missing
   public function sortSubmit(&$form, FormStateInterface $form_state) {}
 
   /**
@@ -199,9 +194,6 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     // #flatten will move everything from $form['expose'][$key] to $form[$key]
     // prior to rendering. That's why the preRender for it needs to run first,

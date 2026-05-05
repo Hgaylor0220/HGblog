@@ -6,14 +6,12 @@ namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the JS components added to the user permissions page.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class UserPermissionsTest extends WebDriverTestBase {
 
   /**

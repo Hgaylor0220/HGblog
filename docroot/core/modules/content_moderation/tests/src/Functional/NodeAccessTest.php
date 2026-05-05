@@ -5,18 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\node\Traits\NodeAccessTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests permission access control around nodes.
+ *
+ * @group content_moderation
  */
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class NodeAccessTest extends ModerationStateTestBase {
-
-  use NodeAccessTrait;
 
   /**
    * {@inheritdoc}
@@ -65,7 +60,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
 
     // Add the private field to the node type.
-    $this->addPrivateField(NodeType::load('moderated_content'));
+    node_access_test_add_field(NodeType::load('moderated_content'));
 
     // Rebuild permissions because hook_node_grants() is implemented by the
     // node_access_test_empty module.

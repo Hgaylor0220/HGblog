@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Form;
 
-use Drupal\Core\Form\FormErrorHandler;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Form\FormErrorHandler.
+ * @coversDefaultClass \Drupal\Core\Form\FormErrorHandler
+ * @group Form
  */
-#[CoversClass(FormErrorHandler::class)]
-#[Group('Form')]
 class FormErrorHandlerTest extends UnitTestCase {
 
   /**
@@ -50,10 +46,8 @@ class FormErrorHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests display error messages.
-   *
-   * @legacy-covers ::handleFormErrors
-   * @legacy-covers ::displayErrorMessages
+   * @covers ::handleFormErrors
+   * @covers ::displayErrorMessages
    */
   public function testDisplayErrorMessages(): void {
     $messages = [
@@ -128,10 +122,8 @@ class FormErrorHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests set element errors from form state.
-   *
-   * @legacy-covers ::handleFormErrors
-   * @legacy-covers ::setElementErrorsFromFormState
+   * @covers ::handleFormErrors
+   * @covers ::setElementErrorsFromFormState
    */
   public function testSetElementErrorsFromFormState(): void {
     $form = [

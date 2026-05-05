@@ -12,15 +12,12 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\Core\Entity\EntityRepository.
+ * @coversDefaultClass \Drupal\Core\Entity\EntityRepository
+ * @group Entity
  */
-#[CoversClass(EntityRepository::class)]
-#[Group('Entity')]
 class EntityRepositoryTest extends UnitTestCase {
 
   /**
@@ -66,6 +63,8 @@ class EntityRepositoryTest extends UnitTestCase {
 
   /**
    * Tests the getTranslationFromContext() method.
+   *
+   * @covers ::getTranslationFromContext
    */
   public function testGetTranslationFromContext(): void {
     $language = new Language(['id' => 'en']);
@@ -91,10 +90,7 @@ class EntityRepositoryTest extends UnitTestCase {
     $entity->hasTranslation(LanguageInterface::LANGCODE_DEFAULT)->willReturn(FALSE);
     $entity->hasTranslation('custom_langcode')->willReturn(TRUE);
     $entity->getTranslation('custom_langcode')->willReturn($translated_entity->reveal());
-    $entity->getTranslationLanguages()->willReturn([
-      new Language(['id' => 'en']),
-      new Language(['id' => 'custom_langcode']),
-    ]);
+    $entity->getTranslationLanguages()->willReturn([new Language(['id' => 'en']), new Language(['id' => 'custom_langcode'])]);
     $entity->addCacheContexts(['languages:language_content'])->shouldBeCalled();
 
     $this->assertSame($entity->reveal(), $this->entityRepository->getTranslationFromContext($entity->reveal()));

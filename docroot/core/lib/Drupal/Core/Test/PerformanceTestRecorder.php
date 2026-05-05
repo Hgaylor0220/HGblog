@@ -40,9 +40,6 @@ class PerformanceTestRecorder implements EventSubscriberInterface {
     $this->state = $state;
   }
 
-  /**
-   * Gets the number of times an event occurred.
-   */
   public function getCount(string $type, string $name): int {
     $count = 0;
     if ($this->state) {

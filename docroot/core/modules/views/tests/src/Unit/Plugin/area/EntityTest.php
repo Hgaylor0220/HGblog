@@ -9,16 +9,12 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\area\Entity;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests Drupal\views\Plugin\views\area\Entity.
+ * @coversDefaultClass \Drupal\views\Plugin\views\area\Entity
+ * @group Entity
  */
-#[CoversClass(Entity::class)]
-#[Group('Entity')]
 class EntityTest extends UnitTestCase {
 
   /**
@@ -131,7 +127,7 @@ class EntityTest extends UnitTestCase {
   /**
    * Ensures that the entity type manager returns an entity storage.
    */
-  protected function setupEntityTypeManager(): void {
+  protected function setupEntityTypeManager() {
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('entity_test')
@@ -146,7 +142,6 @@ class EntityTest extends UnitTestCase {
    * Data provider for testing different types of tokens.
    *
    * @return array
-   *   An array of test data.
    */
   public static function providerTestTokens() {
     return [
@@ -158,11 +153,9 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Tests render with id.
-   *
-   * @legacy-covers ::render
-   * @legacy-covers ::defineOptions
-   * @legacy-covers ::init
+   * @covers ::render
+   * @covers ::defineOptions
+   * @covers ::init
    */
   public function testRenderWithId(): void {
     $this->setupEntityTypeManager();
@@ -194,13 +187,12 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Tests render with id and token.
+   * @covers ::render
+   * @covers ::defineOptions
+   * @covers ::init
    *
-   * @legacy-covers ::render
-   * @legacy-covers ::defineOptions
-   * @legacy-covers ::init
+   * @dataProvider providerTestTokens
    */
-  #[DataProvider('providerTestTokens')]
   public function testRenderWithIdAndToken($token, $id): void {
     $this->setupEntityTypeManager();
     $options = [
@@ -236,11 +228,9 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Tests render with uuid.
-   *
-   * @legacy-covers ::render
-   * @legacy-covers ::defineOptions
-   * @legacy-covers ::init
+   * @covers ::render
+   * @covers ::defineOptions
+   * @covers ::init
    */
   public function testRenderWithUuid(): void {
     $this->setupEntityTypeManager();
@@ -271,9 +261,10 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies with placeholder.
+   * @covers ::calculateDependencies
+   *
+   * @dataProvider providerTestTokens
    */
-  #[DataProvider('providerTestTokens')]
   public function testCalculateDependenciesWithPlaceholder($token, $id): void {
     $this->setupEntityTypeManager();
 
@@ -286,7 +277,7 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies with uuid.
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithUuid(): void {
     $this->setupEntityTypeManager();
@@ -318,7 +309,7 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies with entity id.
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithEntityId(): void {
     $this->setupEntityTypeManager();

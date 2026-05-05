@@ -4,11 +4,6 @@ views.argument_default.*:
   type: mapping
   label: 'Base default argument'
 
-views.argument_default.date:
-  type: mapping
-  label: 'Current date'
-  mapping: {}
-
 views.argument_default.fixed:
   type: mapping
   label: 'Fixed'

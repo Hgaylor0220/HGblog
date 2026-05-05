@@ -8,15 +8,14 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Database\Database;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore nmsgid nmsgstr heure heures jours lundi ponedjeljak
+// cspell:ignore heure heures jours lundi ponedjeljak
+
 /**
  * Tests plural handling for various languages.
+ *
+ * @group locale
  */
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocalePluralFormatTest extends BrowserTestBase {
 
   /**
@@ -222,7 +221,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
     $this->drupalGet($path);
     $this->submitForm($edit, 'Save translations');
 
-    // User interface input for translating seconds should not be duplicated.
+    // User interface input for translating seconds should not be duplicated
     $this->assertSession()->pageTextContainsOnce('@count seconds');
 
     // Member for time should be translated. Change the created time to ensure
@@ -386,7 +385,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
    * @param array $options
    *   Additional options to pass to the translation import form.
    */
-  public function importPoFile($contents, array $options = []): void {
+  public function importPoFile($contents, array $options = []) {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);

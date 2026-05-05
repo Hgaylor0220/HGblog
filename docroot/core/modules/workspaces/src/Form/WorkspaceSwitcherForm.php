@@ -2,7 +2,6 @@
 
 namespace Drupal\workspaces\Form;
 
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,13 +38,6 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
   protected $messenger;
 
   /**
-   * The entity reference selection plugin manager.
-   *
-   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
-   */
-  protected $selectionManager;
-
-  /**
    * Constructs a new WorkspaceSwitcherForm.
    *
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
@@ -54,14 +46,11 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
    *   The entity type manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selection_manager
-   *   The entity reference selection plugin manager.
    */
-  public function __construct(WorkspaceManagerInterface $workspace_manager, EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger, SelectionPluginManagerInterface $selection_manager) {
+  public function __construct(WorkspaceManagerInterface $workspace_manager, EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger) {
     $this->workspaceManager = $workspace_manager;
     $this->workspaceStorage = $entity_type_manager->getStorage('workspace');
     $this->messenger = $messenger;
-    $this->selectionManager = $selection_manager;
   }
 
   /**
@@ -71,8 +60,7 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
     return new static(
       $container->get('workspaces.manager'),
       $container->get('entity_type.manager'),
-      $container->get('messenger'),
-      $container->get('plugin.manager.entity_reference_selection')
+      $container->get('messenger')
     );
   }
 
@@ -87,13 +75,11 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // Use the workspace selection handler to retrieve only the relevant
-    // workspaces.
-    $selection_handler = $this->selectionManager->getInstance([
-      'target_type' => 'workspace',
-      'handler' => 'default',
-    ]);
-    $workspace_labels = $selection_handler->getReferenceableEntities()['workspace'] ?? [];
+    $workspaces = $this->workspaceStorage->loadMultiple();
+    $workspace_labels = [];
+    foreach ($workspaces as $workspace) {
+      $workspace_labels[$workspace->id()] = $workspace->label();
+    }
 
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
     if ($active_workspace) {
@@ -154,7 +140,7 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
       $this->workspaceManager->setActiveWorkspace($workspace);
       $this->messenger->addMessage($this->t('%workspace_label is now the active workspace.', ['%workspace_label' => $workspace->label()]));
     }
-    catch (WorkspaceAccessException) {
+    catch (WorkspaceAccessException $e) {
       $this->messenger->addError($this->t('You do not have access to activate the %workspace_label workspace.', ['%workspace_label' => $workspace->label()]));
     }
   }

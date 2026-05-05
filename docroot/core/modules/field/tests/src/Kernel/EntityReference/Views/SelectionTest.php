@@ -6,21 +6,18 @@ namespace Drupal\Tests\field\Kernel\EntityReference\Views;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests entity reference selection handler.
+ *
+ * @group entity_reference
  */
-#[Group('entity_reference')]
-#[RunTestsInSeparateProcesses]
 class SelectionTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -63,7 +60,6 @@ class SelectionTest extends KernelTestBase {
     $this->installConfig(['entity_reference_test', 'filter']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installEntitySchema('entity_test');
 
     // Create test nodes.
     $type = $this->randomMachineName();
@@ -81,7 +77,7 @@ class SelectionTest extends KernelTestBase {
 
     // Ensure the bundle to which the field is attached actually exists, or we
     // will get config validation errors.
-    EntityTestHelper::createBundle('test_bundle');
+    entity_test_create_bundle('test_bundle');
 
     // Create an entity reference field.
     $handler_settings = [
@@ -137,11 +133,9 @@ class SelectionTest extends KernelTestBase {
    * Tests the anchor tag stripping.
    *
    * Unstripped results based on the data above will result in output like so:
-   * @code
    *   ...<a href="/node/1" hreflang="en">Test first node</a>...
    *   ...<a href="/node/2" hreflang="en">Test second node</a>...
    *   ...<a href="/node/3" hreflang="en">Test third node</a>...
-   * @endcode
    * If we expect our output to not have the <a> tags, and this matches what's
    * produced by the tag-stripping method, we'll know that it's working.
    */

@@ -7,20 +7,16 @@ namespace Drupal\Tests\Core\Logger;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
 
 /**
- * Tests Drupal\Core\Logger\LoggerChannel.
+ * @coversDefaultClass \Drupal\Core\Logger\LoggerChannel
+ * @group Logger
  */
-#[CoversClass(LoggerChannel::class)]
-#[Group('Logger')]
 class LoggerChannelTest extends UnitTestCase {
 
   /**
@@ -34,11 +30,11 @@ class LoggerChannelTest extends UnitTestCase {
    * @param bool $account
    *   Whether to pass an account to the channel under test.
    *
-   * @legacy-covers ::log
-   * @legacy-covers ::setCurrentUser
-   * @legacy-covers ::setRequestStack
+   * @dataProvider providerTestLog
+   * @covers ::log
+   * @covers ::setCurrentUser
+   * @covers ::setRequestStack
    */
-  #[DataProvider('providerTestLog')]
   public function testLog(callable $expected, bool $request = FALSE, bool $account = FALSE): void {
     $channel = new LoggerChannel('test');
     $message = $this->randomMachineName();
@@ -73,6 +69,8 @@ class LoggerChannelTest extends UnitTestCase {
 
   /**
    * Tests LoggerChannel::log() recursion protection.
+   *
+   * @covers ::log
    */
   public function testLogRecursionProtection(): void {
     $channel = new LoggerChannel('test');
@@ -87,8 +85,8 @@ class LoggerChannelTest extends UnitTestCase {
   /**
    * Tests LoggerChannel::addLoggers().
    *
-   * @legacy-covers ::addLogger
-   * @legacy-covers ::sortLoggers
+   * @covers ::addLogger
+   * @covers ::sortLoggers
    */
   public function testSortLoggers(): void {
     $channel = new LoggerChannel($this->randomMachineName());
@@ -97,7 +95,7 @@ class LoggerChannelTest extends UnitTestCase {
       $logger = $this->createMock('Psr\Log\LoggerInterface');
       $logger->expects($this->once())
         ->method('log')
-        ->willReturnCallback(function () use ($i, &$index_order): void {
+        ->willReturnCallback(function () use ($i, &$index_order) {
           // Append the $i to the index order, so that we know the order that
           // loggers got called with.
           $index_order .= $i;
@@ -187,24 +185,10 @@ class LoggerChannelTest extends UnitTestCase {
 
 }
 
-/**
- * Stub class for testing LoggerChannel.
- */
 class NaughtyRecursiveLogger implements LoggerInterface {
   use LoggerTrait;
 
-  /**
-   * The logger channel.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannel
-   */
   protected $channel;
-
-  /**
-   * The message to log.
-   *
-   * @var string|\Stringable
-   */
   protected $message;
 
   public function __construct(LoggerChannel $channel) {

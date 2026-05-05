@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests deprecating variables passed to twig templates.
@@ -15,10 +12,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see \Drupal\Core\Template\TwigExtension::checkDeprecations()
  * @see \Drupal\Core\Template\TwigNodeVisitorCheckDeprecations
  * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
+ * @group Twig
+ * @group legacy
  */
-#[Group('Twig')]
-#[IgnoreDeprecations]
-#[RunTestsInSeparateProcesses]
 class TwigDeprecationsTest extends KernelTestBase {
 
   /**

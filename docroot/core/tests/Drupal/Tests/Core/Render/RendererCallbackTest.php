@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\UntrustedCallbackException;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Render\Renderer.
+ * @coversDefaultClass \Drupal\Core\Render\Renderer
+ * @group Render
  */
-#[CoversClass(Renderer::class)]
-#[Group('Render')]
 class RendererCallbackTest extends RendererTestBase {
 
   /**
@@ -34,8 +29,9 @@ class RendererCallbackTest extends RendererTestBase {
    *   The render array with a callback.
    * @param string $expected_deprecation
    *   The expected deprecation message triggered whilst rendering.
+   *
+   * @dataProvider providerTestCallback
    */
-  #[DataProvider('providerTestCallback')]
   public function testCallback(array $render_array, string $expected_deprecation): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->expectExceptionMessage($expected_deprecation);

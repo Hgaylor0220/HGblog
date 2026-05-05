@@ -8,6 +8,8 @@ use Drupal\Core\Database\DatabaseException;
 
 /**
  * Tests adding UNIQUE keys to tables.
+ *
+ * @group Database
  */
 abstract class SchemaUniquePrefixedKeysIndexTestBase extends DriverSpecificDatabaseTestBase {
 

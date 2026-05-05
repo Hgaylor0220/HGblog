@@ -6,7 +6,6 @@ use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -130,14 +129,8 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
 
     $form['bundles_by_entity'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Enable this @display-mode for the following @bundle-label types:', [
-        '@display-mode' => $this->entityType->getSingularLabel(),
-        '@bundle-label' => $definition->getLabel(),
-      ]),
-      '#description' => $this->t('This @display-mode will still be available for the rest of the @bundle-label types if not checked here, but it will not be enabled by default.', [
-        '@bundle-label' => $definition->getLabel(),
-        '@display-mode' => $this->entityType->getSingularLabel(),
-      ]),
+      '#title' => $this->t('Enable this @display-mode for the following @bundle-label types:', ['@display-mode' => $this->entityType->getSingularLabel(), '@bundle-label' => $definition->getLabel()]),
+      '#description' => $this->t('This @display-mode will still be available for the rest of the @bundle-label types if not checked here, but it will not be enabled by default.', ['@bundle-label' => $definition->getLabel(), '@display-mode' => $this->entityType->getSingularLabel()]),
       '#options' => $bundles_by_entity,
       '#default_value' => $defaults,
     ];
@@ -173,11 +166,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $this->messenger()
-      ->addStatus($this->t('Saved the %label @entity-type.', [
-        '%label' => $this->entity->label(),
-        '@entity-type' => $this->entityType->getSingularLabel(),
-      ]));
+    $this->messenger()->addStatus($this->t('Saved the %label @entity-type.', ['%label' => $this->entity->label(), '@entity-type' => $this->entityType->getSingularLabel()]));
     $this->entity->save();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
@@ -202,13 +191,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
         $bundle_label = $bundles[$target_entity_id][$bundle]['label'];
         $display_mode_label = $form_state->getValue('label');
 
-        $this->messenger()
-          ->addStatus($this->t('<a href=":url">Configure the %display_mode_label %mode mode for %bundle_label</a>.', [
-            '%mode' => $this->displayContext,
-            '%display_mode_label' => $display_mode_label,
-            '%bundle_label' => $bundle_label,
-            ':url' => $url->toString(),
-          ]));
+        $this->messenger()->addStatus($this->t('<a href=":url">Configure the %display_mode_label %mode mode for %bundle_label</a>.', ['%mode' => $this->displayContext, '%display_mode_label' => $display_mode_label, '%bundle_label' => $bundle_label, ':url' => $url->toString()]));
       }
       else {
         // The view/form display has been unchecked, so we need to delete this.
@@ -313,18 +296,6 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       'view' => $this->getViewDisplay($bundle, $display_mode_name),
       'form' => $this->getFormDisplay($bundle, $display_mode_name),
     };
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
-    // Config schema dictates that the description value
-    // cannot be empty string. So, if it is empty, make it NULL.
-    if ($form_state->hasValue('description') && trim($form_state->getValue('description')) === '') {
-      $form_state->setValue('description', NULL);
-    }
-    parent::copyFormValuesToEntity($entity, $form, $form_state);
   }
 
 }

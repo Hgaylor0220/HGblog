@@ -7,25 +7,20 @@ namespace Drupal\Tests\Core\Config\Entity\Query;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Entity\Query\QueryFactory;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * Tests Drupal\Core\Config\Entity\Query\QueryFactory.
+ * @coversDefaultClass \Drupal\Core\Config\Entity\Query\QueryFactory
+ * @group Config
  */
-#[CoversClass(QueryFactory::class)]
-#[Group('Config')]
 class QueryFactoryTest extends UnitTestCase {
 
   /**
-   * Tests get keys.
+   * @covers ::getKeys
+   * @covers ::getValues
    *
-   * @legacy-covers ::getKeys
-   * @legacy-covers ::getValues
+   * @dataProvider providerTestGetKeys
    */
-  #[DataProvider('providerTestGetKeys')]
   public function testGetKeys(array $expected, string $key, array $sets): void {
     $config = $this->getConfigObject('test');
     foreach ($sets as $set) {
@@ -107,10 +102,8 @@ class QueryFactoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get keys wild card end.
-   *
-   * @legacy-covers ::getKeys
-   * @legacy-covers ::getValues
+   * @covers ::getKeys
+   * @covers ::getValues
    */
   public function testGetKeysWildCardEnd(): void {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');

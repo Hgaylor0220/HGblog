@@ -8,22 +8,18 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\Transition;
 use Drupal\workflows\WorkflowTypeInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\workflows\Transition.
+ * @coversDefaultClass \Drupal\workflows\Transition
+ *
+ * @group workflows
  */
-#[CoversClass(Transition::class)]
-#[Group('workflows')]
 class TransitionTest extends UnitTestCase {
 
   /**
-   * Tests getters.
-   *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::id
-   * @legacy-covers ::label
+   * @covers ::__construct
+   * @covers ::id
+   * @covers ::label
    */
   public function testGetters(): void {
     $state = new Transition(
@@ -38,10 +34,8 @@ class TransitionTest extends UnitTestCase {
   }
 
   /**
-   * Tests from and to.
-   *
-   * @legacy-covers ::from
-   * @legacy-covers ::to
+   * @covers ::from
+   * @covers ::to
    */
   public function testFromAndTo(): void {
     $workflow = new TestType([], '', []);

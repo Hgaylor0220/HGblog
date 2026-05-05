@@ -6,21 +6,18 @@ namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Access\AccessResultForbidden.
+ * @coversDefaultClass \Drupal\Core\Access\AccessResultForbidden
+ * @group Access
  */
-#[CoversClass(AccessResultForbidden::class)]
-#[Group('Access')]
 class AccessResultForbiddenTest extends UnitTestCase {
 
   /**
    * Tests the construction of an AccessResultForbidden object.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getReason
+   * @covers ::__construct
+   * @covers ::getReason
    */
   public function testConstruction(): void {
 
@@ -34,6 +31,8 @@ class AccessResultForbiddenTest extends UnitTestCase {
 
   /**
    * Tests setReason()
+   *
+   * @covers ::setReason
    */
   public function testSetReason(): void {
     $a = new AccessResultForbidden();

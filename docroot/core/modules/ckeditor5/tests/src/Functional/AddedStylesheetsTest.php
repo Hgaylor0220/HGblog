@@ -8,17 +8,15 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use Symfony\Component\Validator\ConstraintViolationInterface;
+use Drupal\user\Entity\User;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Test the ckeditor5-stylesheets theme config property.
+ *
+ * @group ckeditor5
  */
-#[Group('ckeditor5')]
-#[RunTestsInSeparateProcesses]
 class AddedStylesheetsTest extends BrowserTestBase {
 
   /**
@@ -64,9 +62,6 @@ class AddedStylesheetsTest extends BrowserTestBase {
     $this->editor = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
       'settings' => [
         'toolbar' => [
           'items' => [],
@@ -75,7 +70,7 @@ class AddedStylesheetsTest extends BrowserTestBase {
     ]);
     $this->editor->save();
     $this->assertSame([], array_map(
-      function (ConstraintViolationInterface $v) {
+      function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))
@@ -106,6 +101,7 @@ class AddedStylesheetsTest extends BrowserTestBase {
     $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['test_ckeditor_stylesheets_relative', 'claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
+    $this->config('node.settings')->set('use_admin_theme', TRUE)->save();
 
     $this->drupalGet('node/add/article');
     $assert_session->responseNotContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');

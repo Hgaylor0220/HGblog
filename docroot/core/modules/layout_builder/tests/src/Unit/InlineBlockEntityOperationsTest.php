@@ -10,20 +10,18 @@ use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\layout_builder\InlineBlockUsageInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\layout_builder\InlineBlockEntityOperations.
+ * @coversDefaultClass \Drupal\layout_builder\InlineBlockEntityOperations
+ *
+ * @group layout_builder
  */
-#[CoversClass(InlineBlockEntityOperations::class)]
-#[Group('layout_builder')]
 class InlineBlockEntityOperationsTest extends UnitTestCase {
 
   /**
    * Tests calling handlePreSave() with an entity that is syncing.
    *
-   * @legacy-covers ::handlePreSave
+   * @covers ::handlePreSave
    */
   public function testPreSaveWithSyncingEntity(): void {
     $entity = $this->prophesize(SynchronizableInterface::class);

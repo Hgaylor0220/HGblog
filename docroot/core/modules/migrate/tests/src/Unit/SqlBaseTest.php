@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
-use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the SqlBase class.
+ *
+ * @group migrate
  */
-#[Group('migrate')]
 class SqlBaseTest extends UnitTestCase {
 
   /**
@@ -31,8 +30,9 @@ class SqlBaseTest extends UnitTestCase {
    * @param array $id_map_options
    *   (optional) An array of connection options for the ID map connection.
    *   Defaults to an empty array.
+   *
+   * @dataProvider sqlBaseTestProvider
    */
-  #[DataProvider('sqlBaseTestProvider')]
   public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []): void {
     // Setup a connection object.
     $source_connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
@@ -169,7 +169,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $database
    *   The database mock object.
    */
-  public function setDatabase($database): void {
+  public function setDatabase($database) {
     $this->database = $database;
   }
 
@@ -186,7 +186,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $migration
    *   The migration mock.
    */
-  public function setMigration($migration): void {
+  public function setMigration($migration) {
     $this->migration = $migration;
   }
 
@@ -210,7 +210,7 @@ class TestSqlBase extends SqlBase {
    * @param array $ids
    *   An array of identifiers.
    */
-  public function setIds($ids): void {
+  public function setIds($ids) {
     $this->ids = $ids;
   }
 

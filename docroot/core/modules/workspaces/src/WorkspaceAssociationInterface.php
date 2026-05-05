@@ -7,10 +7,14 @@ use Drupal\Core\Entity\RevisionableInterface;
 /**
  * Defines an interface for the workspace_association service.
  *
- * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0.
- * Use \Drupal\workspaces\WorkspaceTrackerInterface instead.
+ * The canonical workspace association data is stored in a revision metadata
+ * field on each entity revision that is tracked by a workspace.
  *
- * @see https://www.drupal.org/node/3551450
+ * For the purpose of optimizing workspace-specific queries, the default
+ * implementation of this interface defines a custom 'workspace_association'
+ * index table which stores only the latest revisions tracked by a workspace.
+ *
+ * @internal
  */
 interface WorkspaceAssociationInterface {
 
@@ -119,6 +123,19 @@ interface WorkspaceAssociationInterface {
    *   array if it is not tracked anywhere.
    */
   public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE);
+
+  /**
+   * Triggers clean-up operations after publishing a workspace.
+   *
+   * @param \Drupal\workspaces\WorkspaceInterface $workspace
+   *   A workspace entity.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the
+   *   \Drupal\workspaces\Event\WorkspacePostPublishEvent event instead.
+   *
+   * @see https://www.drupal.org/node/3242573
+   */
+  public function postPublish(WorkspaceInterface $workspace);
 
   /**
    * Deletes all the workspace association records for the given workspace.

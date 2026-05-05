@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Gettext;
 
 use Drupal\Component\Gettext\PoHeader;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for the Gettext PO file header handling features.
  *
  * @see Drupal\Component\Gettext\PoHeader.
+ *
+ * @group Gettext
  */
-#[Group('Gettext')]
 class PoHeaderTest extends TestCase {
 
   /**
@@ -27,11 +26,13 @@ class PoHeaderTest extends TestCase {
    *   The plural expression.
    * @param array $expected
    *   Array of expected plural positions keyed by plural value.
+   *
+   * @dataProvider providerTestPluralsFormula
    */
-  #[DataProvider('providerTestPluralsFormula')]
   public function testPluralsFormula($plural, $expected): void {
     $p = new PoHeader();
-    [, $new_plural] = $p->parsePluralForms($plural);
+    $parsed = $p->parsePluralForms($plural);
+    [$nplurals, $new_plural] = $parsed;
     foreach ($expected as $number => $plural_form) {
       $result = $new_plural[$number] ?? $new_plural['default'];
       $this->assertEquals($result, $plural_form, 'Difference found at ' . $number . ': ' . $plural_form . ' versus ' . $result);
@@ -48,7 +49,7 @@ class PoHeaderTest extends TestCase {
    *   Pairs of plural expressions and expected plural positions keyed by plural
    *   value.
    */
-  public static function providerTestPluralsFormula(): array {
+  public static function providerTestPluralsFormula() {
     return [
       [
         'nplurals=1; plural=0;',

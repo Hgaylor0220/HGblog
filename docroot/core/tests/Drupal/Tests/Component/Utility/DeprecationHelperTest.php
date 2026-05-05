@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\DeprecationHelper;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Utility\DeprecationHelper.
+ * @coversDefaultClass \Drupal\Component\Utility\DeprecationHelper
+ * @group Utility
  */
-#[CoversClass(DeprecationHelper::class)]
-#[Group('Utility')]
 class DeprecationHelperTest extends TestCase {
 
   /**
@@ -22,15 +18,16 @@ class DeprecationHelperTest extends TestCase {
    *   The core version to test against.
    * @param array $tests
    *   Array of versions and their expected result.
+   *
+   * @dataProvider deprecatedHelperTestCases
    */
-  #[DataProvider('deprecatedHelperTestCases')]
   public function testDeprecationHelper(string $currentVersion, array $tests): void {
     foreach ($tests as $deprecatedVersion => $expectedCallable) {
       $result = DeprecationHelper::backwardsCompatibleCall(
         $currentVersion,
         $deprecatedVersion,
-        fn(): string => 'current',
-        fn(): string => 'deprecated',
+        fn() => 'current',
+        fn() => 'deprecated',
       );
       $this->assertEquals($expectedCallable, $result, "Change introduced in $deprecatedVersion should return $expectedCallable for core version $currentVersion");
     }

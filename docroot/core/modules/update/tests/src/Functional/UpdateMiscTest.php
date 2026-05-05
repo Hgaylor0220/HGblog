@@ -6,14 +6,12 @@ namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests general functionality of the Update Status module.
+ * Tests general functionality of the Update module.
+ *
+ * @group update
  */
-#[Group('update')]
-#[RunTestsInSeparateProcesses]
 class UpdateMiscTest extends UpdateTestBase {
 
   use CronRunTrait;
@@ -39,11 +37,27 @@ class UpdateMiscTest extends UpdateTestBase {
       ],
     ];
     $this->config('update_test.settings')->set('system_info', $setting)->save();
-    $this->drupalPlaceBlock('local_actions_block');
   }
 
   /**
-   * Tests the Update Status module when the update server returns 503 errors.
+   * Checks that clearing the disk cache works.
+   */
+  public function testClearDiskCache(): void {
+    $directories = [
+      _update_manager_cache_directory(FALSE),
+      _update_manager_extract_directory(FALSE),
+    ];
+    // Check that update directories does not exists.
+    foreach ($directories as $directory) {
+      $this->assertDirectoryDoesNotExist($directory);
+    }
+
+    // Method must not fail if update directories do not exists.
+    update_clear_update_disk_cache();
+  }
+
+  /**
+   * Tests the Update Manager module when the update server returns 503 errors.
    */
   public function testServiceUnavailable(): void {
     $admin_user = $this->drupalCreateUser([

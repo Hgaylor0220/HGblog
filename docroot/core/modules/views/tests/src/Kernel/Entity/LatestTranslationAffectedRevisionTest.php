@@ -9,14 +9,12 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the 'Latest translation affected revision' filter.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
 
   /**
@@ -29,7 +27,9 @@ class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'node',
+    'system',
     'language',
+    'content_translation',
   ];
 
   /**

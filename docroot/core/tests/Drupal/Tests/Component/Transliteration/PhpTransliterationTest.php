@@ -7,16 +7,15 @@ namespace Drupal\Tests\Component\Transliteration;
 use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Component\Utility\Random;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests Transliteration component functionality.
+ *
+ * @group Transliteration
+ *
+ * @coversDefaultClass \Drupal\Component\Transliteration\PhpTransliteration
  */
-#[CoversClass(PhpTransliteration::class)]
-#[Group('Transliteration')]
 class PhpTransliterationTest extends TestCase {
 
   /**
@@ -26,8 +25,9 @@ class PhpTransliterationTest extends TestCase {
    *   The language code to test.
    * @param string $expected
    *   The expected return from PhpTransliteration::removeDiacritics().
+   *
+   * @dataProvider providerTestPhpTransliterationRemoveDiacritics
    */
-  #[DataProvider('providerTestPhpTransliterationRemoveDiacritics')]
   public function testRemoveDiacritics($original, $expected): void {
     $transliterator_class = new PhpTransliteration();
     $result = $transliterator_class->removeDiacritics($original);
@@ -41,7 +41,7 @@ class PhpTransliterationTest extends TestCase {
    *   An array of arrays, each containing the parameters for
    *   self::testRemoveDiacritics().
    */
-  public static function providerTestPhpTransliterationRemoveDiacritics(): array {
+  public static function providerTestPhpTransliterationRemoveDiacritics() {
     // cSpell:disable
     return [
       // Test all characters in the Unicode range 0x00bf to 0x017f.
@@ -88,8 +88,9 @@ class PhpTransliterationTest extends TestCase {
    *   (optional) If provided, return at most this many characters, ensuring
    *   that the transliteration does not split in the middle of an input
    *   character's transliteration.
+   *
+   * @dataProvider providerTestPhpTransliteration
    */
-  #[DataProvider('providerTestPhpTransliteration')]
   public function testPhpTransliteration(string $langcode, string $original, string $expected, string $unknown_character = '?', ?int $max_length = NULL): void {
     $transliterator_class = new PhpTransliteration();
     $actual = $transliterator_class->transliterate($original, $langcode, $unknown_character, $max_length);
@@ -222,7 +223,7 @@ class PhpTransliterationTest extends TestCase {
   /**
    * Tests inclusion is safe.
    *
-   * @legacy-covers ::readLanguageOverrides
+   * @covers ::readLanguageOverrides
    */
   public function testSafeInclude(): void {
     // The overrides in the transliteration data directory transliterates 0x82

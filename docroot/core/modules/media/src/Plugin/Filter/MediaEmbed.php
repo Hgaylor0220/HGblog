@@ -7,13 +7,10 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\RemovableDependentPluginInterface;
-use Drupal\Core\Plugin\RemovableDependentPluginReturn;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
@@ -44,7 +41,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
     "allowed_media_types" => [],
   ],
 )]
-class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface, RemovableDependentPluginInterface {
+class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The entity repository.
@@ -163,10 +160,14 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#description' => $this->t('The view mode that an embedded media item should be displayed in by default. This can be overridden using the <code>data-view-mode</code> attribute.'),
     ];
 
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo('media');
+    $bundle_options = array_map(function ($item) {
+      return $item['label'];
+    }, $bundles);
     $form['allowed_media_types'] = [
       '#title' => $this->t('Media types selectable in the Media Library'),
       '#type' => 'checkboxes',
-      '#options' => $this->entityTypeBundleInfo->getBundleLabels('media'),
+      '#options' => $bundle_options,
       '#default_value' => $this->settings['allowed_media_types'],
       '#description' => $this->t('If none are selected, all will be allowed.'),
       '#element_validate' => [[static::class, 'validateOptions']],
@@ -457,10 +458,11 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
 
       if (!empty($settings['alt_field']) && $node->hasAttribute('alt')) {
         // Allow the display of the image without an alt tag in special cases.
-        // Since setting the value to an empty string restores the default
-        // value, this allows special cases where the alt text should not be set
-        // to the default value, but should be explicitly empty instead, so it
-        // can be ignored by assistive technologies, such as screen readers.
+        // Since setting the value in the EditorMediaDialog to an empty string
+        // restores the default value, this allows special cases where the alt
+        // text should not be set to the default value, but should be
+        // explicitly empty instead so it can be ignored by assistive
+        // technologies, such as screen readers.
         if ($node->getAttribute('alt') === '""') {
           $node->setAttribute('alt', '');
         }
@@ -529,40 +531,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       }
     }
     return $dependencies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onCollectionDependencyRemoval(array $dependencies): RemovableDependentPluginReturn {
-    $status = RemovableDependentPluginReturn::Unchanged;
-    if (!isset($dependencies['config'])) {
-      return $status;
-    }
-
-    // If view modes for media are deleted, remove the view mode from the plugin
-    // settings and return that the plugin settings have changed.
-    foreach ($dependencies['config'] as $config) {
-      if (($config instanceof EntityViewModeInterface) && str_starts_with($config->id(), 'media.')) {
-        $view_mode_id = substr_replace($config->id(), '', 0, 6);
-        if (isset($this->settings['allowed_view_modes'][$view_mode_id])) {
-          unset($this->settings['allowed_view_modes'][$view_mode_id]);
-          $status = RemovableDependentPluginReturn::Changed;
-        }
-
-        // If the default embed view mode is set to a view mode being deleted,
-        // change the default embed view mode to the default entity display
-        // mode, and make sure that default is in the allowed view modes.
-        if ($this->settings['default_view_mode'] === $view_mode_id) {
-          $this->settings['default_view_mode'] = EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE;
-          $this->settings['allowed_view_modes'] += [EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE => EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE];
-          ksort($this->settings['allowed_view_modes']);
-          $status = RemovableDependentPluginReturn::Changed;
-        }
-      }
-    }
-
-    return $status;
   }
 
 }

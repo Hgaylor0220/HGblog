@@ -6,18 +6,13 @@ namespace Drupal\Tests\rest\Kernel\Entity;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
-use Drupal\rest\RestPermissions;
 use Drupal\rest\RestResourceConfigInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\rest\RestPermissions.
+ * @coversDefaultClass \Drupal\rest\RestPermissions
+ *
+ * @group rest
  */
-#[CoversClass(RestPermissions::class)]
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class RestPermissionsTest extends KernelTestBase {
 
   /**
@@ -27,11 +22,12 @@ class RestPermissionsTest extends KernelTestBase {
     'rest',
     'dblog',
     'serialization',
+    'basic_auth',
     'user',
   ];
 
   /**
-   * Tests permissions.
+   * @covers ::permissions
    */
   public function testPermissions(): void {
     RestResourceConfig::create([

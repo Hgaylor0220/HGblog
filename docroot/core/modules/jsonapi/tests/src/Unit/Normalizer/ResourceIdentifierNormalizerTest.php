@@ -18,19 +18,15 @@ use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeRelationship;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Tests Drupal\jsonapi\Normalizer\ResourceIdentifierNormalizer.
+ * @coversDefaultClass \Drupal\jsonapi\Normalizer\ResourceIdentifierNormalizer
+ * @group jsonapi
  *
  * @internal
  */
-#[CoversClass(ResourceIdentifierNormalizer::class)]
-#[Group('jsonapi')]
 class ResourceIdentifierNormalizerTest extends UnitTestCase {
 
   /**
@@ -112,9 +108,9 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests denormalize.
+   * @covers ::denormalize
+   * @dataProvider denormalizeProvider
    */
-  #[DataProvider('denormalizeProvider')]
   public function testDenormalize($input, $field_name, $expected): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $context = [
@@ -153,9 +149,9 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests denormalize invalid resource.
+   * @covers ::denormalize
+   * @dataProvider denormalizeInvalidResourceProvider
    */
-  #[DataProvider('denormalizeInvalidResourceProvider')]
   public function testDenormalizeInvalidResource($data, $field_name): void {
     $context = [
       'resource_type' => $this->resourceType,

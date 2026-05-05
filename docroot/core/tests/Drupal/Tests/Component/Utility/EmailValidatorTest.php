@@ -6,19 +6,18 @@ namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the EmailValidator utility class.
+ *
+ * @coversDefaultClass \Drupal\Component\Utility\EmailValidator
+ * @group Utility
  */
-#[CoversClass(EmailValidator::class)]
-#[Group('Utility')]
 class EmailValidatorTest extends TestCase {
 
   /**
-   * Tests is valid.
+   * @covers ::isValid
    */
   public function testIsValid(): void {
     // Note that \Drupal\Component\Utility\EmailValidator wraps
@@ -32,7 +31,7 @@ class EmailValidatorTest extends TestCase {
   }
 
   /**
-   * Tests is valid exception.
+   * @covers ::isValid
    */
   public function testIsValidException(): void {
     $validator = new EmailValidator();

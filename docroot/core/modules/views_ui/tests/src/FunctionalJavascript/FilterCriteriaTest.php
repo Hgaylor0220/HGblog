@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the View UI filter criteria group dialog.
+ *
+ * @group views_ui
  */
-#[Group('views_ui')]
-#[RunTestsInSeparateProcesses]
 class FilterCriteriaTest extends WebDriverTestBase {
 
   /**
@@ -180,7 +178,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
   /**
    * Uses the 'And/Or Rearrange' link for filters to open a dialog.
    */
-  protected function openFilterDialog(): void {
+  protected function openFilterDialog() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $dropbutton = $page->find('css', '.views-ui-display-tab-bucket.filter .dropbutton-toggle button');

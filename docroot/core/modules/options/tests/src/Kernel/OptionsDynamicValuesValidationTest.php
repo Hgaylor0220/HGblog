@@ -8,14 +8,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Options field allowed values function.
+ *
+ * @group options
  */
-#[Group('options')]
-#[RunTestsInSeparateProcesses]
 class OptionsDynamicValuesValidationTest extends OptionsFieldUnitTestBase {
 
   /**
@@ -53,7 +51,7 @@ class OptionsDynamicValuesValidationTest extends OptionsFieldUnitTestBase {
       'type' => 'list_string',
       'cardinality' => 1,
       'settings' => [
-        'allowed_values_function' => '\Drupal\options_test\OptionsAllowedValues::dynamicValues',
+        'allowed_values_function' => 'options_test_dynamic_values_callback',
       ],
     ])->save();
 
@@ -71,7 +69,7 @@ class OptionsDynamicValuesValidationTest extends OptionsFieldUnitTestBase {
       ->save();
 
     // Create an entity and prepare test data that will be used by
-    // \Drupal\options_test\OptionsAllowedValues::dynamicValues().
+    // options_test_dynamic_values_callback().
     $values = [
       'user_id' => 2,
       'name' => $this->randomMachineName(),

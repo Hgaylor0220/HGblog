@@ -6,14 +6,12 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests drupal_flush_all_caches() during an install.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class DrupalFlushAllCachesInInstallerTest extends BrowserTestBase {
 
   /**
@@ -29,7 +27,7 @@ class DrupalFlushAllCachesInInstallerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $info = [
       'type' => 'profile',

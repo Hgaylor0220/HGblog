@@ -41,11 +41,7 @@ class NodeDeleteForm extends ContentEntityDeleteForm {
   protected function logDeletionMessage() {
     /** @var \Drupal\node\NodeInterface $entity */
     $entity = $this->getEntity();
-    $this->logger('content')
-      ->info('@type: deleted %title.', [
-        '@type' => $entity->getType(),
-        '%title' => $entity->label(),
-      ]);
+    $this->logger('content')->info('@type: deleted %title.', ['@type' => $entity->getType(), '%title' => $entity->label()]);
   }
 
 }

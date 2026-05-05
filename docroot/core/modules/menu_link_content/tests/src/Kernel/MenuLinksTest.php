@@ -12,14 +12,12 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent as MenuLinkContentPlugin;
 use Drupal\system\Entity\Menu;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests handling of menu links hierarchies.
+ *
+ * @group Menu
  */
-#[Group('Menu')]
-#[RunTestsInSeparateProcesses]
 class MenuLinksTest extends KernelTestBase {
 
   /**
@@ -212,9 +210,9 @@ class MenuLinksTest extends KernelTestBase {
   }
 
   /**
-   * Tests automatic update of parent menu links.
+   * Tests automatic reparenting of menu links.
    */
-  public function testMenuLinkParentUpdate($module = 'menu_test'): void {
+  public function testMenuLinkReparenting($module = 'menu_test'): void {
     // Check the initial hierarchy.
     $links = $this->createLinkHierarchy($module);
 
@@ -280,7 +278,7 @@ class MenuLinksTest extends KernelTestBase {
   /**
    * Tests the MenuLinkContent::preDelete function.
    */
-  public function testMenuLinkContentParentUpdate(): void {
+  public function testMenuLinkContentReparenting(): void {
     // Add new menu items in a hierarchy.
     $parent = MenuLinkContent::create([
       'title' => $this->randomMachineName(8),
@@ -332,7 +330,7 @@ class MenuLinksTest extends KernelTestBase {
   /**
    * Tests handling of pending revisions.
    *
-   * @legacy-covers \Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator::validate
+   * @covers \Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator::validate
    */
   public function testPendingRevisions(): void {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */

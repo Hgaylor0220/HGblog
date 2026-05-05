@@ -22,7 +22,7 @@ class StubFallbackPluginManager extends PluginManagerBase implements FallbackPlu
   /**
    * {@inheritdoc}
    */
-  public function getFallbackPluginId($plugin_id, array $configuration = []): string {
+  public function getFallbackPluginId($plugin_id, array $configuration = []) {
     // Minimally implement getFallbackPluginId so that we can test it.
     return $plugin_id . '_fallback';
   }

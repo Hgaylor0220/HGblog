@@ -9,14 +9,11 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\inline_form_errors\FormErrorHandler;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\inline_form_errors\FormErrorHandler.
+ * @coversDefaultClass \Drupal\inline_form_errors\FormErrorHandler
+ * @group InlineFormErrors
  */
-#[CoversClass(FormErrorHandler::class)]
-#[Group('InlineFormErrors')]
 class FormErrorHandlerTest extends UnitTestCase {
 
   /**
@@ -118,11 +115,9 @@ class FormErrorHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests error messages inline.
-   *
-   * @legacy-covers ::handleFormErrors
-   * @legacy-covers ::displayErrorMessages
-   * @legacy-covers ::setElementErrorsFromFormState
+   * @covers ::handleFormErrors
+   * @covers ::displayErrorMessages
+   * @covers ::setElementErrorsFromFormState
    */
   public function testErrorMessagesInline(): void {
     $messages = [

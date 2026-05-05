@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Serializer\Normalizer;
 
+use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\Serializer\Annotation\Ignore as LegacyIgnore;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
@@ -34,25 +35,43 @@ use Symfony\Component\Serializer\Attribute\Ignore;
  *
  * @author Nils Adermann <naderman@naderman.de>
  * @author Kévin Dunglas <dunglas@gmail.com>
+ *
+ * @final since Symfony 6.3
  */
-final class GetSetMethodNormalizer extends AbstractObjectNormalizer
+class GetSetMethodNormalizer extends AbstractObjectNormalizer
 {
     private static $reflectionCache = [];
     private static array $setterAccessibleCache = [];
 
     public function getSupportedTypes(?string $format): array
     {
-        return ['object' => true];
+        return ['object' => __CLASS__ === static::class || $this->hasCacheableSupportsMethod()];
     }
 
-    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    /**
+     * @param array $context
+     */
+    public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
     {
         return parent::supportsNormalization($data, $format) && $this->supports($data::class, true);
     }
 
-    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
+    /**
+     * @param array $context
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null /* , array $context = [] */): bool
     {
         return parent::supportsDenormalization($data, $type, $format) && $this->supports($type, false);
+    }
+
+    /**
+     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
+     */
+    public function hasCacheableSupportsMethod(): bool
+    {
+        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, implement "%s::getSupportedTypes()" instead.', __METHOD__, get_debug_type($this));
+
+        return __CLASS__ === static::class;
     }
 
     /**
@@ -130,30 +149,40 @@ final class GetSetMethodNormalizer extends AbstractObjectNormalizer
 
     protected function getAttributeValue(object $object, string $attribute, ?string $format = null, array $context = []): mixed
     {
-        $getter = 'get'.$attribute;
-        if (method_exists($object, $getter) && \is_callable([$object, $getter])) {
-            return $object->$getter();
-        }
+        try {
+            $getter = 'get'.$attribute;
+            if (method_exists($object, $getter) && \is_callable([$object, $getter])) {
+                return $object->$getter();
+            }
 
-        $isser = 'is'.$attribute;
-        if (method_exists($object, $isser) && \is_callable([$object, $isser])) {
-            return $object->$isser();
-        }
+            $isser = 'is'.$attribute;
+            if (method_exists($object, $isser) && \is_callable([$object, $isser])) {
+                return $object->$isser();
+            }
 
-        $haser = 'has'.$attribute;
-        if (method_exists($object, $haser) && \is_callable([$object, $haser])) {
-            return $object->$haser();
-        }
+            $haser = 'has'.$attribute;
+            if (method_exists($object, $haser) && \is_callable([$object, $haser])) {
+                return $object->$haser();
+            }
 
-        $caner = 'can'.$attribute;
-        if (method_exists($object, $caner) && \is_callable([$object, $caner])) {
-            return $object->$caner();
+            $caner = 'can'.$attribute;
+            if (method_exists($object, $caner) && \is_callable([$object, $caner])) {
+                return $object->$caner();
+            }
+        } catch (\Error $e) {
+            if (str_starts_with($e->getMessage(), 'Typed property') && str_ends_with($e->getMessage(), 'must not be accessed before initialization')) {
+                throw new UninitializedPropertyException(\sprintf('The property "%s::$%s" is not initialized.', $object::class, $attribute), 0, $e);
+            }
+            throw $e;
         }
 
         return null;
     }
 
-    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = []): void
+    /**
+     * @return void
+     */
+    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = [])
     {
         $setter = 'set'.$attribute;
         $key = $object::class.':'.$setter;
@@ -167,7 +196,7 @@ final class GetSetMethodNormalizer extends AbstractObjectNormalizer
         }
     }
 
-    protected function isAllowedAttribute($classOrObject, string $attribute, ?string $format = null, array $context = []): bool
+    protected function isAllowedAttribute($classOrObject, string $attribute, ?string $format = null, array $context = [])
     {
         if (!parent::isAllowedAttribute($classOrObject, $attribute, $format, $context)) {
             return false;

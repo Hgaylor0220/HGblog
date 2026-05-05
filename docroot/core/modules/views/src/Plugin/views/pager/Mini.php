@@ -38,13 +38,7 @@ class Mini extends SqlBase {
    */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
-      return $this->formatPlural($this->options['items_per_page'],
-        'Mini pager, @count item, skip @skip',
-        'Mini pager, @count items, skip @skip',
-        [
-          '@count' => $this->options['items_per_page'],
-          '@skip' => $this->options['offset'],
-        ]);
+      return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item, skip @skip', 'Mini pager, @count items, skip @skip', ['@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']]);
     }
     return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item', 'Mini pager, @count items', ['@count' => $this->options['items_per_page']]);
   }
@@ -96,8 +90,7 @@ class Mini extends SqlBase {
    * {@inheritdoc}
    */
   public function render($input) {
-    // The 1, 3 indexes are correct, see
-    // \Drupal\Core\Pager\PagerPreprocess::preprocessPager().
+    // The 1, 3 indexes are correct, see template_preprocess_pager().
     $tags = [
       1 => $this->options['tags']['previous'],
       3 => $this->options['tags']['next'],

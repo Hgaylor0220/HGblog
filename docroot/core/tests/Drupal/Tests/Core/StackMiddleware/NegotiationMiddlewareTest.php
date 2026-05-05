@@ -6,24 +6,21 @@ namespace Drupal\Tests\Core\StackMiddleware;
 
 use Drupal\Core\StackMiddleware\NegotiationMiddleware;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Tests Drupal\Core\StackMiddleware\NegotiationMiddleware.
+ * @coversDefaultClass \Drupal\Core\StackMiddleware\NegotiationMiddleware
+ * @group NegotiationMiddleware
  */
-#[CoversClass(NegotiationMiddleware::class)]
-#[Group('NegotiationMiddleware')]
 class NegotiationMiddlewareTest extends UnitTestCase {
 
   /**
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $httpKernel;
+  protected $app;
 
   /**
    * @var \Drupal\Tests\Core\StackMiddleware\StubNegotiationMiddleware
@@ -36,14 +33,14 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->httpKernel = $this->prophesize(HttpKernelInterface::class);
-    $this->contentNegotiation = new StubNegotiationMiddleware($this->httpKernel->reveal());
+    $this->app = $this->prophesize(HttpKernelInterface::class);
+    $this->contentNegotiation = new StubNegotiationMiddleware($this->app->reveal());
   }
 
   /**
    * Tests the getContentType() method with AJAX iframe upload.
    *
-   * @legacy-covers ::getContentType
+   * @covers ::getContentType
    */
   public function testAjaxIframeUpload(): void {
     $request = new Request();
@@ -55,7 +52,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the specifying a format via query parameters gets used.
    *
-   * @legacy-covers ::getContentType
+   * @covers ::getContentType
    */
   public function testFormatViaQueryParameter(): void {
     $request = new Request();
@@ -67,7 +64,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the getContentType() method when no priority format is found.
    *
-   * @legacy-covers ::getContentType
+   * @covers ::getContentType
    */
   public function testUnknownContentTypeReturnsNull(): void {
     $request = new Request();
@@ -78,7 +75,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the getContentType() method when no priority format is found but it's an AJAX request.
    *
-   * @legacy-covers ::getContentType
+   * @covers ::getContentType
    */
   public function testUnknownContentTypeButAjaxRequest(): void {
     $request = new Request();
@@ -89,6 +86,8 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
   /**
    * Tests that handle() correctly hands off to sub application.
+   *
+   * @covers ::handle
    */
   public function testHandle(): void {
     $request = $this->prophesize(Request::class);
@@ -105,14 +104,14 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request_mock->request = new InputBag();
 
     // Calling kernel app with default arguments.
-    $this->httpKernel->handle($request_mock, HttpKernelInterface::MAIN_REQUEST, TRUE)
+    $this->app->handle($request_mock, HttpKernelInterface::MAIN_REQUEST, TRUE)
       ->shouldBeCalled()
       ->willReturn(
         $this->createMock(Response::class)
       );
     $this->contentNegotiation->handle($request_mock);
     // Calling kernel app with specified arguments.
-    $this->httpKernel->handle($request_mock, HttpKernelInterface::SUB_REQUEST, FALSE)
+    $this->app->handle($request_mock, HttpKernelInterface::SUB_REQUEST, FALSE)
       ->shouldBeCalled()
       ->willReturn(
         $this->createMock(Response::class)
@@ -121,17 +120,15 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   }
 
   /**
-   * Tests set format.
-   *
-   * @legacy-covers ::registerFormat
+   * @covers ::registerFormat
    */
   public function testSetFormat(): void {
-    $httpKernel = $this->createMock(HttpKernelInterface::class);
-    $httpKernel->expects($this->once())
+    $app = $this->createMock(HttpKernelInterface::class);
+    $app->expects($this->once())
       ->method('handle')
       ->willReturn($this->createMock(Response::class));
 
-    $content_negotiation = new StubNegotiationMiddleware($httpKernel);
+    $content_negotiation = new StubNegotiationMiddleware($app);
 
     $request = $this->prophesize(Request::class);
 
@@ -151,9 +148,6 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
 }
 
-/**
- * Stub class for testing NegotiationMiddleware.
- */
 class StubNegotiationMiddleware extends NegotiationMiddleware {
 
   public function getContentType(Request $request) {

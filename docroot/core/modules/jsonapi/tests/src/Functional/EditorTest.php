@@ -10,15 +10,12 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\jsonapi\JsonApiSpec;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Editor" config entity type.
+ *
+ * @group jsonapi
  */
-#[Group('jsonapi')]
-#[RunTestsInSeparateProcesses]
 class EditorTest extends ConfigEntityResourceTestBase {
 
   /**
@@ -51,7 +48,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer filters']);
   }
 
@@ -80,19 +77,16 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $camelids = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
     $camelids
       ->setImageUploadSettings([
         'status' => TRUE,
         'scheme' => 'public',
         'directory' => 'inline-images',
-        'max_size' => NULL,
+        'max_size' => '',
         'max_dimensions' => [
-          'width' => NULL,
-          'height' => NULL,
+          'width' => '',
+          'height' => '',
         ],
       ])
       ->save();
@@ -103,16 +97,16 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/editor/editor/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -162,7 +156,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }
@@ -195,19 +189,16 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $entity = Editor::create([
       'format' => 'pachyderm',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
 
     $entity->setImageUploadSettings([
       'status' => TRUE,
       'scheme' => 'public',
       'directory' => 'inline-images',
-      'max_size' => NULL,
+      'max_size' => '',
       'max_dimensions' => [
-        'width' => NULL,
-        'height' => NULL,
+        'width' => '',
+        'height' => '',
       ],
     ])->save();
 

@@ -10,24 +10,22 @@
  * Maintenance page.
  */
 
-.maintenance-page {
-  & .site-header__initial {
-    @media (min-width: 75rem) {
-      flex-shrink: 0;
-      width: var(--content-left);
-    }
+@media (min-width: 75rem) {
+  .maintenance-page .site-header__initial {
+    flex-shrink: 0;
+    width: var(--content-left);
   }
+}
 
-  & .main-content {
-    min-height: 80vh;
-  }
+.maintenance-page .main-content {
+  min-height: 80vh;
 }
 
 .maintenance-page-icon {
   display: block;
   margin-block: var(--sp3);
+}
 
-  & path {
-    fill: var(--color--primary-50);
-  }
+.maintenance-page-icon path {
+  fill: var(--color--primary-50);
 }

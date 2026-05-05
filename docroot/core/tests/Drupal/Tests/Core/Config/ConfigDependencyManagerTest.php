@@ -6,28 +6,26 @@ namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the ConfigDependencyManager class.
+ *
+ * @group Config
+ *
+ * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigDependencyManager
  */
-#[CoversClass(ConfigDependencyManager::class)]
-#[Group('Config')]
 class ConfigDependencyManagerTest extends UnitTestCase {
 
   /**
- * Tests sort all.
- */
-  #[DataProvider('providerTestSortAll')]
+   * @dataProvider providerTestSortAll
+   */
   public function testSortAll(array $data, array $expected_order): void {
     $dependency_manager = new ConfigDependencyManager();
     $dependency_manager->setData($data);
     $this->assertEquals($expected_order, $dependency_manager->sortAll());
   }
 
-  public static function providerTestSortAll(): array {
+  public static function providerTestSortAll() {
     $datasets[] = [
       [
         'provider.entity_b' => [],

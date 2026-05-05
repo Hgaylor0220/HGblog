@@ -7,23 +7,19 @@ namespace Drupal\Tests\Core\Form;
 use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\Core\Form\ConfirmFormHelper.
+ * @coversDefaultClass \Drupal\Core\Form\ConfirmFormHelper
+ * @group Form
  */
-#[CoversClass(ConfirmFormHelper::class)]
-#[Group('Form')]
 class ConfirmFormHelperTest extends UnitTestCase {
 
   /**
-   * Tests the cancel link title.
+   * @covers ::buildCancelLink
    *
-   * @legacy-covers ::buildCancelLink
+   * Tests the cancel link title.
    */
   public function testCancelLinkTitle(): void {
     $cancel_text = 'Cancel text';
@@ -38,9 +34,9 @@ class ConfirmFormHelperTest extends UnitTestCase {
   }
 
   /**
-   * Tests a cancel link route.
+   * @covers ::buildCancelLink
    *
-   * @legacy-covers ::buildCancelLink
+   * Tests a cancel link route.
    */
   public function testCancelLinkRoute(): void {
     $route_name = 'foo_bar';
@@ -55,9 +51,9 @@ class ConfirmFormHelperTest extends UnitTestCase {
   }
 
   /**
-   * Tests a cancel link route with parameters.
+   * @covers ::buildCancelLink
    *
-   * @legacy-covers ::buildCancelLink
+   * Tests a cancel link route with parameters.
    */
   public function testCancelLinkRouteWithParams(): void {
     $expected = Url::fromRoute('foo_bar.baz', ['baz' => 'banana'], ['absolute' => TRUE]);
@@ -71,9 +67,9 @@ class ConfirmFormHelperTest extends UnitTestCase {
   }
 
   /**
-   * Tests a cancel link route with a URL object.
+   * @covers ::buildCancelLink
    *
-   * @legacy-covers ::buildCancelLink
+   * Tests a cancel link route with a URL object.
    */
   public function testCancelLinkRouteWithUrl(): void {
     $cancel_route = new Url(
@@ -94,11 +90,12 @@ class ConfirmFormHelperTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::buildCancelLink
+   *
    * Tests a cancel link provided by the destination.
    *
-   * @legacy-covers ::buildCancelLink
+   * @dataProvider providerTestCancelLinkDestination
    */
-  #[DataProvider('providerTestCancelLinkDestination')]
   public function testCancelLinkDestination($destination): void {
     $query = ['destination' => $destination];
     $form = $this->createMock('Drupal\Core\Form\ConfirmFormInterface');
@@ -122,7 +119,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   /**
    * Provides test data for testCancelLinkDestination().
    */
-  public static function providerTestCancelLinkDestination(): array {
+  public static function providerTestCancelLinkDestination() {
     $data = [];
     $data[] = ['baz'];
     $data[] = ['/baz'];

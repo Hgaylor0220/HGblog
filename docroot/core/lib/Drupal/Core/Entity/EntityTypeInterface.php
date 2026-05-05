@@ -69,28 +69,18 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getOriginalClass();
 
   /**
-   * Gets the list of all the classes for this entity type.
-   *
-   * In case the class name was changed with setClass(), this will return
-   * the list of all the changes.
-   *
-   * @return class-string[]
-   *   The list of classes.
-   */
-  public function getDecoratedClasses(): array;
-
-  /**
    * Gets an array of entity keys.
    *
    * @return array
-   *   An array describing how information can be extracted from entities of
-   *   this entity type:
+   *   An array describing how the Field API can extract certain information
+   *   from objects of this entity type:
    *   - id: The name of the property that contains the primary ID of the
-   *     entity. Entities that can be saved to storage must have this.
+   *     entity. Every entity object passed to the Field API must have this
+   *     property and its value must be numeric.
    *   - revision: (optional) The name of the property that contains the
-   *     revision ID of the entity. It is assumed that all revision IDs are
-   *     unique across all entities of a type. If this entry is omitted the
-   *     entities of this type are not revisionable.
+   *     revision ID of the entity. The Field API assumes that all revision IDs
+   *     are unique across all entities of a type. If this entry is omitted
+   *     the entities of this type are not revisionable.
    *   - bundle: (optional) The name of the property that contains the bundle
    *     name for the entity. The bundle name defines which set of fields are
    *     attached to the entity (e.g. what nodes call "content type"). This
@@ -147,7 +137,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Indicates whether the rendered output of entities should be cached.
    *
    * @return bool
-   *   TRUE if the rendered output can be cached, FALSE otherwise.
    */
   public function isRenderCacheable();
 
@@ -160,7 +149,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * persistent cache is available for the entity type.
    *
    * @return bool
-   *   TRUE if the persistent cache of field data is used, FALSE otherwise.
    */
   public function isPersistentlyCacheable();
 
@@ -206,12 +194,10 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *     handler's constructor, so that one class can be used for multiple
    *     entity forms when the forms are similar. The classes must implement
    *     \Drupal\Core\Entity\EntityFormInterface.
-   *   - list_builder: The name of the class that provides listings of the
-   *     entities. The class must implement
-   *     \Drupal\Core\Entity\EntityListBuilderInterface.
-   *   - view_builder: The name of the class that is used to render the
-   *     entities. The class must implement
-   *     \Drupal\Core\Entity\EntityViewBuilderInterface.
+   *   - list_builder: The name of the class that provides listings of the entities. The
+   *     class must implement \Drupal\Core\Entity\EntityListBuilderInterface.
+   *   - view_builder: The name of the class that is used to render the entities. The
+   *     class must implement \Drupal\Core\Entity\EntityViewBuilderInterface.
    *   - access: The name of the class that is used for access checks. The class
    *     must implement \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
    *     Defaults to \Drupal\Core\Entity\EntityAccessControlHandler.
@@ -281,7 +267,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Indicates if this entity type has any route provider.
    *
    * @return bool
-   *   TRUE when this entity type has any route provider, FALSE otherwise.
    */
   public function hasRouteProviders();
 
@@ -291,7 +276,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Much like forms you can define multiple route provider handlers.
    *
    * @return string[]
-   *   An array of all the route provider handlers.
    */
   public function getRouteProviderClasses();
 
@@ -391,14 +375,12 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the name of the default administrative permission.
    *
-   * The default \Drupal\Core\Entity\EntityAccessControlHandler class checks
-   * this permission for all operations in its checkAccess() method. Entities
-   * with more complex permissions can extend this class to do their own access
+   * The default \Drupal\Core\Entity\EntityAccessControlHandler class checks this
+   * permission for all operations in its checkAccess() method. Entities with
+   * more complex permissions can extend this class to do their own access
    * checks.
    *
-   * @return string|false
-   *   The name of the administrative permission. Defaults to FALSE, if the
-   *   permission does not exist.
+   * @return string|bool
    */
   public function getAdminPermission();
 
@@ -442,13 +424,12 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *   placeholder of {node_type} used on the Node class.
    *
    * Specific entity types may also expand upon this list by overriding the
-   * EntityBase::urlRouteParameters() method.
+   * Entity::urlRouteParameters() method.
    *
    * @link http://www.iana.org/assignments/link-relations/link-relations.xml @endlink
    * @link http://tools.ietf.org/html/rfc6570 @endlink
    *
    * @return array
-   *   An array of link templates using the URI template syntax.
    */
   public function getLinkTemplates();
 
@@ -458,7 +439,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @param string $key
    *   The link type.
    *
-   * @return string|false
+   * @return string|bool
    *   The path for this link, or FALSE if it doesn't exist.
    */
   public function getLinkTemplate($key);
@@ -554,7 +535,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * this indicates translation support.
    *
    * @return bool
-   *   TRUE if the entity can be translated, FALSE otherwise.
    */
   public function isTranslatable();
 
@@ -570,7 +550,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Indicates whether entities of this type have revision support.
    *
    * @return bool
-   *   TRUE if the entity has revision support, FALSE otherwise.
    */
   public function isRevisionable();
 
@@ -707,7 +686,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *    managed as part of the site's configuration.
    *
    * @return string
-   *   The machine name of the entity type group.
    */
   public function getGroup();
 
@@ -729,7 +707,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * entities listed than users of role B.
    *
    * @return string[]
-   *   An array of cache contexts associated with this entity type.
    */
   public function getListCacheContexts();
 
@@ -740,20 +717,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * entities show up immediately.
    *
    * @return string[]
-   *   An array of the cache tags for this entity type.
    */
   public function getListCacheTags();
-
-  /**
-   * The list cache tags associated with a specific bundle.
-   *
-   * Enables code listing entities of this type and bundle to ensure that newly
-   * created entities show up immediately.
-   *
-   * @return string[]
-   *   An array of the cache tags for this bundle.
-   */
-  public function getBundleListCacheTags(string $bundle): array;
 
   /**
    * Gets the key that is used to store configuration dependencies.

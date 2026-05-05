@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Unit;
 
-use Drupal\filter\Plugin\Filter\FilterHtml;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\filter\Plugin\Filter\FilterHtml;
 
 /**
- * Tests Drupal\filter\Plugin\Filter\FilterHtml.
+ * @coversDefaultClass \Drupal\filter\Plugin\Filter\FilterHtml
+ * @group filter
  */
-#[CoversClass(FilterHtml::class)]
-#[Group('filter')]
 class FilterHtmlTest extends UnitTestCase {
 
   /**
-   * The filter to test.
-   *
    * @var \Drupal\filter\Plugin\Filter\FilterHtml
    */
   protected $filter;
@@ -39,14 +33,15 @@ class FilterHtmlTest extends UnitTestCase {
   }
 
   /**
-   * Tests filter attributes.
+   * @covers ::filterAttributes
+   *
+   * @dataProvider providerFilterAttributes
    *
    * @param string $html
    *   Input HTML.
    * @param string $expected
    *   The expected output string.
    */
-  #[DataProvider('providerFilterAttributes')]
   public function testFilterAttributes($html, $expected): void {
     $this->assertSame($expected, $this->filter->filterAttributes($html));
   }
@@ -65,60 +60,27 @@ class FilterHtmlTest extends UnitTestCase {
       ['<p id="first" />', '<p></p>'],
       ['<p id="first" lang="en">text</p>', '<p lang="en">text</p>'],
       ['<p style="display: none;" />', '<p></p>'],
-      [
-        '<code class="pretty invalid">foreach ($a as $b) {}</code>',
-        '<code class="pretty">foreach ($a as $b) {}</code>',
-      ],
-      [
-        '<code class="boring pretty">foreach ($a as $b) {}</code>',
-        '<code class="boring pretty">foreach ($a as $b) {}</code>',
-      ],
-      [
-        '<code class="boring    pretty ">foreach ($a as $b) {}</code>',
-        '<code class="boring pretty">foreach ($a as $b) {}</code>',
-      ],
-      [
-        '<code class="invalid alpaca">foreach ($a as $b) {}</code>',
-        '<code>foreach ($a as $b) {}</code>',
-      ],
+      ['<code class="pretty invalid">foreach ($a as $b) {}</code>', '<code class="pretty">foreach ($a as $b) {}</code>'],
+      ['<code class="boring pretty">foreach ($a as $b) {}</code>', '<code class="boring pretty">foreach ($a as $b) {}</code>'],
+      ['<code class="boring    pretty ">foreach ($a as $b) {}</code>', '<code class="boring pretty">foreach ($a as $b) {}</code>'],
+      ['<code class="invalid alpaca">foreach ($a as $b) {}</code>', '<code>foreach ($a as $b) {}</code>'],
       ['<h3 class="big">a heading</h3>', '<h3>a heading</h3>'],
       ['<h3 id="first">a heading</h3>', '<h3 id="first">a heading</h3>'],
       // Wildcard value. Case matters, so upper case doesn't match.
-      [
-        '<code class="align-left bold">foreach ($a as $b) {}</code>',
-        '<code class="align-left">foreach ($a as $b) {}</code>',
-      ],
-      [
-        '<code class="align-right ">foreach ($a as $b) {}</code>',
-        '<code class="align-right">foreach ($a as $b) {}</code>',
-      ],
-      [
-        '<code class="Align-right ">foreach ($a as $b) {}</code>',
-        '<code>foreach ($a as $b) {}</code>',
-      ],
+      ['<code class="align-left bold">foreach ($a as $b) {}</code>', '<code class="align-left">foreach ($a as $b) {}</code>'],
+      ['<code class="align-right ">foreach ($a as $b) {}</code>', '<code class="align-right">foreach ($a as $b) {}</code>'],
+      ['<code class="Align-right ">foreach ($a as $b) {}</code>', '<code>foreach ($a as $b) {}</code>'],
       // Wildcard name, case is ignored.
-      [
-        '<ol style="display: none;" llama-wim="noble majestic"></ol>',
-        '<ol llama-wim="noble majestic"></ol>',
-      ],
-      [
-        '<ol style="display: none;" LlamA-Wim="majestic"></ol>',
-        '<ol llama-wim="majestic"></ol>',
-      ],
-      [
-        '<ol style="display: none;" llama-="noble majestic"></ol>',
-        '<ol llama-="noble majestic"></ol>',
-      ],
+      ['<ol style="display: none;" llama-wim="noble majestic"></ol>', '<ol llama-wim="noble majestic"></ol>'],
+      ['<ol style="display: none;" LlamA-Wim="majestic"></ol>', '<ol llama-wim="majestic"></ol>'],
+      ['<ol style="display: none;" llama-="noble majestic"></ol>', '<ol llama-="noble majestic"></ol>'],
       // Both wildcard names and values.
-      [
-        '<ul style="display: none;" alpaca-wool="wooly-warm strong majestic"></ul>',
-        '<ul alpaca-wool="wooly-warm strong"></ul>',
-      ],
+      ['<ul style="display: none;" alpaca-wool="wooly-warm strong majestic"></ul>', '<ul alpaca-wool="wooly-warm strong"></ul>'],
     ];
   }
 
   /**
-   * Tests set configuration.
+   * @covers ::setConfiguration
    */
   public function testSetConfiguration(): void {
     $configuration['settings'] = [

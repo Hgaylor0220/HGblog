@@ -6,14 +6,12 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\views\Tests\ViewTestData;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the fields dialogs.
+ *
+ * @group views_ui
  */
-#[Group('views_ui')]
-#[RunTestsInSeparateProcesses]
 class FieldDialogsTest extends WebDriverTestBase {
 
   /**
@@ -79,7 +77,7 @@ class FieldDialogsTest extends WebDriverTestBase {
   /**
    * Uses the 'And/Or Rearrange' link for fields to open a dialog.
    */
-  protected function openFieldDialog(): void {
+  protected function openFieldDialog() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $dropbutton = $page->find('css', '.views-ui-display-tab-bucket.field .dropbutton-toggle button');

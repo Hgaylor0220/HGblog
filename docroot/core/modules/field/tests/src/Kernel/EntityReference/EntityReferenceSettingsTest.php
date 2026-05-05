@@ -6,21 +6,18 @@ namespace Drupal\Tests\field\Kernel\EntityReference;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
  * Tests entity reference field settings.
+ *
+ * @group field
  */
-#[Group('field')]
-#[RunTestsInSeparateProcesses]
 class EntityReferenceSettingsTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -35,6 +32,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     'user',
     'text',
     'entity_test',
+    'system',
   ];
 
   /**
@@ -83,7 +81,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
 
     // Create a custom bundle.
     $this->customBundle = 'test_bundle_' . $this->randomMachineName();
-    EntityTestHelper::createBundle($this->customBundle, NULL, 'entity_test');
+    entity_test_create_bundle($this->customBundle, NULL, 'entity_test');
 
     // Prepare the logger for collecting the expected critical error.
     $this->container->get($this->testLogServiceName)->cleanLogs();
@@ -165,7 +163,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     $this->assertEquals($handler_settings, $actual_handler_settings);
 
     // Delete the custom bundle.
-    EntityTestHelper::deleteBundle($this->customBundle, 'entity_test');
+    entity_test_delete_bundle($this->customBundle, 'entity_test');
 
     // Ensure that field_field_config_presave() logs the expected critical
     // error.
@@ -186,7 +184,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     $container
       ->register($this->testLogServiceName, BufferingLogger::class)

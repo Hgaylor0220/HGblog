@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\comment\Entity\Comment;
-use Drupal\node\NodeInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\node\NodeInterface;
 
 /**
  * Tests the migration of comments from Drupal 7.
+ *
+ * @group comment
+ * @group migrate_drupal_7
  */
-#[Group('comment')]
-#[Group('migrate_drupal_7')]
-#[RunTestsInSeparateProcesses]
 class MigrateCommentTest extends MigrateDrupal7TestBase {
 
   /**
@@ -26,6 +24,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     'content_translation',
     'datetime',
     'datetime_range',
+    'filter',
     'image',
     'language',
     'link',

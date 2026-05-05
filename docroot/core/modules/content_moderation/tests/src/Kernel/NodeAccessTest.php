@@ -9,14 +9,12 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests with node access enabled.
+ *
+ * @group content_moderation
  */
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class NodeAccessTest extends KernelTestBase {
 
   use NodeCreationTrait;
@@ -69,9 +67,7 @@ class NodeAccessTest extends KernelTestBase {
   }
 
   /**
-   * Tests get default revision id.
-   *
-   * @legacy-covers \Drupal\content_moderation\ModerationInformation::getDefaultRevisionId
+   * @covers \Drupal\content_moderation\ModerationInformation::getDefaultRevisionId
    */
   public function testGetDefaultRevisionId(): void {
     // Create an admin user.

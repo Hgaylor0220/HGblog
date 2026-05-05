@@ -8,15 +8,11 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Annotation\Translation.
+ * @coversDefaultClass \Drupal\Core\Annotation\Translation
+ * @group Annotation
  */
-#[CoversClass(Translation::class)]
-#[Group('Annotation')]
 class TranslationTest extends UnitTestCase {
 
   /**
@@ -36,9 +32,10 @@ class TranslationTest extends UnitTestCase {
   }
 
   /**
-   * Tests get.
+   * @covers ::get
+   *
+   * @dataProvider providerTestGet
    */
-  #[DataProvider('providerTestGet')]
   public function testGet(array $values, $expected): void {
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->translationManager);
@@ -52,7 +49,7 @@ class TranslationTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public static function providerTestGet(): array {
+  public static function providerTestGet() {
     $data = [];
     $data[] = [
       [

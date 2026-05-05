@@ -6,14 +6,10 @@ namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Configurable Language Xml Cookie.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class ConfigurableLanguageXmlCookieTest extends ConfigurableLanguageResourceTestBase {
 
   use CookieResourceTestTrait;

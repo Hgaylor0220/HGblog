@@ -7,19 +7,17 @@ namespace Drupal\Tests\Core\Form;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Form\FormHelper.
+ * @coversDefaultClass \Drupal\Core\Form\FormHelper
+ * @group Form
  */
-#[CoversClass(FormHelper::class)]
-#[Group('Form')]
 class FormHelperTest extends UnitTestCase {
 
   /**
    * Tests rewriting the #states selectors.
+   *
+   * @covers ::rewriteStatesSelector
    */
   public function testRewriteStatesSelector(): void {
 
@@ -88,9 +86,9 @@ class FormHelperTest extends UnitTestCase {
   }
 
   /**
-   * Tests process states.
+   * @covers ::processStates
+   * @dataProvider providerElements
    */
-  #[DataProvider('providerElements')]
   public function testProcessStates($elements, $key): void {
     $json = Json::encode($elements['#states']);
     FormHelper::processStates($elements);
@@ -101,7 +99,7 @@ class FormHelperTest extends UnitTestCase {
   /**
    * Provides a list of elements to test.
    */
-  public static function providerElements(): array {
+  public static function providerElements() {
     return [
       [
         [

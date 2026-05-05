@@ -6,21 +6,17 @@ namespace Drupal\Tests\migrate\Unit\Exception;
 
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Exception\RequirementsException.
+ * @coversDefaultClass \Drupal\migrate\Exception\RequirementsException
+ * @group migrate
  */
-#[CoversClass(RequirementsException::class)]
-#[Group('migrate')]
 class RequirementsExceptionTest extends UnitTestCase {
 
   protected const MISSING_REQUIREMENTS = ['random_jackson_pivot', 'exoplanet'];
 
   /**
-   * Tests get requirements.
+   * @covers ::getRequirements
    */
   public function testGetRequirements(): void {
     $exception = new RequirementsException('Missing requirements ', ['requirements' => static::MISSING_REQUIREMENTS]);
@@ -28,11 +24,9 @@ class RequirementsExceptionTest extends UnitTestCase {
   }
 
   /**
-   * Tests get exception string.
-   *
-   * @legacy-covers ::getRequirementsString
+   * @covers ::getRequirementsString
+   * @dataProvider getRequirementsProvider
    */
-  #[DataProvider('getRequirementsProvider')]
   public function testGetExceptionString($expected, $message, $requirements): void {
     $exception = new RequirementsException($message, $requirements);
     $this->assertEquals($expected, $exception->getRequirementsString());

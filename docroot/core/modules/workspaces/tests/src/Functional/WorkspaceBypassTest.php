@@ -6,15 +6,14 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore ditka
+
 /**
  * Tests access bypass permission controls on workspaces.
+ *
+ * @group workspaces
  */
-#[Group('workspaces')]
-#[RunTestsInSeparateProcesses]
 class WorkspaceBypassTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;
@@ -23,7 +22,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user', 'block', 'workspaces', 'workspaces_ui'];
+  protected static $modules = ['node', 'user', 'block', 'workspaces'];
 
   /**
    * {@inheritdoc}

@@ -9,18 +9,15 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Entity\Workspace;
-use Drupal\workspaces\WorkspaceInformation;
 use Drupal\workspaces_test\EntityTestRevPubWorkspaceHandler;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the workspace information service.
+ *
+ * @coversDefaultClass \Drupal\workspaces\WorkspaceInformation
+ *
+ * @group workspaces
  */
-#[CoversClass(WorkspaceInformation::class)]
-#[Group('workspaces')]
-#[RunTestsInSeparateProcesses]
 class WorkspaceInformationTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -72,7 +69,7 @@ class WorkspaceInformationTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_revpub');
     $this->installEntitySchema('workspace');
 
-    $this->installSchema('workspaces', ['workspace_association', 'workspace_association_revision']);
+    $this->installSchema('workspaces', ['workspace_association']);
 
     // Create a new workspace and activate it.
     Workspace::create(['id' => 'stage', 'label' => 'Stage'])->save();

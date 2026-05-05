@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests distribution profile support.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class DistributionProfileTest extends InstallerTestBase {
 
   /**
@@ -27,7 +25,7 @@ class DistributionProfileTest extends InstallerTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->info = [
       'type' => 'profile',
@@ -36,7 +34,7 @@ class DistributionProfileTest extends InstallerTestBase {
       'distribution' => [
         'name' => 'My Distribution',
         'install' => [
-          'theme' => 'test_installer_theme',
+          'theme' => 'claro',
           'finish_url' => '/root-user',
         ],
       ],
@@ -51,17 +49,13 @@ class DistributionProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // Verify that the distribution name appears.
     $this->assertSession()->pageTextContains($this->info['distribution']['name']);
     // Verify that the distribution name is used in the site title.
     $this->assertSession()->titleEquals('Choose language | ' . $this->info['distribution']['name']);
-    // Verify that the requested theme is used -- its modifications to this form
-    // should be visible.
-    $this->assertSession()->pageTextContains('Added by custom installer theme.');
-    // Verify the base theme CSS is loaded.
-    $this->assertSession()->responseContains("claro/css/theme/install-page.css");
-
+    // Verify that the requested theme is used.
+    $this->assertSession()->responseContains($this->info['distribution']['install']['theme']);
     // Verify that the "Choose profile" step does not appear.
     $this->assertSession()->pageTextNotContains('profile');
 
@@ -71,7 +65,7 @@ class DistributionProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
+  protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.
   }
 

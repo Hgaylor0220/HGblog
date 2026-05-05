@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Listeners;
 
-use Drupal\deprecation_test\Deprecation\DrupalStandardsListenerDeprecatedClass;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test deprecation error handling by DrupalStandardsListener.
@@ -24,15 +21,17 @@ use PHPUnit\Framework\Attributes\Group;
  * actually instantiate
  * \Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass because that
  * would trigger another deprecation error.
+ *
+ * @group Listeners
+ *
+ * @coversDefaultClass \Drupal\deprecation_test\Deprecation\DrupalStandardsListenerDeprecatedClass
  */
-#[CoversClass(DrupalStandardsListenerDeprecatedClass::class)]
-#[Group('Listeners')]
 class DrupalStandardsListenerDeprecationTest extends UnitTestCase {
 
   /**
    * Exercise DrupalStandardsListener's coverage validation.
    *
-   * @legacy-covers ::testFunction
+   * @covers ::testFunction
    */
   public function testDeprecation(): void {
     // Meaningless assertion so this test is not risky.

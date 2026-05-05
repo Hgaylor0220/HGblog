@@ -7,16 +7,13 @@ namespace Drupal\Tests\Core\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\DefaultAccessCheck;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests Drupal\Core\Access\DefaultAccessCheck.
+ * @coversDefaultClass \Drupal\Core\Access\DefaultAccessCheck
+ * @group Access
  */
-#[CoversClass(DefaultAccessCheck::class)]
-#[Group('Access')]
 class DefaultAccessCheckTest extends UnitTestCase {
 
   /**

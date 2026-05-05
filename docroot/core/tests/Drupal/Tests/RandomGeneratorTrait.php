@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
-use Drupal\Component\Utility\Random as RandomUtility;
 use Drupal\TestTools\Random;
 
 /**
@@ -30,8 +29,30 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::string()
    */
-  public function randomString($length = 8): string {
+  public function randomString($length = 8) {
     return Random::string($length);
+  }
+
+  /**
+   * Callback for random string validation.
+   *
+   * @see \Drupal\Component\Utility\Random::string()
+   *
+   * @param string $string
+   *   The random string to validate.
+   *
+   * @return bool
+   *   TRUE if the random string is valid, FALSE if not.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
+   *   Use \Drupal\TestTools\Random::stringValidate() instead.
+   *
+   * @see https://www.drupal.org/node/3358389
+   */
+  public function randomStringValidate($string) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\TestTools\Random::stringValidate() instead. See https://www.drupal.org/node/3358389", E_USER_DEPRECATED);
+
+    return Random::stringValidate($string);
   }
 
   /**
@@ -64,7 +85,7 @@ trait RandomGeneratorTrait {
    *
    * @see \Drupal\Component\Utility\Random::object()
    */
-  public function randomObject($size = 4): \stdClass {
+  public function randomObject($size = 4) {
     return Random::object($size);
   }
 
@@ -74,7 +95,7 @@ trait RandomGeneratorTrait {
    * @return \Drupal\Component\Utility\Random
    *   The random generator.
    */
-  protected function getRandomGenerator(): RandomUtility {
+  protected function getRandomGenerator() {
     return Random::getGenerator();
   }
 

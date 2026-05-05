@@ -6,14 +6,10 @@ namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Action Xml Basic Auth.
+ * @group Action
  */
-#[Group('Action')]
-#[RunTestsInSeparateProcesses]
 class ActionXmlBasicAuthTest extends ActionResourceTestBase {
 
   use BasicAuthResourceTestTrait;

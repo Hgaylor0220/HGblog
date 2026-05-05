@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Entity\Query\Sql;
 
 use Drupal\Core\Entity\EntityType;
-use Drupal\Core\Entity\Query\QueryException;
-use Drupal\Core\Entity\Query\Sql\Query;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Entity\Query\Sql\Query;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests Drupal\Core\Entity\Query\Sql\Query.
+ * @coversDefaultClass \Drupal\Core\Entity\Query\Sql\Query
+ * @group Entity
  */
-#[CoversClass(Query::class)]
-#[Group('Entity')]
 class QueryTest extends UnitTestCase {
 
   /**
@@ -43,14 +40,14 @@ class QueryTest extends UnitTestCase {
     $container->expects($this->any())
       ->method('get')
       ->with('module_handler')
-      ->willReturn($this->createMock(ModuleHandler::class));
+      ->will($this->returnValue($this->createMock(ModuleHandler::class)));
     \Drupal::setContainer($container);
   }
 
   /**
    * Tests entity query for entity type without base table.
    *
-   * @legacy-covers ::prepare
+   * @covers ::prepare
    */
   public function testNoBaseTable(): void {
     $this->expectException(QueryException::class);
@@ -61,7 +58,7 @@ class QueryTest extends UnitTestCase {
   /**
    * Tests revision entity query for entity type without revision table.
    *
-   * @legacy-covers ::prepare
+   * @covers ::prepare
    */
   public function testNoRevisionTable(): void {
     $this->expectException(QueryException::class);

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Verifies that installing from existing configuration works.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class InstallerExistingConfigExistingSettingsTest extends InstallerExistingConfigTest {
 
   /**
@@ -21,7 +19,7 @@ class InstallerExistingConfigExistingSettingsTest extends InstallerExistingConfi
    * Partially configures a preexisting settings.php file before invoking the
    * interactive installer.
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.

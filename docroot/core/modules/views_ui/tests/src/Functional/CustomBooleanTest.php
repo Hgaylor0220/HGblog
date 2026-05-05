@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI and functionality for the Custom boolean field handler options.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\field\Boolean
  */
-#[Group('views_ui')]
-#[RunTestsInSeparateProcesses]
 class CustomBooleanTest extends UITestBase {
 
   /**
@@ -30,7 +27,7 @@ class CustomBooleanTest extends UITestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
+   * \Drupal\views\Tests\ViewTestBase::viewsData().
    */
   public function viewsData() {
     $data = parent::viewsData();

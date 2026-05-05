@@ -6,14 +6,12 @@ namespace Drupal\Tests\system\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests protecting routes by requiring CSRF token in the request header.
+ *
+ * @group system
  */
-#[Group('system')]
-#[RunTestsInSeparateProcesses]
 class CsrfRequestHeaderTest extends BrowserTestBase {
 
   /**

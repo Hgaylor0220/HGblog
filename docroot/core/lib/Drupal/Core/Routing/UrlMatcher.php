@@ -33,9 +33,6 @@ class UrlMatcher extends BaseUrlMatcher {
     $this->currentPath = $current_path;
   }
 
-  /**
-   * Tries to match the request URL with a route collection.
-   */
   public function finalMatch(RouteCollection $collection, Request $request) {
     $this->routes = $collection;
     $context = new RequestContext();

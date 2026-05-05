@@ -84,11 +84,7 @@ class CurrentRouteMatch implements ResettableStackedRouteMatchInterface {
    *   The current route match object.
    */
   public function getCurrentRouteMatch() {
-    $request = $this->requestStack->getCurrentRequest();
-    if (!$request) {
-      return new NullRouteMatch();
-    }
-    return $this->getRouteMatch($request);
+    return $this->getRouteMatch($this->requestStack->getCurrentRequest());
   }
 
   /**

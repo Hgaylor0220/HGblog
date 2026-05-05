@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.ViewsAjaxView = {};
   Drupal.behaviors.ViewsAjaxView.attach = function (context, settings) {
-    if (settings?.views?.ajaxViews) {
+    if (settings && settings.views && settings.views.ajaxViews) {
       const {
         views: { ajaxViews },
       } = settings;
@@ -25,7 +25,7 @@
   };
   Drupal.behaviors.ViewsAjaxView.detach = (context, settings, trigger) => {
     if (trigger === 'unload') {
-      if (settings?.views?.ajaxViews) {
+      if (settings && settings.views && settings.views.ajaxViews) {
         const {
           views: { ajaxViews },
         } = settings;
@@ -63,12 +63,6 @@
   Drupal.views.ajaxView = function (settings) {
     const selector = `.js-view-dom-id-${settings.view_dom_id}`;
     this.$view = $(selector);
-    this.$exposed_form = $(
-      `form#views-exposed-form-${settings.view_name.replace(
-        /_/g,
-        '-',
-      )}-${settings.view_display_id.replace(/_/g, '-')}`,
-    );
 
     // Retrieve the path to use for views' ajax.
     let ajaxPath = drupalSettings.views.ajax_path;
@@ -83,27 +77,13 @@
     let queryString = window.location.search || '';
     if (queryString !== '') {
       // Remove the question mark and Drupal path component if any.
-      queryString = queryString.slice(1);
-
-      // Remove current exposed filters.
-      const params = decodeURI(queryString)
-        .split('&')
-        .filter((param) => {
-          const [name, value] = param.split('=');
-          return (
-            this.$exposed_form.find(`input[name="${name}"]`).length === 0 &&
-            /*
-            Submitting filters should reset paging and sorting
-            because that is what happens without AJAX.
-             */
-            !['page', 'reset', 'sort', 'order', 'q', 'render'].includes(name)
-          );
-        });
-      queryString = encodeURI(params.join('&'));
-      // If there is a '?' in ajaxPath, clean URL are on and & should be
-      // used to add parameters.
+      queryString = queryString
+        .slice(1)
+        .replace(/q=[^&]+&?|page=[^&]+&?|&?render=[^&]+/, '');
       if (queryString !== '') {
-        queryString = (ajaxPath.includes('?') ? '&' : '?') + queryString;
+        // If there is a '?' in ajaxPath, clean URL are on and & should be
+        // used to add parameters.
+        queryString = (/\?/.test(ajaxPath) ? '&' : '?') + queryString;
       }
     }
 
@@ -120,6 +100,12 @@
     this.settings = settings;
 
     // Add the ajax to exposed forms.
+    this.$exposed_form = $(
+      `form#views-exposed-form-${settings.view_name.replace(
+        /_/g,
+        '-',
+      )}-${settings.view_display_id.replace(/_/g, '-')}`,
+    );
     once('exposed-form', this.$exposed_form).forEach(
       this.attachExposedFormAjax.bind(this),
     );
@@ -223,19 +209,21 @@
   };
 
   /**
-   * Sets the browser URL ajax command.
+   * Views scroll to top ajax command.
    *
    * @param {Drupal.Ajax} [ajax]
    *   A {@link Drupal.ajax} object.
    * @param {object} response
    *   Ajax response.
-   * @param {string} response.url
-   *   URL to be set.
+   * @param {string} response.selector
+   *   Selector to use.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+   *   Use Drupal.AjaxCommands.prototype.scrollTop().
+   *
+   * @see https://www.drupal.org/node/3344141
    */
-  Drupal.AjaxCommands.prototype.setBrowserUrl = (ajax, response) => {
-    // Do not change browser URL if we are in a dialog wrapper.
-    if (ajax.element && !ajax.element.closest('.ui-dialog-content')) {
-      window.history.replaceState(null, '', response.url);
-    }
+  Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {
+    Drupal.AjaxCommands.prototype.scrollTop(ajax, response);
   };
 })(jQuery, Drupal, drupalSettings);

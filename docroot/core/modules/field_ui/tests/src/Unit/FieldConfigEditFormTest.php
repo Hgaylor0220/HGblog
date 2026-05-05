@@ -9,15 +9,12 @@ use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\field_ui\Form\FieldConfigEditForm.
+ * @coversDefaultClass \Drupal\field_ui\Form\FieldConfigEditForm
+ *
+ * @group field_ui
  */
-#[CoversClass(FieldConfigEditForm::class)]
-#[Group('field_ui')]
 class FieldConfigEditFormTest extends UnitTestCase {
 
   /**
@@ -42,9 +39,10 @@ class FieldConfigEditFormTest extends UnitTestCase {
   }
 
   /**
-   * Tests has any required.
+   * @covers ::hasAnyRequired
+   *
+   * @dataProvider providerRequired
    */
-  #[DataProvider('providerRequired')]
   public function testHasAnyRequired(array $element, bool $result): void {
     $reflection = new \ReflectionClass('\Drupal\field_ui\Form\FieldConfigEditForm');
     $method = $reflection->getMethod('hasAnyRequired');

@@ -12,16 +12,13 @@ use Drupal\Core\File\FileExists;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileRepository;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the FileRepository.
+ *
+ * @coversDefaultClass \Drupal\file\FileRepository
+ * @group file
  */
-#[CoversClass(FileRepository::class)]
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
@@ -50,7 +47,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests the writeData() method.
    *
-   * @legacy-covers ::writeData
+   * @covers ::writeData
    */
   public function testWithFilename(): void {
     $contents = $this->randomMachineName();
@@ -65,7 +62,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
     $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEquals($filename, basename($result->getFileUri()), 'File was named correctly.');
+    $this->assertEquals($filename, \Drupal::service('file_system')->basename($result->getFileUri()), 'File was named correctly.');
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
     $this->assertEquals('text/plain', $result->getMimeType(), 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
@@ -80,7 +77,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests writeData() when renaming around an existing file.
    *
-   * @legacy-covers ::writeData
+   * @covers ::writeData
    */
   public function testExistingRename(): void {
     // Setup a file to overwrite.
@@ -112,7 +109,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests writeData() when replacing an existing file.
    *
-   * @legacy-covers ::writeData
+   * @covers ::writeData
    */
   public function testExistingReplace(): void {
     // Setup a file to overwrite.
@@ -143,7 +140,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests that writeData() fails overwriting an existing file.
    *
-   * @legacy-covers ::writeData
+   * @covers ::writeData
    */
   public function testExistingError(): void {
     $contents = $this->randomMachineName();
@@ -170,7 +167,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests for an invalid stream wrapper.
    *
-   * @legacy-covers ::writeData
+   * @covers ::writeData
    */
   public function testInvalidStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -181,7 +178,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests for entity storage exception.
    *
-   * @legacy-covers ::writeData
+   * @covers ::writeData
    */
   public function testEntityStorageException(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */
@@ -205,6 +202,8 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
    * Tests loading a file by URI.
+   *
+   * @covers ::loadByUri
    */
   public function testLoadByUri(): void {
     $source = $this->createFile();
@@ -214,6 +213,8 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
 
   /**
    * Tests loading a file by case-sensitive URI.
+   *
+   * @covers ::loadByUri
    */
   public function testLoadByUriCaseSensitive(): void {
     $source = $this->createFile('FooBar.txt');

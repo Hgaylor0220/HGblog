@@ -15,15 +15,12 @@ use Drupal\Core\Field\FieldDefinitionListener;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\Core\Field\FieldDefinitionListener.
+ * @coversDefaultClass \Drupal\Core\Field\FieldDefinitionListener
+ * @group Field
  */
-#[CoversClass(FieldDefinitionListener::class)]
-#[Group('Field')]
 class FieldDefinitionListenerTest extends UnitTestCase {
 
   /**
@@ -81,11 +78,11 @@ class FieldDefinitionListenerTest extends UnitTestCase {
    * @param \Drupal\Core\Entity\EntityTypeInterface[]|\Prophecy\Prophecy\ProphecyInterface[] $definitions
    *   (optional) An array of entity type definitions.
    */
-  protected function setUpEntityTypeManager($definitions = []): void {
+  protected function setUpEntityTypeManager($definitions = []) {
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
-      // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it
-      // must always be mocked.
+      // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it must
+      // always be mocked.
       $entity_type->getLinkTemplates()->willReturn([]);
 
       $definitions[$key] = $entity_type->reveal();
@@ -109,7 +106,7 @@ class FieldDefinitionListenerTest extends UnitTestCase {
   }
 
   /**
-   * Tests on field definition create new field.
+   * @covers ::onFieldDefinitionCreate
    */
   public function testOnFieldDefinitionCreateNewField(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -140,7 +137,7 @@ class FieldDefinitionListenerTest extends UnitTestCase {
   }
 
   /**
-   * Tests on field definition create existing field.
+   * @covers ::onFieldDefinitionCreate
    */
   public function testOnFieldDefinitionCreateExistingField(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -176,7 +173,7 @@ class FieldDefinitionListenerTest extends UnitTestCase {
   }
 
   /**
-   * Tests on field definition update.
+   * @covers ::onFieldDefinitionUpdate
    */
   public function testOnFieldDefinitionUpdate(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -193,7 +190,7 @@ class FieldDefinitionListenerTest extends UnitTestCase {
   }
 
   /**
-   * Tests on field definition delete multiple bundles.
+   * @covers ::onFieldDefinitionDelete
    */
   public function testOnFieldDefinitionDeleteMultipleBundles(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -233,7 +230,7 @@ class FieldDefinitionListenerTest extends UnitTestCase {
   }
 
   /**
-   * Tests on field definition delete single bundles.
+   * @covers ::onFieldDefinitionDelete
    */
   public function testOnFieldDefinitionDeleteSingleBundles(): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);

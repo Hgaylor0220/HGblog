@@ -6,8 +6,6 @@ namespace Drupal\Tests\system\Functional\Condition;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that condition plugins basic form handling is working.
@@ -15,9 +13,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Checks condition forms and submission and gives a very cursory check to make
  * sure the configuration that was submitted actually causes the condition to
  * validate correctly.
+ *
+ * @group Condition
  */
-#[Group('Condition')]
-#[RunTestsInSeparateProcesses]
 class ConditionFormTest extends BrowserTestBase {
 
   /**

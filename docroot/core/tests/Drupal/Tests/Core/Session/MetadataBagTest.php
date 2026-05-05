@@ -7,18 +7,15 @@ namespace Drupal\Tests\Core\Session;
 use Drupal\Core\Session\MetadataBag;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Session\MetadataBag.
+ * @coversDefaultClass \Drupal\Core\Session\MetadataBag
+ * @group Session
  */
-#[CoversClass(MetadataBag::class)]
-#[Group('Session')]
 class MetadataBagTest extends UnitTestCase {
 
   /**
-   * Tests stamp new.
+   * @covers ::stampNew
    */
   public function testStampNew(): void {
     $metadata = new MetadataBag(new Settings([]));

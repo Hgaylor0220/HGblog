@@ -33,7 +33,7 @@ class DynamicMenuLinkMock extends MenuLinkMock {
    *
    * @return $this
    */
-  public function setCurrentUser(AccountInterface $current_user): static {
+  public function setCurrentUser(AccountInterface $current_user) {
     $this->currentUser = $current_user;
     return $this;
   }
@@ -41,7 +41,7 @@ class DynamicMenuLinkMock extends MenuLinkMock {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(): string {
+  public function getTitle() {
     if ($this->currentUser->isAuthenticated()) {
       return 'Log out';
     }
@@ -53,7 +53,7 @@ class DynamicMenuLinkMock extends MenuLinkMock {
   /**
    * {@inheritdoc}
    */
-  public function getRouteName(): string {
+  public function getRouteName() {
     if ($this->currentUser->isAuthenticated()) {
       return 'user.logout';
     }
@@ -65,7 +65,7 @@ class DynamicMenuLinkMock extends MenuLinkMock {
   /**
    * {@inheritdoc}
    */
-  public function getCacheContexts(): array {
+  public function getCacheContexts() {
     return ['user.roles:authenticated'];
   }
 

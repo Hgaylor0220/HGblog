@@ -9,21 +9,16 @@ use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\layout_builder\LayoutTempstoreRepository;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\layout_builder\LayoutTempstoreRepository.
+ * @coversDefaultClass \Drupal\layout_builder\LayoutTempstoreRepository
+ * @group layout_builder
  */
-#[CoversClass(LayoutTempstoreRepository::class)]
-#[Group('layout_builder')]
 class LayoutTempstoreRepositoryTest extends UnitTestCase {
 
   /**
-   * Tests get empty tempstore.
-   *
-   * @legacy-covers ::get
-   * @legacy-covers ::has
+   * @covers ::get
+   * @covers ::has
    */
   public function testGetEmptyTempstore(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
@@ -45,10 +40,8 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get loaded tempstore.
-   *
-   * @legacy-covers ::get
-   * @legacy-covers ::has
+   * @covers ::get
+   * @covers ::has
    */
   public function testGetLoadedTempstore(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
@@ -71,7 +64,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get invalid entry.
+   * @covers ::get
    */
   public function testGetInvalidEntry(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);

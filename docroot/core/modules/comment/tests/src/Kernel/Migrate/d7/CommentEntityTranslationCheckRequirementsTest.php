@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
-use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\migrate\Exception\RequirementsException;
 
 /**
  * Tests check requirements for comment entity translation source plugin.
+ *
+ * @group comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBase {
 
   /**
@@ -28,8 +25,9 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
 
   /**
    * Tests exception thrown when the given module is not enabled in the source.
+   *
+   * @dataProvider providerTestCheckRequirements
    */
-  #[DataProvider('providerTestCheckRequirements')]
   public function testCheckRequirements($module): void {
     // Disable the module in the source site.
     $this->sourceDatabase->update('system')
@@ -49,7 +47,6 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
    * Provides data for testCheckRequirements.
    *
    * @return string[][]
-   *   An array of module machine names.
    */
   public static function providerTestCheckRequirements() {
     return [

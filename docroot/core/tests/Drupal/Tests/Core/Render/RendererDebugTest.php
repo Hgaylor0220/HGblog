@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Core\Render\Renderer;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use function preg_replace;
 
 /**
- * Tests Drupal\Core\Render\Renderer.
+ * @coversDefaultClass \Drupal\Core\Render\Renderer
+ * @group Render
  */
-#[CoversClass(Renderer::class)]
-#[Group('Render')]
 class RendererDebugTest extends RendererTestBase {
 
   /**

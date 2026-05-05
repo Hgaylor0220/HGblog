@@ -8,6 +8,7 @@ dblog.settings:
       type: integer
       label: 'Database log messages to keep'
       constraints:
-        PositiveOrZero: ~
+        Range:
+          min: 0
   constraints:
     FullyValidatable: ~

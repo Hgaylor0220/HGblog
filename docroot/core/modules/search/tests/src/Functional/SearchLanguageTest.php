@@ -8,14 +8,12 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests advanced search with different languages added.
+ *
+ * @group search
  */
-#[Group('search')]
-#[RunTestsInSeparateProcesses]
 class SearchLanguageTest extends BrowserTestBase {
 
   /**
@@ -107,9 +105,6 @@ class SearchLanguageTest extends BrowserTestBase {
     $plugin->updateIndex();
   }
 
-  /**
-   * Tests language management in the search interface.
-   */
   public function testLanguages(): void {
     // Add predefined language.
     $edit = ['predefined_langcode' => 'fr'];

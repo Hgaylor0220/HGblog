@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsDisplay;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -69,6 +70,20 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
     $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('router.route_provider'),
+      $container->get('state'),
+      $container->get('renderer')
+    );
   }
 
   /**

@@ -6,31 +6,30 @@ namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\MachineName;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\Core\Render\Element\MachineName.
+ * @coversDefaultClass \Drupal\Core\Render\Element\MachineName
+ * @group Render
  */
-#[CoversClass(MachineName::class)]
-#[Group('Render')]
-#[RunTestsInSeparateProcesses]
 class MachineNameTest extends KernelTestBase implements FormInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  protected static $modules = ['system'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
     return __CLASS__;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $element = [
       '#id' => 'test',
       '#type' => 'machine_name',

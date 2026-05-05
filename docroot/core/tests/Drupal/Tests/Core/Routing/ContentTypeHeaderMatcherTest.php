@@ -6,18 +6,17 @@ namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\ContentTypeHeaderMatcher;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 /**
  * Confirm that the content types partial matcher is functioning properly.
+ *
+ * @group Routing
+ *
+ * @coversDefaultClass \Drupal\Core\Routing\ContentTypeHeaderMatcher
  */
-#[CoversClass(ContentTypeHeaderMatcher::class)]
-#[Group('Routing')]
 class ContentTypeHeaderMatcherTest extends UnitTestCase {
 
   /**
@@ -46,8 +45,9 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
 
   /**
    * Tests that routes are not filtered on safe requests.
+   *
+   * @dataProvider providerTestSafeRequestFilter
    */
-  #[DataProvider('providerTestSafeRequestFilter')]
   public function testSafeRequestFilter($method): void {
     $collection = $this->fixtures->sampleRouteCollection();
     $collection->addCollection($this->fixtures->contentRouteCollection());
@@ -57,7 +57,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $this->assertCount(7, $routes, 'The correct number of routes was found.');
   }
 
-  public static function providerTestSafeRequestFilter(): array {
+  public static function providerTestSafeRequestFilter() {
     return [
       ['GET'],
       ['HEAD'],
@@ -106,7 +106,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   /**
    * Confirms that the matcher throws an exception for no-route.
    *
-   * @legacy-covers ::filter
+   * @covers ::filter
    */
   public function testNoRouteFound(): void {
     $matcher = new ContentTypeHeaderMatcher();
@@ -122,7 +122,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   /**
    * Confirms that the matcher throws an exception for missing request header.
    *
-   * @legacy-covers ::filter
+   * @covers ::filter
    */
   public function testContentTypeRequestHeaderMissing(): void {
     $matcher = new ContentTypeHeaderMatcher();

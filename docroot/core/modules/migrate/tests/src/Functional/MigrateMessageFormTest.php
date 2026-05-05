@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Functional;
 
 use Drupal\migrate\Plugin\MigrationInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the MessageForm class.
+ *
+ * @group migrate
  */
-#[Group('migrate')]
-#[RunTestsInSeparateProcesses]
 class MigrateMessageFormTest extends MigrateMessageTestBase {
 
   /**
@@ -47,7 +45,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
       $this->assertEquals($expected_count, $count[$level], sprintf('Count for level %s failed', $level));
     }
 
-    // Reset the filter.
+    // Reset the filter
     $this->submitForm([], 'Reset');
     $messages = $this->getMessages();
     $this->assertCount(4, $messages);

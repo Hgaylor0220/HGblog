@@ -6,8 +6,6 @@ namespace Drupal\FunctionalTests\HttpKernel;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests CORS provided by Drupal.
@@ -15,9 +13,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see sites/default/default.services.yml
  * @see \Asm89\Stack\Cors
  * @see \Asm89\Stack\CorsService
+ *
+ * @group Http
  */
-#[Group('Http')]
-#[RunTestsInSeparateProcesses]
 class CorsIntegrationTest extends BrowserTestBase {
 
   /**
@@ -77,6 +75,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Fire a request from an origin that isn't allowed.
+    /** @var \Symfony\Component\HttpFoundation\Response $response */
     $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderDoesNotExist('Access-Control-Allow-Origin');
@@ -122,6 +121,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Fire a request from an origin that isn't allowed.
+    /** @var \Symfony\Component\HttpFoundation\Response $response */
     $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
@@ -140,6 +140,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Fire a request from an origin that isn't allowed.
+    /** @var \Symfony\Component\HttpFoundation\Response $response */
     $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', NULL);
@@ -163,7 +164,6 @@ class CorsIntegrationTest extends BrowserTestBase {
     /** @var \GuzzleHttp\ClientInterface $httpClient */
     $httpClient = $this->getSession()->getDriver()->getClient()->getClient();
     $url = Url::fromUri('base:/test-page');
-    /** @var \Symfony\Component\HttpFoundation\Response $response */
     $response = $httpClient->request('POST', $url->setAbsolute()->toString(), [
       'headers' => [
         'Origin' => $origin,

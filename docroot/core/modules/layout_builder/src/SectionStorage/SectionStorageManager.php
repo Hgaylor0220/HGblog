@@ -10,7 +10,6 @@ use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
-use Drupal\layout_builder\SupportAwareSectionStorageInterface;
 
 /**
  * Provides the Section Storage type plugin manager.
@@ -21,7 +20,7 @@ use Drupal\layout_builder\SupportAwareSectionStorageInterface;
  * While internally depending on the parent class is necessary, external code
  * should only use the methods available on that interface.
  */
-class SectionStorageManager extends DefaultPluginManager implements SupportAwareSectionStorageManagerInterface {
+class SectionStorageManager extends DefaultPluginManager implements SectionStorageManagerInterface {
 
   /**
    * The context handler.
@@ -76,7 +75,7 @@ class SectionStorageManager extends DefaultPluginManager implements SupportAware
     try {
       $this->contextHandler->applyContextMapping($plugin, $contexts);
     }
-    catch (ContextException) {
+    catch (ContextException $e) {
       return NULL;
     }
     return $plugin;
@@ -106,22 +105,6 @@ class SectionStorageManager extends DefaultPluginManager implements SupportAware
    */
   public function loadEmpty($type) {
     return $this->createInstance($type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function notSupported(string $entity_type_id, string $bundle, string $view_mode): bool {
-    $storage_types = array_keys($this->getDefinitions());
-    foreach ($storage_types as $storage_type) {
-      $storage = $this->loadEmpty($storage_type);
-
-      if ((!$storage instanceof SupportAwareSectionStorageInterface) || $storage->isSupported($entity_type_id, $bundle, $view_mode)) {
-        return FALSE;
-      }
-    }
-    // No plugins support this view mode.
-    return TRUE;
   }
 
 }

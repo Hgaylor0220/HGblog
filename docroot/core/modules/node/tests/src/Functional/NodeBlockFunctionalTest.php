@@ -10,14 +10,12 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node block functionality.
+ *
+ * @group node
  */
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class NodeBlockFunctionalTest extends NodeTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
@@ -143,14 +141,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextContains($node3->label());
     $this->assertSession()->pageTextContains($node4->label());
 
-    $this->assertCacheContexts([
-      'languages:language_content',
-      'languages:language_interface',
-      'theme',
-      'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
-      'url.site',
-      'user',
-    ]);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user']);
 
     // Enable the "Powered by Drupal" block only on article nodes.
     $theme = \Drupal::service('theme_handler')->getDefault();
@@ -178,15 +169,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $label = $block->label();
     // Check that block is not displayed on the front page.
     $this->assertSession()->pageTextNotContains($label);
-    $this->assertCacheContexts([
-      'languages:language_content',
-      'languages:language_interface',
-      'theme',
-      'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
-      'url.site',
-      'user',
-      'route',
-    ]);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route']);
 
     // Ensure that a page that does not have a node context can still be cached.
     \Drupal::service('module_installer')->install(['dynamic_page_cache_test']);
@@ -199,16 +182,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('node/add/article');
     // Check that block is displayed on the add article page.
     $this->assertSession()->pageTextContains($label);
-    $this->assertCacheContexts([
-      'languages:language_content',
-      'languages:language_interface',
-      'session',
-      'theme',
-      'url.path',
-      'url.query_args',
-      'user',
-      'route',
-    ]);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'session', 'theme', 'url.path', 'url.query_args', 'user', 'route']);
 
     // The node/add/article page is an admin path and currently uncacheable.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'UNCACHEABLE (poor cacheability)');
@@ -217,16 +191,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Check that block is displayed on the node page when node is of type
     // 'article'.
     $this->assertSession()->pageTextContains($label);
-    $this->assertCacheContexts([
-      'languages:language_content',
-      'languages:language_interface',
-      'theme',
-      'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
-      'url.site',
-      'user',
-      'route',
-      'timezone',
-    ]);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route', 'timezone']);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
     $this->drupalGet('node/' . $node1->id());
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
@@ -235,16 +200,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Check that block is not displayed on the node page when node is of type
     // 'page'.
     $this->assertSession()->pageTextNotContains($label);
-    $this->assertCacheContexts([
-      'languages:language_content',
-      'languages:language_interface',
-      'theme',
-      'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
-      'url.site',
-      'user',
-      'route',
-      'timezone',
-    ]);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route', 'timezone']);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
     $this->drupalGet('node/' . $node5->id());
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
@@ -269,17 +225,11 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #: Node revision 2 title');
 
     // Assert that the revision page for both revisions displays the block.
-    $this->drupalGet(Url::fromRoute('entity.node.revision', [
-      'node' => $node1->id(),
-      'node_revision' => $node1_revision_1->getRevisionId(),
-    ]));
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1_revision_1->getRevisionId()]));
     $this->assertSession()->pageTextContains($label);
     $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1_revision_1->getRevisionId() . ': ' . $node1_revision_1->label());
 
-    $this->drupalGet(Url::fromRoute('entity.node.revision', [
-      'node' => $node1->id(),
-      'node_revision' => $node1->getRevisionId(),
-    ]));
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1->getRevisionId()]));
     $this->assertSession()->pageTextContains($label);
     $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
 

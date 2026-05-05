@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\ajax_forms_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -26,6 +24,8 @@ class AjaxFormsTestSimpleForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $object = new Callbacks();
+
     $form = [];
     $form['select'] = [
       '#title' => $this->t('Color'),
@@ -36,7 +36,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
         'blue' => 'blue',
       ],
       '#ajax' => [
-        'callback' => [Callbacks::class, 'selectCallback'],
+        'callback' => [$object, 'selectCallback'],
       ],
       '#suffix' => '<div id="ajax_selected_color">No color yet selected</div>',
     ];
@@ -45,7 +45,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Test checkbox'),
       '#ajax' => [
-        'callback' => [Callbacks::class, 'checkboxCallback'],
+        'callback' => [$object, 'checkboxCallback'],
       ],
       '#suffix' => '<div id="ajax_checkbox_value">No action yet</div>',
     ];
@@ -85,7 +85,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
         '#type' => 'checkbox',
         '#title' => $this->t('AJAX checkbox in a group'),
         '#ajax' => [
-          'callback' => [Callbacks::class, 'checkboxGroupCallback'],
+          'callback' => [$object, 'checkboxGroupCallback'],
           'wrapper' => 'checkbox-wrapper',
         ],
       ],
@@ -99,7 +99,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
         '#group' => 'nested_group',
         '#title' => $this->t('AJAX checkbox in a nested group'),
         '#ajax' => [
-          'callback' => [Callbacks::class, 'checkboxGroupCallback'],
+          'callback' => [$object, 'checkboxGroupCallback'],
           'wrapper' => 'checkbox-wrapper',
         ],
       ],
@@ -111,20 +111,6 @@ class AjaxFormsTestSimpleForm extends FormBase {
       '#title' => $this->t('Another AJAX checkbox in a nested group'),
     ];
 
-    $form['email_group'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Email test group'),
-      '#open' => TRUE,
-    ];
-
-    $form['email_group']['email_field_1'] = [
-      '#type' => 'email',
-      '#title' => 'Email 1',
-      '#ajax' => [
-        'callback' => [static::class, 'emailFieldCallback'],
-      ],
-    ];
-
     $form['textfield_focus_tests'] = [
       '#type' => 'details',
       '#title' => $this->t('Test group 2'),
@@ -134,14 +120,14 @@ class AjaxFormsTestSimpleForm extends FormBase {
       '#type' => 'textfield',
       '#title' => 'Textfield 1',
       '#ajax' => [
-        'callback' => [static::class, 'textFieldCallback'],
+        'callback' => [static::class, 'textfieldCallback'],
       ],
     ];
     $form['textfield_focus_tests']['textfield_2'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield 2',
       '#ajax' => [
-        'callback' => [static::class, 'textFieldCallback'],
+        'callback' => [static::class, 'textfieldCallback'],
         'event' => 'change',
         'refocus-blur' => FALSE,
       ],
@@ -150,7 +136,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
       '#type' => 'textfield',
       '#title' => 'Textfield 3',
       '#ajax' => [
-        'callback' => [static::class, 'textFieldCallback'],
+        'callback' => [static::class, 'textfieldCallback'],
         'event' => 'change',
       ],
     ];
@@ -158,30 +144,8 @@ class AjaxFormsTestSimpleForm extends FormBase {
     return $form;
   }
 
-  /**
-   * AJAX callback for textfield.
-   *
-   * @param array $form
-   *   The form array.
-   *
-   * @return array
-   *   The form element to return via AJAX.
-   */
-  public static function textFieldCallback(array $form): array {
-    return $form['textfield_focus_tests'];
-  }
-
-  /**
-   * AJAX callback for email field.
-   *
-   * @param array $form
-   *   The form array.
-   *
-   * @return array
-   *   The form element to return via AJAX.
-   */
-  public static function emailFieldCallback(array $form): array {
-    return $form['email_group'];
+  public static function textfieldCallback($form) {
+    return $form;
   }
 
   /**

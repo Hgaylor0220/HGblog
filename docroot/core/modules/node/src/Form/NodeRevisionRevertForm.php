@@ -133,15 +133,10 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
     $this->revision->setChangedTime($this->time->getRequestTime());
     $this->revision->save();
 
-    $this->logger('content')
-      ->info('@type: reverted %title revision %revision.', [
-        '@type' => $this->revision->bundle(),
-        '%title' => $this->revision->label(),
-        '%revision' => $this->revision->getRevisionId(),
-      ]);
+    $this->logger('content')->info('@type: reverted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
     $this->messenger()
       ->addStatus($this->t('@type %title has been reverted to the revision from %revision-date.', [
-        '@type' => $this->revision->getBundleEntity()->label(),
+        '@type' => node_get_type_label($this->revision),
         '%title' => $this->revision->label(),
         '%revision-date' => $this->dateFormatter->format($original_revision_timestamp),
       ]));
@@ -163,7 +158,10 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    *   The prepared revision ready to be stored.
    */
   protected function prepareRevertedRevision(NodeInterface $revision, FormStateInterface $form_state) {
-    return $this->nodeStorage->createRevision($revision);
+    $revision->setNewRevision();
+    $revision->isDefaultRevision(TRUE);
+
+    return $revision;
   }
 
 }

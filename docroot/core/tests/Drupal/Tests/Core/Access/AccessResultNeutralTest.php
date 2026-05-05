@@ -6,21 +6,18 @@ namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Access\AccessResultNeutral.
+ * @coversDefaultClass \Drupal\Core\Access\AccessResultNeutral
+ * @group Access
  */
-#[CoversClass(AccessResultNeutral::class)]
-#[Group('Access')]
 class AccessResultNeutralTest extends UnitTestCase {
 
   /**
    * Tests the construction of an AccessResultForbidden object.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getReason
+   * @covers ::__construct
+   * @covers ::getReason
    */
   public function testConstruction(): void {
     $a = new AccessResultNeutral();
@@ -33,6 +30,8 @@ class AccessResultNeutralTest extends UnitTestCase {
 
   /**
    * Tests setReason()
+   *
+   * @covers ::setReason
    */
   public function testSetReason(): void {
     $a = new AccessResultNeutral();

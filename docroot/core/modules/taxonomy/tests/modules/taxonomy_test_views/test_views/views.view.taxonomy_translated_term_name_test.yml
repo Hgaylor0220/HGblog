@@ -234,7 +234,7 @@ display:
           empty: true
           tokenize: true
           target: '{{ raw_arguments.tid }}'
-          view_mode: test
+          view_mode: full
           bypass_access: false
           plugin_id: entity
       footer: {  }

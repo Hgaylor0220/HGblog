@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests entity level validation constraints.
+ *
+ * @group Entity
  */
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityTypeConstraintsTest extends EntityKernelTestBase {
 
   /**

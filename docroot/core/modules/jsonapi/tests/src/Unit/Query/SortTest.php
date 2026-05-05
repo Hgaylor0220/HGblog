@@ -8,19 +8,15 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\jsonapi\Query\Sort;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Tests Drupal\jsonapi\Query\Sort.
+ * @coversDefaultClass \Drupal\jsonapi\Query\Sort
+ * @group jsonapi
  *
  * @internal
  */
-#[CoversClass(Sort::class)]
-#[Group('jsonapi')]
 class SortTest extends UnitTestCase {
 
   /**
@@ -38,9 +34,9 @@ class SortTest extends UnitTestCase {
   }
 
   /**
-   * Tests create from query parameter.
+   * @covers ::createFromQueryParameter
+   * @dataProvider parameterProvider
    */
-  #[DataProvider('parameterProvider')]
   public function testCreateFromQueryParameter($input, $expected): void {
     $sort = Sort::createFromQueryParameter($input);
     foreach ($sort->fields() as $index => $sort_field) {
@@ -86,9 +82,9 @@ class SortTest extends UnitTestCase {
   }
 
   /**
-   * Tests create from query parameter fail.
+   * @covers ::createFromQueryParameter
+   * @dataProvider badParameterProvider
    */
-  #[DataProvider('badParameterProvider')]
   public function testCreateFromQueryParameterFail($input): void {
     $this->expectException(BadRequestHttpException::class);
     Sort::createFromQueryParameter($input);

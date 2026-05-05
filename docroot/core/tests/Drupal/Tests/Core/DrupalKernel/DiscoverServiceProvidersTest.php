@@ -8,20 +8,17 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\DrupalKernel.
+ * @coversDefaultClass \Drupal\Core\DrupalKernel
+ * @group DrupalKernel
  */
-#[CoversClass(DrupalKernel::class)]
-#[Group('DrupalKernel')]
 class DiscoverServiceProvidersTest extends UnitTestCase {
 
   /**
    * Tests discovery with user defined container yaml.
    *
-   * @legacy-covers ::discoverServiceProviders
+   * @covers ::discoverServiceProviders
    */
   public function testDiscoverServiceCustom(): void {
     new Settings([

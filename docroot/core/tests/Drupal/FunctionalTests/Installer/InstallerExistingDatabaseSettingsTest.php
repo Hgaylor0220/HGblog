@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests installation with database information in an existing settings file.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
 
   /**
@@ -23,7 +21,7 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Pre-configure database credentials in settings.php.
     $connection_info = Database::getConnectionInfo();
@@ -43,7 +41,7 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
    *   contains a valid database connection already (but e.g. no config
    *   directories yet).
    */
-  protected function setUpSettings(): void {
+  protected function setUpSettings() {
     // All database settings should be pre-configured, except password.
     $values = $this->parameters['forms']['install_settings_form'];
     $driver = $values['driver'];

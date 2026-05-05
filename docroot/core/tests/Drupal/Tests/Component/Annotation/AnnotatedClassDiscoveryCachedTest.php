@@ -6,17 +6,13 @@ namespace Drupal\Tests\Component\Annotation;
 
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery.
+ * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery
+ * @group Annotation
+ * @runTestsInSeparateProcesses
  */
-#[CoversClass(AnnotatedClassDiscovery::class)]
-#[Group('Annotation')]
-#[RunTestsInSeparateProcesses]
 class AnnotatedClassDiscoveryCachedTest extends TestCase {
 
   /**
@@ -33,6 +29,8 @@ class AnnotatedClassDiscoveryCachedTest extends TestCase {
 
   /**
    * Tests that getDefinitions() retrieves the file cache correctly.
+   *
+   * @covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     // Path to the classes which we'll discover and parse annotation.

@@ -10,18 +10,14 @@ use Drupal\Core\Datetime\FormattedDateDiff;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Tests Drupal\Core\Datetime\DateFormatter.
+ * @coversDefaultClass \Drupal\Core\Datetime\DateFormatter
+ * @group Datetime
  */
-#[CoversClass(DateFormatter::class)]
-#[Group('Datetime')]
 class DateTest extends UnitTestCase {
 
   /**
@@ -94,21 +90,18 @@ class DateTest extends UnitTestCase {
     $this->dateFormatter = new DateFormatter($this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack);
 
     $this->dateFormatterStub = $this->getMockBuilder('\Drupal\Core\Datetime\DateFormatter')
-      ->setConstructorArgs([
-        $this->entityTypeManager,
-        $this->languageManager,
-        $this->stringTranslation,
-        $this->getConfigFactoryStub(),
-        $this->requestStack,
-      ])
+      ->setConstructorArgs([$this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack])
       ->onlyMethods(['formatDiff'])
       ->getMock();
   }
 
   /**
    * Tests the formatInterval method.
+   *
+   * @dataProvider providerTestFormatInterval
+   *
+   * @covers ::formatInterval
    */
-  #[DataProvider('providerTestFormatInterval')]
   public function testFormatInterval($interval, $granularity, $expected, $langcode = NULL): void {
     // Mocks a simple formatPlural implementation.
     $this->stringTranslation->expects($this->any())
@@ -124,14 +117,14 @@ class DateTest extends UnitTestCase {
     else {
       $result = $this->dateFormatter->formatInterval($interval);
     }
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
+
     $this->assertEquals(new TranslatableMarkup($expected, [], ['langcode' => $langcode], $this->stringTranslation), $result);
   }
 
   /**
    * Provides some test data for the format interval test.
    */
-  public static function providerTestFormatInterval(): array {
+  public static function providerTestFormatInterval() {
     $data = [
       // Checks for basic seconds.
       [1, 1, '1 sec'],
@@ -174,7 +167,7 @@ class DateTest extends UnitTestCase {
   /**
    * Tests the getSampleDateFormats method.
    *
-   * @legacy-covers \Drupal\Core\Datetime\DateFormatter::getSampleDateFormats
+   * @covers \Drupal\Core\Datetime\DateFormatter::getSampleDateFormats
    */
   public function testGetSampleDateFormats(): void {
     $timestamp = strtotime('2015-03-22 14:23:00');
@@ -193,6 +186,8 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatTimeDiffUntil method.
+   *
+   * @covers ::formatTimeDiffUntil
    */
   public function testFormatTimeDiffUntil(): void {
     $expected = '1 second';
@@ -224,6 +219,8 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatTimeDiffSince method.
+   *
+   * @covers ::formatTimeDiffSince
    */
   public function testFormatTimeDiffSince(): void {
     $expected = '1 second';
@@ -255,8 +252,11 @@ class DateTest extends UnitTestCase {
 
   /**
    * Tests the formatDiff method.
+   *
+   * @dataProvider providerTestFormatDiff
+   *
+   * @covers ::formatDiff
    */
-  #[DataProvider('providerTestFormatDiff')]
   public function testFormatDiff(string $expected, int $max_age, int $timestamp1, int $timestamp2, array $options = []): void {
     // Mocks a simple translateString implementation.
     $this->stringTranslation->expects($this->any())
@@ -266,11 +266,9 @@ class DateTest extends UnitTestCase {
       });
 
     if (isset($options['langcode'])) {
-      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $expected_markup = new TranslatableMarkup($expected, [], ['langcode' => $options['langcode']], $this->stringTranslation);
     }
     else {
-      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $expected_markup = new TranslatableMarkup($expected, [], [], $this->stringTranslation);
     }
     $this->assertEquals($expected_markup, $this->dateFormatter->formatDiff($timestamp1, $timestamp2, $options));
@@ -335,122 +333,26 @@ class DateTest extends UnitTestCase {
       ['23 hours 59 minutes', 60, self::createTimestamp('2013-12-10 10:10:08'), $request_time],
 
       // Checks for days and possibly hours, minutes or seconds.
-      [
-        '1 day',
-        86400,
-        self::createTimestamp('2013-12-10 10:09:08'),
-        $request_time,
-      ],
-      [
-        '1 day',
-        86400,
-        self::createTimestamp('2013-12-10 10:09:07'),
-        $request_time,
-      ],
-      [
-        '1 day 1 hour',
-        3600,
-        self::createTimestamp('2013-12-10 09:09:08'),
-        $request_time,
-      ],
-      [
-        '1 day 1 hour 1 minute',
-        60,
-        self::createTimestamp('2013-12-10 09:08:07'),
-        $request_time,
-        $granularity_3 + $langcode_en,
-      ],
-      [
-        '1 day 1 hour 1 minute 1 second',
-        1,
-        self::createTimestamp('2013-12-10 09:08:07'),
-        $request_time,
-        $granularity_4 + $langcode_lolspeak,
-      ],
-      [
-        '1 day 2 hours 2 minutes 2 seconds',
-        1,
-        self::createTimestamp('2013-12-10 08:07:06'),
-        $request_time,
-        $granularity_4,
-      ],
-      [
-        '2 days',
-        86400,
-        self::createTimestamp('2013-12-09 10:09:08'),
-        $request_time,
-      ],
-      [
-        '2 days',
-        86400,
-        self::createTimestamp('2013-12-09 10:07:08'),
-        $request_time,
-      ],
-      [
-        '2 days 2 hours',
-        3600,
-        self::createTimestamp('2013-12-09 08:09:08'),
-        $request_time,
-      ],
-      [
-        '2 days 2 hours 2 minutes',
-        60,
-        self::createTimestamp('2013-12-09 08:07:06'),
-        $request_time,
-        $granularity_3 + $langcode_en,
-      ],
-      [
-        '2 days 2 hours 2 minutes 2 seconds',
-        1,
-        self::createTimestamp('2013-12-09 08:07:06'),
-        $request_time,
-        $granularity_4 + $langcode_lolspeak,
-      ],
+      ['1 day', 86400, self::createTimestamp('2013-12-10 10:09:08'), $request_time],
+      ['1 day', 86400, self::createTimestamp('2013-12-10 10:09:07'), $request_time],
+      ['1 day 1 hour', 3600, self::createTimestamp('2013-12-10 09:09:08'), $request_time],
+      ['1 day 1 hour 1 minute', 60, self::createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_3 + $langcode_en],
+      ['1 day 1 hour 1 minute 1 second', 1, self::createTimestamp('2013-12-10 09:08:07'), $request_time, $granularity_4 + $langcode_lolspeak],
+      ['1 day 2 hours 2 minutes 2 seconds', 1, self::createTimestamp('2013-12-10 08:07:06'), $request_time, $granularity_4],
+      ['2 days', 86400, self::createTimestamp('2013-12-09 10:09:08'), $request_time],
+      ['2 days', 86400, self::createTimestamp('2013-12-09 10:07:08'), $request_time],
+      ['2 days 2 hours', 3600, self::createTimestamp('2013-12-09 08:09:08'), $request_time],
+      ['2 days 2 hours 2 minutes', 60, self::createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_3 + $langcode_en],
+      ['2 days 2 hours 2 minutes 2 seconds', 1, self::createTimestamp('2013-12-09 08:07:06'), $request_time, $granularity_4 + $langcode_lolspeak],
 
       // Checks for weeks and possibly days, hours, minutes or seconds.
-      [
-        '1 week',
-        7 * 86400,
-        self::createTimestamp('2013-12-04 10:09:08'),
-        $request_time,
-      ],
-      [
-        '1 week 1 day',
-        86400,
-        self::createTimestamp('2013-12-03 10:09:08'),
-        $request_time,
-      ],
-      [
-        '2 weeks',
-        7 * 86400,
-        self::createTimestamp('2013-11-27 10:09:08'),
-        $request_time,
-      ],
-      [
-        '2 weeks 2 days',
-        86400,
-        self::createTimestamp('2013-11-25 08:07:08'),
-        $request_time,
-      ],
-      [
-        '2 weeks 2 days 2 hours 2 minutes',
-        60,
-        self::createTimestamp('2013-11-25 08:07:08'),
-        $request_time,
-        $granularity_4,
-      ],
-      [
-        '4 weeks',
-        7 * 86400,
-        self::createTimestamp('2013-11-13 10:09:08'),
-        $request_time,
-      ],
-      [
-        '4 weeks 1 day',
-        86400,
-        self::createTimestamp('2013-11-12 10:09:08'),
-        $request_time,
-      ],
+      ['1 week', 7 * 86400, self::createTimestamp('2013-12-04 10:09:08'), $request_time],
+      ['1 week 1 day', 86400, self::createTimestamp('2013-12-03 10:09:08'), $request_time],
+      ['2 weeks', 7 * 86400, self::createTimestamp('2013-11-27 10:09:08'), $request_time],
+      ['2 weeks 2 days', 86400, self::createTimestamp('2013-11-25 08:07:08'), $request_time],
+      ['2 weeks 2 days 2 hours 2 minutes', 60, self::createTimestamp('2013-11-25 08:07:08'), $request_time, $granularity_4],
+      ['4 weeks', 7 * 86400, self::createTimestamp('2013-11-13 10:09:08'), $request_time],
+      ['4 weeks 1 day', 86400, self::createTimestamp('2013-11-12 10:09:08'), $request_time],
 
       // Checks for months and possibly days, hours, minutes or seconds.
       ['1 month', 30 * 86400, self::createTimestamp('2013-11-11 10:09:08'), $request_time],
@@ -485,23 +387,11 @@ class DateTest extends UnitTestCase {
       ['100 years', 365 * 86400, self::createTimestamp('1913-12-11 10:09:08'), $request_time],
 
       // Checks the non-strict option vs. strict (default).
-      [
-        '1 second',
-        1,
-        self::createTimestamp('2013-12-11 10:09:08'),
-        self::createTimestamp('2013-12-11 10:09:07'),
-        $non_strict,
-      ],
+      ['1 second', 1, self::createTimestamp('2013-12-11 10:09:08'), self::createTimestamp('2013-12-11 10:09:07'), $non_strict],
       ['0 seconds', 0, self::createTimestamp('2013-12-11 10:09:08'), self::createTimestamp('2013-12-11 10:09:07')],
 
       // Checks granularity limit.
-      [
-        '2 years 3 months 1 week',
-        7 * 86400,
-        self::createTimestamp('2011-08-30 11:15:57'),
-        $request_time,
-        $granularity_3,
-      ],
+      ['2 years 3 months 1 week', 7 * 86400, self::createTimestamp('2011-08-30 11:15:57'), $request_time, $granularity_3],
     ];
 
     return $data;
@@ -510,9 +400,9 @@ class DateTest extends UnitTestCase {
   /**
    * Tests FormattedDateDiff.
    *
-   * @legacy-covers \Drupal\Core\Datetime\FormattedDateDiff::toRenderable
-   * @legacy-covers \Drupal\Core\Datetime\FormattedDateDiff::getString
-   * @legacy-covers \Drupal\Core\Datetime\FormattedDateDiff::getCacheMaxAge
+   * @covers \Drupal\Core\Datetime\FormattedDateDiff::toRenderable
+   * @covers \Drupal\Core\Datetime\FormattedDateDiff::getString
+   * @covers \Drupal\Core\Datetime\FormattedDateDiff::getCacheMaxAge
    */
   public function testFormattedDateDiff(): void {
     $string = '10 minutes';
@@ -542,7 +432,7 @@ class DateTest extends UnitTestCase {
    *
    * @see http://www.faqs.org/rfcs/rfc2822.html
    *
-   * @legacy-covers ::format
+   * @covers ::format
    */
   public function testRfc2822DateFormat(): void {
     $timestamp = 1549110600;
@@ -553,17 +443,6 @@ class DateTest extends UnitTestCase {
       // Check that RFC2822 format date is returned regardless of langcode.
       $this->assertSame('Sat, 02 Feb 2019 13:30:00 +0100', $formatted_date);
     }
-  }
-
-  /**
-   * Tests that the formatter does not call \Drupal\Core\Language\LanguageManagerInterface::getConfigOverrideLanguage.
-   *
-   * The language manager is called by \Drupal\Core\Datetime\DateFormatter::dateFormat,
-   * which should not happen when the type is set to empty string.
-   */
-  public function testFormatWithEmptyStringAsDateFormatType(): void {
-    $this->languageManager = $this->languageManager->expects($this->never())->method('getConfigOverrideLanguage');
-    $this->assertSame('00:00:00', $this->dateFormatter->format(0, '', 'H:i:s', 'UTC', 'en'));
   }
 
   /**

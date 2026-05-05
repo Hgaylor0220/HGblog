@@ -10,15 +10,11 @@ use Drupal\views\Plugin\views\field\Counter;
 use Drupal\views\ResultRow;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\ViewExecutable;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\views\Plugin\views\field\Counter.
+ * @coversDefaultClass \Drupal\views\Plugin\views\field\Counter
+ * @group views
  */
-#[CoversClass(Counter::class)]
-#[Group('views')]
 class CounterTest extends UnitTestCase {
 
   /**
@@ -117,8 +113,9 @@ class CounterTest extends UnitTestCase {
 
   /**
    * Tests a simple counter field.
+   *
+   * @dataProvider providerRowIndexes
    */
-  #[DataProvider('providerRowIndexes')]
   public function testSimpleCounter($i): void {
     $counter_handler = new Counter([], 'counter', $this->definition);
     $options = [];
@@ -138,8 +135,9 @@ class CounterTest extends UnitTestCase {
    *
    * @param int $i
    *   The row index to test.
+   *
+   * @dataProvider providerRowIndexes
    */
-  #[DataProvider('providerRowIndexes')]
   public function testCounterRandomStart($i): void {
     // Setup a counter field with a random start.
     $rand_start = rand(5, 10);
@@ -163,8 +161,9 @@ class CounterTest extends UnitTestCase {
    *
    * @param int $i
    *   The row index to test.
+   *
+   * @dataProvider providerRowIndexes
    */
-  #[DataProvider('providerRowIndexes')]
   public function testCounterRandomPagerOffset($i): void {
     // Setup a counter field with a pager with a random offset.
     $offset = 3;
@@ -191,8 +190,9 @@ class CounterTest extends UnitTestCase {
    *
    * @param int $i
    *   The row index to test.
+   *
+   * @dataProvider providerRowIndexes
    */
-  #[DataProvider('providerRowIndexes')]
   public function testCounterSecondPage($i): void {
     $offset = 3;
     // Setup a pager on the second page.

@@ -144,9 +144,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     $this->query = &$view->query;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -184,8 +181,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       }
     }
 
-    // If grouping, check to see if the aggregation method needs to modify the
-    // field.
+    // If grouping, check to see if the aggregation method needs to modify the field.
     if ($this->view->display_handler->useGroupBy()) {
       $this->view->initQuery();
       if ($this->query) {
@@ -232,9 +228,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * Transform a string by a certain method.
    *
-   * @param string $string
+   * @param $string
    *   The input you want to transform.
-   * @param string $option
+   * @param $option
    *   How do you want to transform it, possible values:
    *   - upper: Uppercase the string.
    *   - lower: lowercase the string.
@@ -266,10 +262,10 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    // Some form elements belong in a fieldset for presentation, but can't be
-    // moved into one because of the $form_state->getValues() hierarchy. Those
-    // elements can add a #fieldset => 'fieldset_name' property, and they'll be
-    // moved to their fieldset during pre_render.
+    // Some form elements belong in a fieldset for presentation, but can't
+    // be moved into one because of the $form_state->getValues() hierarchy. Those
+    // elements can add a #fieldset => 'fieldset_name' property, and they'll
+    // be moved to their fieldset during pre_render.
     $form['#pre_render'][] = [static::class, 'preRenderAddFieldsetMarkup'];
 
     parent::buildOptionsForm($form, $form_state);
@@ -310,7 +306,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Gets the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    */
   protected function getModuleHandler() {
     if (!$this->moduleHandler) {
@@ -331,7 +326,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * Provides the handler some group by.
+   * Provides the handler some groupby.
    */
   public function usesGroupBy() {
     return TRUE;
@@ -395,19 +390,8 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Provide defaults for the handler.
-   *
-   * @param array $option
-   *   An array of options.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
-   *   This method is no longer used by Drupal core. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3486781
    */
-  public function defineExtraOptions(&$option) {
-    @trigger_error('defineExtraOptions() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method is no longer in use and should not be called. See https://www.drupal.org/node/3486781', E_USER_DEPRECATED);
-  }
+  public function defineExtraOptions(&$option) {}
 
   /**
    * Provide a form for setting options.
@@ -570,9 +554,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function access(AccountInterface $account) {
     if (isset($this->definition['access callback']) && function_exists($this->definition['access callback'])) {
-      // @todo when this is removed return FALSE.
-      // See https://www.drupal.org/project/drupal/issues/3547724
-      @trigger_error('Passing the access callback using the array key is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3539918', E_USER_DEPRECATED);
       if (isset($this->definition['access arguments']) && is_array($this->definition['access arguments'])) {
         return call_user_func_array($this->definition['access callback'], [$account] + $this->definition['access arguments']);
       }
@@ -659,7 +640,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Exposed means it provides form elements to let users modify the view.
    *
    * @return bool
-   *   TRUE if the item is exposed, FALSE otherwise.
    */
   public function isExposed() {
     return !empty($this->options['exposed']);
@@ -691,11 +671,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * If set to remember exposed input in the session, store it there.
-   *
-   * @param array $input
-   *   Associative array containing the exposed data for this view.
-   * @param bool $status
-   *   Whether to store the exposed input in the session.
    */
   public function storeExposedInput($input, $status) {
     return TRUE;
@@ -706,8 +681,8 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function getJoin() {
     // Get the join from this table that links back to the base table.
-    // Determine the primary table to seek.
-    if (!isset($this->relationship) || empty($this->query->relationships[$this->relationship])) {
+    // Determine the primary table to seek
+    if (empty($this->query->relationships[$this->relationship])) {
       $base_table = $this->view->storage->get('base_table');
     }
     else {
@@ -761,7 +736,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Gets views data service.
    *
    * @return \Drupal\views\ViewsData
-   *   The views data service.
    */
   protected function getViewsData() {
     if (!$this->viewsData) {
@@ -772,10 +746,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * Sets the views data service.
-   *
-   * @param \Drupal\views\ViewsData $views_data
-   *   The view to save.
+   * {@inheritdoc}
    */
   public function setViewsData(ViewsData $views_data) {
     $this->viewsData = $views_data;
@@ -844,7 +815,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * {@inheritdoc}
    */
   public static function breakString($str, $force_int = FALSE) {
-    $operator = '';
+    $operator = NULL;
     $value = [];
 
     // Determine if the string has 'or' operators (plus signs) or 'and'
@@ -881,7 +852,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function displayExposedForm($form, FormStateInterface $form_state) {
     $item = &$this->options;
-    // Flip.
+    // Flip
     $item['exposed'] = empty($item['exposed']);
 
     // If necessary, set new defaults:
@@ -955,13 +926,13 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // @todo Decide if \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() is
     //   perhaps the better place to fix the issue.
     // \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() drops the current
-    // form from the stack, even if it's an #ajax. So add the item back to the
-    // top of the stack.
+    // form from the stack, even if it's an #ajax. So add the item back to the top
+    // of the stack.
     $view->addFormToStack($form_state->get('form_key'), $form_state->get('display_id'), $type, $item['id'], TRUE);
 
     $form_state->get('rerender', TRUE);
     $form_state->setRebuild();
-    // Write to cache.
+    // Write to cache
     $view->cacheSet();
   }
 
@@ -969,7 +940,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Calculates options stored on the handler.
    *
    * @param array $options
-   *   The options stored in the handler.
+   *   The options stored in the handler
    * @param array $form_state_options
    *   The newly submitted form state options.
    *

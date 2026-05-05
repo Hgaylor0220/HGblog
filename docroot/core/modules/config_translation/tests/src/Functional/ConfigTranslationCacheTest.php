@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Translate settings and entities to various languages.
+ *
+ * @group config_translation
  */
-#[Group('config_translation')]
-#[RunTestsInSeparateProcesses]
 class ConfigTranslationCacheTest extends BrowserTestBase {
 
   /**
@@ -27,6 +24,8 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     'block',
     'config_translation',
     'config_translation_test',
+    'contact',
+    'contact_test',
     'contextual',
     'entity_test',
     'field_test',
@@ -91,10 +90,12 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
       'administer languages',
       'administer site configuration',
       'link to any page',
+      'administer contact forms',
       'administer filters',
       $filtered_html_format->getPermissionName(),
       $full_html_format->getPermissionName(),
       $filter_test_format->getPermissionName(),
+      'access site-wide contact form',
       'access contextual links',
       'administer account settings',
       'administer themes',
@@ -133,7 +134,7 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     $field_storage->save();
 
     $bundle = $this->randomMachineName();
-    EntityTestHelper::createBundle($bundle);
+    entity_test_create_bundle($bundle);
     $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

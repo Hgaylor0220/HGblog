@@ -7,17 +7,13 @@ namespace Drupal\Tests\Component\Annotation;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery.
+ * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery
+ * @group Annotation
+ * @runTestsInSeparateProcesses
  */
-#[CoversClass(AnnotatedClassDiscovery::class)]
-#[Group('Annotation')]
-#[RunTestsInSeparateProcesses]
 class AnnotatedClassDiscoveryTest extends TestCase {
 
   /**
@@ -32,8 +28,8 @@ class AnnotatedClassDiscoveryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPluginNamespaces
+   * @covers ::__construct
+   * @covers ::getPluginNamespaces
    */
   public function testGetPluginNamespaces(): void {
     $discovery = new AnnotatedClassDiscovery(['com/example' => [__DIR__]]);
@@ -44,9 +40,9 @@ class AnnotatedClassDiscoveryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDefinitions
-   * @legacy-covers ::prepareAnnotationDefinition
-   * @legacy-covers ::getAnnotationReader
+   * @covers ::getDefinitions
+   * @covers ::prepareAnnotationDefinition
+   * @covers ::getAnnotationReader
    */
   public function testGetDefinitions(): void {
     $discovery = new AnnotatedClassDiscovery(['com\example' => [__DIR__ . '/Fixtures']]);

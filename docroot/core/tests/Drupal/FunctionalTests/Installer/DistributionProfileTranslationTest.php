@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests distribution profile support.
  *
+ * @group Installer
+ *
  * @see \Drupal\FunctionalTests\Installer\DistributionProfileTest
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class DistributionProfileTranslationTest extends InstallerTestBase {
 
   /**
@@ -37,7 +35,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // We set core_version_requirement to '*' for the test so that it does not
     // need to be updated between major versions.
@@ -66,7 +64,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // This step is skipped, because the distribution profile uses a fixed
     // language.
   }
@@ -74,14 +72,14 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
+  protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings(): void {
+  protected function setUpSettings() {
     // The language should have been automatically detected, all following
     // screens should be translated already.
     $this->assertSession()->buttonExists('Save and continue de');
@@ -112,8 +110,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    // cspell:ignore deutsch
-    $this->assertSession()->pageTextContains('Deutsch');
+    $this->assertSession()->pageTextContains('German');
     $this->assertSession()->pageTextNotContains('English');
   }
 

@@ -8,18 +8,15 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Performs tests on AJAX framework commands.
+ *
+ * @group Ajax
  */
-#[Group('Ajax')]
-#[RunTestsInSeparateProcesses]
 class CommandsTest extends KernelTestBase {
 
   /**
@@ -27,6 +24,7 @@ class CommandsTest extends KernelTestBase {
    */
   protected static $modules = [
     'system',
+    'node',
     'ajax_test',
     'ajax_forms_test',
   ];
@@ -35,7 +33,7 @@ class CommandsTest extends KernelTestBase {
    * Regression test: Settings command exists regardless of JS aggregation.
    */
   public function testAttachedSettings(): void {
-    $assert = function ($message): void {
+    $assert = function ($message) {
       $response = new AjaxResponse();
       $response->setAttachments([
         'library' => ['core/drupalSettings'],
@@ -68,8 +66,9 @@ class CommandsTest extends KernelTestBase {
 
   /**
    * Checks empty content in commands does not throw exceptions.
+   *
+   * @doesNotPerformAssertions
    */
-  #[DoesNotPerformAssertions]
   public function testEmptyInsertCommand(): void {
     (new InsertCommand('foobar', []))->render();
   }

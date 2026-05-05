@@ -12,7 +12,7 @@ class Tasks extends InstallTasks {
   /**
    * {@inheritdoc}
    */
-  public function name(): string {
+  public function name() {
     return 'CoreFakeWithAllCustomClasses';
   }
 

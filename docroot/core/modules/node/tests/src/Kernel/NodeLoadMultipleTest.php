@@ -7,14 +7,12 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the loading of multiple nodes.
+ *
+ * @group node
  */
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class NodeLoadMultipleTest extends NodeAccessTestBase {
 
   /**
@@ -98,7 +96,7 @@ class NodeLoadMultipleTest extends NodeAccessTestBase {
       'field_first' => '1234',
       'field_second' => 'test_value_1',
     ]);
-    $this->drupalCreateNode([
+    $node2 = $this->drupalCreateNode([
       'type' => 'page',
       'field_first' => '1234',
       'field_second' => 'test_value_2',
@@ -108,7 +106,7 @@ class NodeLoadMultipleTest extends NodeAccessTestBase {
       'field_first' => '5678',
       'field_second' => 'test_value_1',
     ]);
-    $this->drupalCreateNode([
+    $node4 = $this->drupalCreateNode([
       'type' => 'page',
       'field_first' => '5678',
       'field_second' => 'test_value_2',

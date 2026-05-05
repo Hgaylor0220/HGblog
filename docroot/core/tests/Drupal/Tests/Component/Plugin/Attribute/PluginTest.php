@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Plugin\Attribute\Plugin.
+ * @coversDefaultClass \Drupal\Component\Annotation\Plugin
+ * @group Attribute
  */
-#[CoversClass(Plugin::class)]
-#[Group('Attribute')]
 class PluginTest extends TestCase {
 
   /**
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @covers ::__construct
+   * @covers ::get
    */
   public function testGet(): void {
     $plugin = new PluginStub(id: 'example', deriver: 'test');
@@ -31,8 +28,8 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::setProvider
-   * @legacy-covers ::getProvider
+   * @covers ::setProvider
+   * @covers ::getProvider
    */
   public function testSetProvider(): void {
     $plugin = new Plugin(id: 'example');
@@ -41,7 +38,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * Tests get id.
+   * @covers ::getId
    */
   public function testGetId(): void {
     $plugin = new Plugin(id: 'example');
@@ -49,8 +46,8 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::setClass
-   * @legacy-covers ::getClass
+   * @covers ::setClass
+   * @covers ::getClass
    */
   public function testSetClass(): void {
     $plugin = new Plugin(id: 'test');

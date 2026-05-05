@@ -12,16 +12,18 @@
 
 [data-admin-toolbar-body-scroll="locked"] {
   overflow: clip;
+}
 
-  body {
-    overflow: clip;
+[data-admin-toolbar-body-scroll="locked"] body {
+  overflow: clip;
+}
+
+@media (min-width: 64rem) {
+  [data-admin-toolbar-body-scroll="locked"] {
+    overflow: initial;
   }
 
-  @media (min-width: 64rem) {
+  [data-admin-toolbar-body-scroll="locked"] body {
     overflow: initial;
-
-    body {
-      overflow: initial;
-    }
   }
 }

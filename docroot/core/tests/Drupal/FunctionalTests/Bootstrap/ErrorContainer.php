@@ -18,7 +18,7 @@ class ErrorContainer extends Container {
   public function get($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): ?object {
     if ($id === 'http_kernel') {
       // Enforce a recoverable error.
-      $callable = function (ErrorContainer $container): void {
+      $callable = function (ErrorContainer $container) {
       };
       return $callable(1);
     }

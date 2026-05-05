@@ -4,32 +4,25 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Extension;
 
-use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Drupal\Core\Extension\ThemeExtensionList.
+ * @coversDefaultClass \Drupal\Core\Extension\ThemeExtensionList
+ * @group Extension
  */
-#[CoversClass(ThemeExtensionList::class)]
-#[Group('Extension')]
-#[RunTestsInSeparateProcesses]
 class ThemeExtensionListTest extends KernelTestBase {
 
   /**
-   * Tests get list.
+   * @covers ::getList
    */
   public function testGetList(): void {
     \Drupal::configFactory()->getEditable('core.extension')
       ->set('module.testing', 1000)
       ->set('theme.test_theme', 0)
-      ->set('profile', 'testing')
       ->save();
 
     // The installation profile is provided by a container parameter.
-    // Saving the configuration doesn't automatically trigger invalidation.
+    // Saving the configuration doesn't automatically trigger invalidation
     $this->container->get('kernel')->rebuildContainer();
 
     /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list */

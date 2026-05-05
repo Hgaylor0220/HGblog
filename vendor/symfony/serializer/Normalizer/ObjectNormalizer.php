@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Serializer\Normalizer;
 
+use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException as PropertyAccessInvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Serializer\Exception\LogicException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\Mapping\Loader\AccessorCollisionResolverTrait;
@@ -29,8 +31,10 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
  * Converts between objects and arrays using the PropertyAccess component.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
+ *
+ * @final since Symfony 6.3
  */
-final class ObjectNormalizer extends AbstractObjectNormalizer
+class ObjectNormalizer extends AbstractObjectNormalizer
 {
     use AccessorCollisionResolverTrait;
 
@@ -38,7 +42,7 @@ final class ObjectNormalizer extends AbstractObjectNormalizer
     private static $isReadableCache = [];
     private static $isWritableCache = [];
 
-    protected PropertyAccessorInterface $propertyAccessor;
+    protected $propertyAccessor;
     protected $propertyInfoExtractor;
     private $writeInfoExtractor;
 
@@ -61,7 +65,17 @@ final class ObjectNormalizer extends AbstractObjectNormalizer
 
     public function getSupportedTypes(?string $format): array
     {
-        return ['object' => true];
+        return ['object' => __CLASS__ === static::class || $this->hasCacheableSupportsMethod()];
+    }
+
+    /**
+     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
+     */
+    public function hasCacheableSupportsMethod(): bool
+    {
+        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, implement "%s::getSupportedTypes()" instead.', __METHOD__, get_debug_type($this));
+
+        return __CLASS__ === static::class;
     }
 
     protected function extractAttributes(object $object, ?string $format = null, array $context = []): array
@@ -115,16 +129,21 @@ final class ObjectNormalizer extends AbstractObjectNormalizer
             : $this->propertyAccessor->getValue($object, $attribute);
     }
 
-    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = []): void
+    /**
+     * @return void
+     */
+    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = [])
     {
         try {
             $this->propertyAccessor->setValue($object, $attribute, $value);
         } catch (NoSuchPropertyException) {
             // Properties not found are ignored
+        } catch (PropertyAccessInvalidArgumentException $e) {
+            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('Failed to denormalize attribute "%s" value for class "%s": %s', $attribute, $object::class, $e->getMessage()), $value, ['unknown'], $context['deserialization_path'] ?? null, false, $e->getCode(), $e);
         }
     }
 
-    protected function isAllowedAttribute($classOrObject, string $attribute, ?string $format = null, array $context = []): bool
+    protected function isAllowedAttribute($classOrObject, string $attribute, ?string $format = null, array $context = [])
     {
         if (!parent::isAllowedAttribute($classOrObject, $attribute, $format, $context)) {
             return false;

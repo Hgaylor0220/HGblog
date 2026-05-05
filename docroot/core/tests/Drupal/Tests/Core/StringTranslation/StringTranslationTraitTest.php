@@ -9,15 +9,12 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\Core\StringTranslation\StringTranslationTrait.
+ * @coversDefaultClass \Drupal\Core\StringTranslation\StringTranslationTrait
+ * @group StringTranslation
  */
-#[CoversClass(StringTranslationTrait::class)]
-#[Group('StringTranslation')]
 class StringTranslationTraitTest extends UnitTestCase {
 
   /**
@@ -49,9 +46,7 @@ class StringTranslationTraitTest extends UnitTestCase {
   }
 
   /**
-   * Tests t().
-   *
-   * @legacy-covers ::t
+   * @covers ::t
    */
   public function testT(): void {
     $invokableT = new \ReflectionMethod($this->testObject, 't');
@@ -61,9 +56,7 @@ class StringTranslationTraitTest extends UnitTestCase {
   }
 
   /**
-   * Tests formatPlural().
-   *
-   * @legacy-covers ::formatPlural
+   * @covers ::formatPlural
    */
   public function testFormatPlural(): void {
     $invokableFormatPlural = new \ReflectionMethod($this->testObject, 'formatPlural');

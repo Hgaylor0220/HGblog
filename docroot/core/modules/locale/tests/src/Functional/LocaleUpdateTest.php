@@ -6,19 +6,15 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore extraday lundi
+
 /**
  * Tests for updating the interface translations of projects.
+ *
+ * @group locale
  */
-#[Group('locale')]
-#[RunTestsInSeparateProcesses]
 class LocaleUpdateTest extends LocaleUpdateBase {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -117,7 +113,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *
    * Test conditions:
    *  - Source: remote and local files
-   *  - Import overwrite: all existing translations.
+   *  - Import overwrite: all existing translations
    */
   public function testUpdateImportSourceRemote(): void {
     $config = $this->config('locale.settings');
@@ -173,13 +169,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_1', $this->t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_2', $this->t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', $this->t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', $this->t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', $this->t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', $this->t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', $this->t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_1', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -188,7 +184,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *
    * Test conditions:
    *  - Source: local files only
-   *  - Import overwrite: all existing translations.
+   *  - Import overwrite: all existing translations
    */
   public function testUpdateImportSourceLocal(): void {
     $config = $this->config('locale.settings');
@@ -233,13 +229,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_customized', $this->t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_2', $this->t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', $this->t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', $this->t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', $this->t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', $this->t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', $this->t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -248,7 +244,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *
    * Test conditions:
    *  - Source: remote and local files
-   *  - Import overwrite: only overwrite non-customized translations.
+   *  - Import overwrite: only overwrite non-customized translations
    */
   public function testUpdateImportModeNonCustomized(): void {
     $config = $this->config('locale.settings');
@@ -273,13 +269,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_customized', $this->t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_customized', $this->t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', $this->t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', $this->t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', $this->t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', $this->t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', $this->t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_customized', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -288,7 +284,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *
    * Test conditions:
    *  - Source: remote and local files
-   *  - Import overwrite: don't overwrite any existing translation.
+   *  - Import overwrite: don't overwrite any existing translation
    */
   public function testUpdateImportModeNone(): void {
     $config = $this->config('locale.settings');

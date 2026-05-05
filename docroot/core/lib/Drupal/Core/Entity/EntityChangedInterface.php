@@ -21,9 +21,8 @@ interface EntityChangedInterface extends EntityInterface {
   /**
    * Gets the timestamp of the last entity change for the current translation.
    *
-   * @return int|null
-   *   The timestamp of the last entity save operation. Some entities allow a
-   *   NULL value indicating the changed time is unknown.
+   * @return int
+   *   The timestamp of the last entity save operation.
    */
   public function getChangedTime();
 
@@ -45,9 +44,9 @@ interface EntityChangedInterface extends EntityInterface {
    * (e.g. to avoid overwriting newer translations with old data), compare each
    * translation to the other version individually.
    *
-   * @return int|null
-   *   The timestamp of the last entity save operation across all translations.
-   *   Some entities allow a NULL value indicating the changed time is unknown.
+   * @return int
+   *   The timestamp of the last entity save operation across all
+   *   translations.
    */
   public function getChangedTimeAcrossTranslations();
 

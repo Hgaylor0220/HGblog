@@ -38,7 +38,7 @@ class ThemeExtensionList extends ExtensionList {
     ],
     'description' => '',
     // The following array should be kept inline with
-    // ThemeSettingsProvider::DEFAULT_THEME_FEATURES.
+    // _system_default_theme_features().
     'features' => [
       'favicon',
       'logo',

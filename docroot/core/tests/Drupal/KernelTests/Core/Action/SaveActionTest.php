@@ -8,14 +8,10 @@ use Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver;
 use Drupal\entity_test\Entity\EntityTestMulChanged;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Action;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Save Action.
+ * @group Action
  */
-#[Group('Action')]
-#[RunTestsInSeparateProcesses]
 class SaveActionTest extends KernelTestBase {
 
   /**
@@ -32,9 +28,7 @@ class SaveActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests get derivative definitions.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver::getDerivativeDefinitions
+   * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions(): void {
     $deriver = new EntityChangedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
@@ -49,9 +43,7 @@ class SaveActionTest extends KernelTestBase {
   }
 
   /**
-   * Tests save action.
-   *
-   * @legacy-covers \Drupal\Core\Action\Plugin\Action\SaveAction::execute
+   * @covers \Drupal\Core\Action\Plugin\Action\SaveAction::execute
    */
   public function testSaveAction(): void {
     $entity = EntityTestMulChanged::create(['name' => 'test']);

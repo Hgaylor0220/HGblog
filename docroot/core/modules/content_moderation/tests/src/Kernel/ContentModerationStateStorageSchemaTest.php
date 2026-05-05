@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-use Drupal\content_moderation\ContentModerationStateStorageSchema;
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test the ContentModerationState storage schema.
+ *
+ * @coversDefaultClass \Drupal\content_moderation\ContentModerationStateStorageSchema
+ * @group content_moderation
  */
-#[CoversClass(ContentModerationStateStorageSchema::class)]
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class ContentModerationStateStorageSchemaTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -31,6 +27,8 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     'node',
     'content_moderation',
     'user',
+    'system',
+    'text',
     'workflows',
     'entity_test',
   ];
@@ -60,7 +58,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
   /**
    * Tests the ContentModerationState unique keys.
    *
-   * @legacy-covers ::getEntitySchema
+   * @covers ::getEntitySchema
    */
   public function testUniqueKeys(): void {
     // Create a node which will create a new ContentModerationState entity.
@@ -142,7 +140,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     try {
       ContentModerationState::updateOrCreateFromEntity($entity);
     }
-    catch (\Exception) {
+    catch (\Exception $e) {
       $exception_triggered = TRUE;
     }
     $this->assertEquals($has_exception, $exception_triggered);

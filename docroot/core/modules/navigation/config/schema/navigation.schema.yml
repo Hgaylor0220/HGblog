@@ -15,10 +15,9 @@ navigation.settings:
           label: 'Select Navigation logo handling'
           constraints:
             Choice:
-              choices:
-                - default
-                - hide
-                - custom
+              - default
+              - hide
+              - custom
         path:
           type: string
           label: 'Path'
@@ -33,19 +32,22 @@ navigation.settings:
               label: 'Maximum file sizes (bytes)'
               constraints:
                 NotNull: [ ]
-                PositiveOrZero: ~
+                Range:
+                  min: 0
             height:
               type: integer
               label: 'Logo expected height'
               constraints:
                 NotNull: [ ]
-                PositiveOrZero: ~
+                Range:
+                  min: 0
             width:
               type: integer
               label: 'Logo expected width'
               constraints:
                 NotNull: [ ]
-                PositiveOrZero: ~
+                Range:
+                  min: 0
           constraints:
             ValidKeys: '<infer>'
       constraints:

@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\block_content\Entity\BlockContentType;
 
 /**
  * Tests general content moderation workflow for blocks.
+ *
+ * @group content_moderation
  */
-#[Group('content_moderation')]
-#[RunTestsInSeparateProcesses]
 class ModerationStateBlockTest extends ModerationStateTestBase {
 
-  use BlockContentCreationTrait;
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -26,25 +30,19 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAdministratorPermissions(): array {
-    return array_merge($this->permissions, [
-      'administer blocks',
-      'administer block content',
-    ]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 
     // Create the "basic" block type.
-    $this->createBlockContentType([
+    $bundle = BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',
       'revision' => FALSE,
-    ], TRUE);
+    ]);
+    $bundle->save();
+
+    // Add the body field to it.
+    block_content_add_body_field($bundle->id());
   }
 
   /**
@@ -66,8 +64,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
    * @see \Drupal\content_moderation\Tests\ModerationFormTest::testModerationForm
    */
   public function testCustomBlockModeration(): void {
-    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->rootUser);
 
     // Enable moderation for content blocks.
     $edit['bundles[basic]'] = TRUE;

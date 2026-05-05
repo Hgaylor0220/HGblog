@@ -6,14 +6,12 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\ConfigFormTestBase;
 use Drupal\user\AccountSettingsForm;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Configuration object user.mail and user.settings save test.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class UserAdminSettingsFormTest extends ConfigFormTestBase {
 
   /**

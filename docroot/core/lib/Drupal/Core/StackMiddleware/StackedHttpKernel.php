@@ -22,28 +22,25 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
    *
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  private $httpKernel;
+  private $kernel;
 
   /**
    * A set of middlewares that are wrapped around this kernel.
    *
-   * @var iterable<\Symfony\Component\HttpKernel\HttpKernelInterface>
+   * @var array
    */
   private $middlewares = [];
 
   /**
    * Constructs a stacked HTTP kernel.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The decorated kernel.
-   * @param iterable<\Symfony\Component\HttpKernel\HttpKernelInterface> $middlewares
+   * @param array $middlewares
    *   An array of previous middleware services.
    */
-  public function __construct(HttpKernelInterface $http_kernel, iterable $middlewares) {
-    if (is_array($middlewares)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an array of $middlewares is deprecated in drupal:11.3.0 and it will throw an error in drupal:12.0.0. Pass in a lazy iterator instead. See https://www.drupal.org/node/3538740', E_USER_DEPRECATED);
-    }
-    $this->httpKernel = $http_kernel;
+  public function __construct(HttpKernelInterface $kernel, array $middlewares) {
+    $this->kernel = $kernel;
     $this->middlewares = $middlewares;
   }
 
@@ -51,13 +48,16 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function handle(Request $request, $type = HttpKernelInterface::MAIN_REQUEST, $catch = TRUE): Response {
-    return $this->httpKernel->handle($request, $type, $catch);
+    return $this->kernel->handle($request, $type, $catch);
   }
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
-  public function terminate(Request $request, Response $response): void {
+  public function terminate(Request $request, Response $response) {
     $previous = NULL;
     foreach ($this->middlewares as $kernel) {
       // If the previous kernel was terminable we can assume this middleware

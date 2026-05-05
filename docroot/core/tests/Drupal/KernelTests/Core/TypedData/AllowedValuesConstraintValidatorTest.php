@@ -6,14 +6,13 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * Tests AllowedValues validation constraint with both valid and invalid values.
+ *
+ * @group Validation
  */
-#[Group('Validation')]
-#[RunTestsInSeparateProcesses]
 class AllowedValuesConstraintValidatorTest extends KernelTestBase {
 
   /**
@@ -21,14 +20,14 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
-  protected $typedDataManager;
+  protected $typedData;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->typedDataManager = $this->container->get('typed_data_manager');
+    $this->typedData = $this->container->get('typed_data_manager');
   }
 
   /**
@@ -39,15 +38,15 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
   public function testValidation(): void {
     // Create a definition that specifies some AllowedValues.
     $definition = DataDefinition::create('integer')
-      ->addConstraint('AllowedValues', ['choices' => [1, 2, 3]]);
+      ->addConstraint('AllowedValues', [1, 2, 3]);
 
     // Test the validation.
-    $typed_data = $this->typedDataManager->create($definition, 1);
+    $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
     // Test the validation when an invalid value is passed.
-    $typed_data = $this->typedDataManager->create($definition, 4);
+    $typed_data = $this->typedData->create($definition, 4);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
@@ -58,7 +57,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     $this->assertEquals(4, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
 
     // Test the validation when a value of an incorrect type is passed.
-    $typed_data = $this->typedDataManager->create($definition, '1');
+    $typed_data = $this->typedData->create($definition, '1');
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Value is coerced to the correct type and is valid.');
   }
@@ -72,23 +71,23 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     // values and can be used to coerce the value to the correct type.
     $definition = DataDefinition::create('string')
       ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'allowedValueCallback']]);
-    $typed_data = $this->typedDataManager->create($definition, 'a');
+    $typed_data = $this->typedData->create($definition, 'a');
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
-    $typed_data = $this->typedDataManager->create($definition, 1);
+    $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passed for value that will be cast to the correct type.');
 
-    $typed_data = $this->typedDataManager->create($definition, 2);
+    $typed_data = $this->typedData->create($definition, 2);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
-    $typed_data = $this->typedDataManager->create($definition, 'd');
+    $typed_data = $this->typedData->create($definition, 'd');
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
 
-    $typed_data = $this->typedDataManager->create($definition, 0);
+    $typed_data = $this->typedData->create($definition, 0);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed for incorrect value.');
   }
@@ -99,7 +98,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    * @return string[]
    *   A list of allowed values.
    */
-  public static function allowedValueCallback(): array {
+  public static function allowedValueCallback() {
     return ['a', 'b', 'c', '1'];
   }
 
@@ -112,10 +111,10 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
     // values and can be used to coerce the value to the correct type.
     $definition = DataDefinition::create('string')
       ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'doesNotExist']]);
-    $typed_data = $this->typedDataManager->create($definition, 1);
+    $typed_data = $this->typedData->create($definition, 1);
 
-    $this->expectException(\TypeError::class);
-    $this->expectExceptionMessage('Symfony\Component\Validator\Constraints\Choice::__construct(): Argument #3 ($callback) must be of type callable|string|null, array given');
+    $this->expectException(ConstraintDefinitionException::class);
+    $this->expectExceptionMessage('The AllowedValuesConstraint constraint expects a valid callback');
     $typed_data->validate();
   }
 

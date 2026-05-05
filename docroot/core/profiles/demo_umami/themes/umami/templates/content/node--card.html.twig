@@ -22,6 +22,7 @@
  *   of a given child element.
  * - author_picture: The node author user entity, rendered using the "compact"
  *   view mode.
+ * - metadata: Metadata for this node.
  * - date: (optional) Themed creation date field.
  * - author_name: (optional) Themed author name field.
  * - url: Direct URL of the current node.
@@ -54,8 +55,9 @@
  *   displayed after the main title tag that appears in the template.
  * - view_mode: View mode; for example, "teaser" or "full".
  * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
  *
- * @see \Drupal\node\Hook\NodeThemeHooks::preprocessNode()
+ * @see template_preprocess_node()
  */
 #}
 {%

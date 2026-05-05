@@ -33,7 +33,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
   protected $languageManager;
 
   /**
-   * Constructs a new AccountForm object.
+   * Constructs a new EntityForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
@@ -105,8 +105,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#access' => $account->mail->access('edit'),
     ];
 
-    // Only show name field on registration form or user can change own
-    // username.
+    // Only show name field on registration form or user can change own username.
     $form['account']['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
@@ -201,7 +200,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#title' => $this->t('Status'),
       '#default_value' => $status,
       '#options' => [$this->t('Blocked'), $this->t('Active')],
-      '#access' => $account->status->access('edit') && $user->id() !== $account->id(),
+      '#access' => $account->status->access('edit'),
     ];
 
     $roles = Role::loadMultiple();
@@ -402,7 +401,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       'name',
       'pass',
       'mail',
-      'roles',
       'timezone',
       'langcode',
       'preferred_langcode',
@@ -421,7 +419,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       'name',
       'pass',
       'mail',
-      'roles',
       'timezone',
       'langcode',
       'preferred_langcode',

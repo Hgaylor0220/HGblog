@@ -157,10 +157,7 @@ class MoveBlockForm extends FormBase implements WorkspaceDynamicSafeFormInterfac
     ];
     $current_section = $sections[$selected_delta];
 
-    $aria_label = $this->t('Blocks in Section: @section, Region: @region', [
-      '@section' => $selected_delta + 1,
-      '@region' => $selected_region,
-    ]);
+    $aria_label = $this->t('Blocks in Section: @section, Region: @region', ['@section' => $selected_delta + 1, '@region' => $selected_region]);
 
     $form['components_wrapper']['components'] = [
       '#type' => 'table',

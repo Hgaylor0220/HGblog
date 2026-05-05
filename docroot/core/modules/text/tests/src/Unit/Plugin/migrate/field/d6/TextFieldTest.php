@@ -8,29 +8,22 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\text\Plugin\migrate\field\d6\TextField;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 // cspell:ignore optionwidgets
+
 /**
- * Tests Drupal\text\Plugin\migrate\field\d6\TextField.
+ * @coversDefaultClass \Drupal\text\Plugin\migrate\field\d6\TextField
+ * @group text
  */
-#[CoversClass(TextField::class)]
-#[Group('text')]
 class TextFieldTest extends UnitTestCase {
 
   /**
-   * The migration field plugin to test.
-   *
    * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
    */
   protected $plugin;
 
   /**
-   * The migration object.
-   *
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $migration;
@@ -58,9 +51,7 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests filtered text value process pipeline.
-   *
-   * @legacy-covers ::defineValueProcessPipeline
+   * @covers ::defineValueProcessPipeline
    */
   public function testFilteredTextValueProcessPipeline(): void {
     $field_info = [
@@ -83,9 +74,7 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests boolean text implicit value process pipeline.
-   *
-   * @legacy-covers ::defineValueProcessPipeline
+   * @covers ::defineValueProcessPipeline
    */
   public function testBooleanTextImplicitValueProcessPipeline(): void {
     $info = [
@@ -110,9 +99,7 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests boolean text explicit value process pipeline.
-   *
-   * @legacy-covers ::defineValueProcessPipeline
+   * @covers ::defineValueProcessPipeline
    */
   public function testBooleanTextExplicitValueProcessPipeline(): void {
     $info = [
@@ -173,9 +160,9 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests get field type.
+   * @covers ::getFieldType
+   * @dataProvider getFieldTypeProvider
    */
-  #[DataProvider('getFieldTypeProvider')]
   public function testGetFieldType($expected_type, $widget_type, array $settings = []): void {
     $row = new Row();
     $row->setSourceProperty('widget_type', $widget_type);

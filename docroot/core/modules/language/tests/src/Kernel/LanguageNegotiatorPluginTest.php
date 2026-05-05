@@ -8,15 +8,13 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
  * Tests PluginNotFoundException.
+ *
+ * @group language
  */
-#[Group('language')]
-#[RunTestsInSeparateProcesses]
 class LanguageNegotiatorPluginTest extends KernelTestBase {
 
   /**
@@ -49,7 +47,7 @@ class LanguageNegotiatorPluginTest extends KernelTestBase {
     try {
       $languageNegotiator->initializeType(LanguageInterface::TYPE_URL);
     }
-    catch (PluginNotFoundException) {
+    catch (PluginNotFoundException $exception) {
       $this->fail('Plugin not found exception unhandled.');
     }
     $log_message = $logger->cleanLogs()[0];

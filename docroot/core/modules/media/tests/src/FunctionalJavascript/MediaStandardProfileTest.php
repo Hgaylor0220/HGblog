@@ -11,15 +11,14 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore Drupalin Hustlin Schipulcon
+
 /**
  * Basic tests for Media configuration in the standard profile.
+ *
+ * @group media
  */
-#[Group('media')]
-#[RunTestsInSeparateProcesses]
 class MediaStandardProfileTest extends MediaJavascriptTestBase {
 
   use OEmbedTestTrait;
@@ -103,7 +102,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'audio'.
    */
-  protected function audioTest(): void {
+  protected function audioTest() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_audio_file';
@@ -197,7 +196,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'image'.
    */
-  protected function imageTest(): void {
+  protected function imageTest() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_image';
@@ -294,7 +293,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'document'.
    */
-  protected function documentTest(): void {
+  protected function documentTest() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_document';
@@ -384,7 +383,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'remote_video'.
    */
-  protected function remoteVideoTest(): void {
+  protected function remoteVideoTest() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_oembed_video';
@@ -479,7 +478,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'video'.
    */
-  protected function videoTest(): void {
+  protected function videoTest() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_video_file';

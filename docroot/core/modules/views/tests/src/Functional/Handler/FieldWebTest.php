@@ -12,16 +12,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests fields from within a UI.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class FieldWebTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
@@ -31,13 +28,7 @@ class FieldWebTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = [
-    'test_view',
-    'test_field_classes',
-    'test_field_output',
-    'test_click_sort',
-    'test_distinct_click_sorting',
-  ];
+  public static $testViews = ['test_view', 'test_field_classes', 'test_field_output', 'test_click_sort', 'test_distinct_click_sorting'];
 
   /**
    * {@inheritdoc}
@@ -84,21 +75,9 @@ class FieldWebTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Only the id and name should be click sortable, but not the name.
-    $this->assertSession()->linkByHrefExists(Url::fromRoute(
-      '<none>',
-      [],
-      ['query' => ['order' => 'id', 'sort' => 'asc']]
-    )->toString());
-    $this->assertSession()->linkByHrefExists(Url::fromRoute(
-      '<none>',
-      [],
-      ['query' => ['order' => 'name', 'sort' => 'desc']]
-    )->toString());
-    $this->assertSession()->linkByHrefNotExists(Url::fromRoute(
-      '<none>',
-      [],
-      ['query' => ['order' => 'created']]
-    )->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'name', 'sort' => 'desc']])->toString());
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'created']])->toString());
 
     // Check that the view returns the click sorting cache contexts.
     $expected_contexts = [
@@ -135,11 +114,7 @@ class FieldWebTest extends ViewTestBase {
 
     // Check that the results are ordered by id in ascending order and that the
     // title click filter is for descending.
-    $this->assertSession()->linkByHrefExists(Url::fromRoute(
-     '<none>',
-      [],
-      ['query' => ['order' => 'changed', 'sort' => 'desc']]
-    )->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'changed', 'sort' => 'desc']])->toString());
     $this->assertSession()->pageTextContains($node->getTitle());
     $this->clickLink('Changed');
     $this->assertSession()->statusCodeEquals(200);
@@ -152,7 +127,7 @@ class FieldWebTest extends ViewTestBase {
    * @return array
    *   A list of beatle ids.
    */
-  protected function clickSortLoadIdsFromOutput(): array {
+  protected function clickSortLoadIdsFromOutput() {
     $fields = $this->xpath("//td[contains(@class, 'views-field-id')]");
     $ids = [];
     foreach ($fields as $field) {
@@ -178,7 +153,7 @@ class FieldWebTest extends ViewTestBase {
   }
 
   /**
-   * Asserts that a string is not part of another string.
+   * Assertion helper which checks whether a string is not part of another string.
    *
    * @param string $haystack
    *   The value to search in.
@@ -231,9 +206,9 @@ class FieldWebTest extends ViewTestBase {
       $xpath = $this->assertSession()->buildXPathQuery($xpath, $arguments);
       $result = $elements->xpath($xpath);
       // Some combinations of PHP / libxml versions return an empty array
-      // instead of the documented FALSE. Forcefully convert any falsy values
+      // instead of the documented FALSE. Forcefully convert any falsish values
       // to an empty array to allow foreach(...) constructions.
-      return $result ?: [];
+      return $result ? $result : [];
     }
     else {
       return FALSE;
@@ -252,7 +227,6 @@ class FieldWebTest extends ViewTestBase {
     $view->initHandlers();
     $this->executeView($view);
     $row = $view->result[0];
-    $view->row_index = 0;
     $id_field = $view->field['id'];
 
     // Setup the general settings required to build a link.
@@ -288,33 +262,21 @@ class FieldWebTest extends ViewTestBase {
       });
       $this->assertSubString($result, $expected_result);
 
-      $expected_result = Url::fromRoute(
-        'entity.node.canonical',
-        ['node' => '123'],
-        ['fragment' => 'foo', 'absolute' => $absolute]
-      )->toString();
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['fragment' => 'foo', 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123#foo';
       $result = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
       });
       $this->assertSubString($result, $expected_result);
 
-      $expected_result = Url::fromRoute(
-        'entity.node.canonical',
-        ['node' => '123'],
-        ['query' => ['foo' => NULL], 'absolute' => $absolute]
-      )->toString();
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo';
       $result = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
       });
       $this->assertSubString($result, $expected_result);
 
-      $expected_result = Url::fromRoute(
-        'entity.node.canonical',
-        ['node' => '123'],
-        ['query' => ['foo' => 'bar', 'bar' => 'baz'], 'absolute' => $absolute]
-      )->toString();
+      $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => 'bar', 'bar' => 'baz'], 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo=bar&bar=baz';
       $result = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
@@ -322,12 +284,8 @@ class FieldWebTest extends ViewTestBase {
       $this->assertSubString(Html::decodeEntities($result), Html::decodeEntities($expected_result));
 
       // @todo The route-based URL generator strips out NULL attributes.
-      // phpcs:ignore
       // $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
-      $expected_result = Url::fromUserInput(
-        '/node/123',
-        ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute]
-      )->toString();
+      $expected_result = Url::fromUserInput('/node/123', ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo#bar';
       $result = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
@@ -478,8 +436,7 @@ class FieldWebTest extends ViewTestBase {
     // Tests the element wrapper classes/element.
     $random_class = $this->randomMachineName();
 
-    // Set some common wrapper element types and see whether they appear with
-    // and without a custom class set.
+    // Set some common wrapper element types and see whether they appear with and without a custom class set.
     foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_wrapper_type'] = $element_type;
 
@@ -499,8 +456,7 @@ class FieldWebTest extends ViewTestBase {
 
     // Tests the label class/element.
 
-    // Set some common label element types and see whether they appear with and
-    // without a custom class set.
+    // Set some common label element types and see whether they appear with and without a custom class set.
     foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_label_type'] = $element_type;
 
@@ -520,8 +476,7 @@ class FieldWebTest extends ViewTestBase {
 
     // Tests the element classes/element.
 
-    // Set some common element types and see whether they appear with and
-    // without a custom class set.
+    // Set some common element types and see whether they appear with and without a custom class set.
     foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_type'] = $element_type;
 
@@ -578,7 +533,6 @@ class FieldWebTest extends ViewTestBase {
     $name_field->options['alter']['alter_text'] = TRUE;
     $name_field->options['alter']['text'] = $html_text = '<div class="views-test">' . $random_text . '</div>';
     $row = $view->result[0];
-    $view->row_index = 0;
 
     $name_field->options['alter']['strip_tags'] = TRUE;
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
@@ -691,7 +645,7 @@ class FieldWebTest extends ViewTestBase {
       }
     }
 
-    // Tests for displaying a 'read more' link when the output got trimmed.
+    // Tests for displaying a readmore link when the output got trimmed.
     $row->views_test_data_name = $this->randomMachineName(8);
     $name_field->options['alter']['max_length'] = 5;
     $name_field->options['alter']['more_link'] = TRUE;

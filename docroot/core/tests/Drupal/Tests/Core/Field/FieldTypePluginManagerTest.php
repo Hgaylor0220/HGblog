@@ -13,15 +13,12 @@ use Drupal\Core\Field\FieldTypePluginManager;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
 /**
- * Tests Drupal\Core\Field\FieldTypePluginManager.
+ * @coversDefaultClass \Drupal\Core\Field\FieldTypePluginManager
+ * @group Field
  */
-#[CoversClass(FieldTypePluginManager::class)]
-#[Group('Field')]
 class FieldTypePluginManagerTest extends UnitTestCase {
 
   /**
@@ -75,11 +72,12 @@ class FieldTypePluginManagerTest extends UnitTestCase {
 
     $this->discovery = $this->prophesize(DiscoveryInterface::class);
     $property = new \ReflectionProperty(FieldTypePluginManager::class, 'discovery');
+    $property->setAccessible(TRUE);
     $property->setValue($this->fieldTypeManager, $this->discovery->reveal());
   }
 
   /**
-   * Tests get grouped definitions.
+   * @covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitions(): void {
     $this->discovery->getDefinitions()->willReturn([
@@ -132,7 +130,7 @@ class FieldTypePluginManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests get grouped definitions invalid.
+   * @covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitionsInvalid(): void {
     $this->discovery->getDefinitions()->willReturn([
@@ -172,7 +170,7 @@ class FieldTypePluginManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests get grouped definitions empty.
+   * @covers ::getGroupedDefinitions
    */
   public function testGetGroupedDefinitionsEmpty(): void {
     $this->fieldTypeCategoryManager->getDefinitions()->willReturn([]);

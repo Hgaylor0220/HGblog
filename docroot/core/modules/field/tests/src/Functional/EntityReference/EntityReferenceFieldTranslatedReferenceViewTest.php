@@ -10,14 +10,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the translation of entity reference field display on nodes.
+ *
+ * @group entity_reference
  */
-#[Group('entity_reference')]
-#[RunTestsInSeparateProcesses]
 class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;
@@ -219,14 +217,14 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   /**
    * Adds additional languages.
    */
-  protected function setUpLanguages(): void {
+  protected function setUpLanguages() {
     static::createLanguageFromLangcode($this->translateToLangcode);
   }
 
   /**
    * Creates a test subject contents, with translation.
    */
-  protected function createContent(): void {
+  protected function createContent() {
     $this->referencedEntityWithTranslation = $this->createReferencedEntityWithTranslation();
     $this->referencedEntityWithoutTranslation = $this->createNotTranslatedReferencedEntity();
   }
@@ -234,7 +232,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   /**
    * Enables translations where it needed.
    */
-  protected function enableTranslation(): void {
+  protected function enableTranslation() {
     // Enable translation for the entity types.
     $this->enableContentTranslation($this->testEntityTypeName, $this->referrerType->id());
     $this->enableContentTranslation($this->testEntityTypeName, $this->referencedType->id());
@@ -243,7 +241,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   /**
    * Adds term reference field for the article content type.
    */
-  protected function setUpEntityReferenceField(): void {
+  protected function setUpEntityReferenceField() {
     FieldStorageConfig::create([
       'field_name' => $this->referenceFieldName,
       'entity_type' => $this->testEntityTypeName,
@@ -284,7 +282,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   /**
    * Create content types.
    */
-  protected function setUpContentTypes(): void {
+  protected function setUpContentTypes() {
     $this->referrerType = $this->drupalCreateContentType([
       'type' => 'referrer',
       'name' => 'Referrer',

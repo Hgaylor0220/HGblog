@@ -6,25 +6,19 @@ namespace Drupal\Tests\jsonapi\Unit\Query;
 
 use Drupal\jsonapi\Query\EntityConditionGroup;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\jsonapi\Query\EntityConditionGroup.
+ * @coversDefaultClass \Drupal\jsonapi\Query\EntityConditionGroup
+ * @group jsonapi
  *
  * @internal
  */
-#[CoversClass(EntityConditionGroup::class)]
-#[Group('jsonapi')]
 class EntityConditionGroupTest extends UnitTestCase {
 
   /**
-   * Tests construct.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
+   * @dataProvider constructProvider
    */
-  #[DataProvider('constructProvider')]
   public function testConstruct($case): void {
     $group = new EntityConditionGroup($case['conjunction'], $case['members']);
 
@@ -37,9 +31,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   }
 
   /**
-   * Tests construct exception.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testConstructException(): void {
     $this->expectException(\InvalidArgumentException::class);

@@ -6,21 +6,18 @@ namespace Drupal\Tests\migrate\Unit\Event;
 
 use Drupal\migrate\Event\EventBase;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Event\EventBase.
+ * @coversDefaultClass \Drupal\migrate\Event\EventBase
+ * @group migrate
  */
-#[CoversClass(EventBase::class)]
-#[Group('migrate')]
 class EventBaseTest extends UnitTestCase {
 
   /**
    * Tests getMigration method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getMigration
+   * @covers ::__construct
+   * @covers ::getMigration
    */
   public function testGetMigration(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
@@ -32,8 +29,8 @@ class EventBaseTest extends UnitTestCase {
   /**
    * Tests logging a message.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::logMessage
+   * @covers ::__construct
+   * @covers ::logMessage
    */
   public function testLogMessage(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

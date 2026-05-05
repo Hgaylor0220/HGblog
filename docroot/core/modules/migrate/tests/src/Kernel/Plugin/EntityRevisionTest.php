@@ -8,15 +8,14 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore tabarnak
+
 /**
  * Tests the EntityRevision destination plugin.
+ *
+ * @group migrate
  */
-#[Group('migrate')]
-#[RunTestsInSeparateProcesses]
 class EntityRevisionTest extends MigrateTestBase {
 
   use ContentTypeCreationTrait;
@@ -25,7 +24,9 @@ class EntityRevisionTest extends MigrateTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'content_translation',
     'field',
+    'filter',
     'language',
     'node',
     'system',

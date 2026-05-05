@@ -32,8 +32,10 @@
   cursor: default;
   color: var(--color-text-neutral-soft);
   background-color: var(--color--white);
+}
 
-  @media (min-width: 31.25rem) {
+@media (min-width: 31.25rem) {
+  .pager__item {
     width: var(--sp3);
     height: var(--sp3);
   }
@@ -48,11 +50,9 @@
   background-color: var(--color--primary-40);
 }
 
-.pager__item--control {
-  @media (forced-colors: active) {
-    & path {
-      fill: linktext;
-    }
+@media (forced-colors: active) {
+  .pager__item--control path {
+    fill: linktext;
   }
 }
 

@@ -15,7 +15,6 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DirectoryAwareLoaderInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
-use Symfony\Component\Routing\Exception\InvalidArgumentException;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -45,16 +44,12 @@ final class Psr4DirectoryLoader extends Loader implements DirectoryAwareLoaderIn
             return new RouteCollection();
         }
 
-        if (!preg_match('/^(?:[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+\\\)++$/', trim($resource['namespace'], '\\').'\\')) {
-            throw new InvalidArgumentException(\sprintf('Namespace "%s" is not a valid PSR-4 prefix.', $resource['namespace']));
-        }
-
         return $this->loadFromDirectory($path, trim($resource['namespace'], '\\'), $excluded);
     }
 
     public function supports(mixed $resource, ?string $type = null): bool
     {
-        return 'attribute' === $type && \is_array($resource) && isset($resource['path'], $resource['namespace']);
+        return ('attribute' === $type || 'annotation' === $type) && \is_array($resource) && isset($resource['path'], $resource['namespace']);
     }
 
     public function forDirectory(string $currentDirectory): static
@@ -72,11 +67,11 @@ final class Psr4DirectoryLoader extends Loader implements DirectoryAwareLoaderIn
         $files = iterator_to_array(new \RecursiveIteratorIterator(
             new \RecursiveCallbackFilterIterator(
                 new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS),
-                fn (\SplFileInfo $current) => !str_starts_with($current->getBasename(), '.')
+                static fn (\SplFileInfo $current) => !str_starts_with($current->getBasename(), '.')
             ),
             \RecursiveIteratorIterator::SELF_FIRST
         ));
-        usort($files, fn (\SplFileInfo $a, \SplFileInfo $b) => (string) $a > (string) $b ? 1 : -1);
+        usort($files, static fn (\SplFileInfo $a, \SplFileInfo $b) => (string) $a > (string) $b ? 1 : -1);
 
         /** @var \SplFileInfo $file */
         foreach ($files as $file) {

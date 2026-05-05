@@ -9,14 +9,12 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the file field widget, single and multi-valued, using AJAX upload.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class FileFieldWidgetTest extends WebDriverTestBase {
 
   use FieldUiTestTrait;
@@ -95,7 +93,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
       $remaining = 3;
       // Test clicking each "Remove" button. For extra robustness, test them out
       // of sequential order. They are 0-indexed, and get renumbered after each
-      // iteration, so [1, 1, 0] means:
+      // iteration, so array(1, 1, 0) means:
       // - First remove the 2nd file.
       // - Then remove what is then the 2nd file (was originally the 3rd file).
       // - Then remove the first file.

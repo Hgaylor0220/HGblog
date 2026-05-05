@@ -9,8 +9,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Checks that all core content/config entity types have REST test coverage.
@@ -20,10 +18,10 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * - every authentication provider in core (anon, cookie, basic_auth)
  *
  * Additionally, every entity type must have the correct parent test class.
+ *
+ * @group rest
+ * @group #slow
  */
-#[Group('rest')]
-#[Group('#slow')]
-#[RunTestsInSeparateProcesses]
 class EntityResourceRestTestCoverageTest extends KernelTestBase {
 
   /**
@@ -44,7 +42,6 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig('system');
     $all_modules = $this->container->get('extension.list.module')->getList();
     $stable_core_modules = array_filter($all_modules, function ($module) {
       // Filter out contrib, hidden, testing, deprecated and experimental

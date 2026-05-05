@@ -6,18 +6,17 @@ namespace Drupal\Tests\Composer;
 
 use Drupal\Composer\Composer;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Composer\Composer.
+ * @coversDefaultClass \Drupal\Composer\Composer
+ * @group Composer
  */
-#[CoversClass(Composer::class)]
-#[Group('Composer')]
 class ComposerTest extends UnitTestCase {
 
   /**
    * Verify that Composer::ensureComposerVersion() doesn't break.
+   *
+   * @covers ::ensureComposerVersion
    */
   public function testEnsureComposerVersion(): void {
     try {

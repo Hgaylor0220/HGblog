@@ -153,10 +153,15 @@
    */
   function calculateOffset(edge) {
     let edgeOffset = 0;
-    document.querySelectorAll(`[data-offset-${edge}]`).forEach((el) => {
+    const displacingElements = document.querySelectorAll(
+      `[data-offset-${edge}]`,
+    );
+    const n = displacingElements.length;
+    for (let i = 0; i < n; i++) {
+      const el = displacingElements[i];
       // If the element is not visible, do consider its dimensions.
       if (el.style.display === 'none') {
-        return;
+        continue;
       }
       // If the offset data attribute contains a displacing value, use it.
       let displacement = parseInt(el.getAttribute(`data-offset-${edge}`), 10);
@@ -170,7 +175,7 @@
       // If the displacement value is larger than the current value for this
       // edge, use the displacement value.
       edgeOffset = Math.max(edgeOffset, displacement);
-    });
+    }
 
     return edgeOffset;
   }

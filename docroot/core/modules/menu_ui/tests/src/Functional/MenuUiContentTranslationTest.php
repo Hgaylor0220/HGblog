@@ -7,15 +7,12 @@ namespace Drupal\Tests\menu_ui\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Menu UI and Content Translation integration for content entities.
+ *
+ * @group menu_ui
  */
-#[Group('menu_ui')]
-#[RunTestsInSeparateProcesses]
 class MenuUiContentTranslationTest extends BrowserTestBase {
 
   use LanguageTestTrait;
@@ -118,8 +115,9 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
    *   Language code of pseudo-language to change content language to.
    *   Either \Drupal\Core\LanguageInterface::LANGCODE_NOT_SPECIFIED or
    *   \Drupal\Core\LanguageInterface::LANGCODE_NOT_APPLICABLE.
+   *
+   * @dataProvider provideChangeContentToPseudoLanguageData
    */
-  #[DataProvider('provideChangeContentToPseudoLanguageData')]
   public function testChangeContentToPseudoLanguage($langcode): void {
     $node_title = 'Test node';
     $menu_link_title_en = 'Test menu link EN';

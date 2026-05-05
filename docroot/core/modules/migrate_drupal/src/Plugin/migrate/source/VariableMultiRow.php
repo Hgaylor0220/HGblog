@@ -66,7 +66,7 @@ class VariableMultiRow extends DrupalSqlBase {
    */
   public function prepareRow(Row $row) {
     if ($value = $row->getSourceProperty('value')) {
-      $row->setSourceProperty('value', unserialize($value, ['allowed_classes' => FALSE]));
+      $row->setSourceProperty('value', unserialize($value));
     }
     return parent::prepareRow($row);
   }

@@ -8,15 +8,12 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\LazyContextRepository;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests Drupal\Core\Plugin\Context\LazyContextRepository.
+ * @coversDefaultClass \Drupal\Core\Plugin\Context\LazyContextRepository
+ * @group context
  */
-#[CoversClass(LazyContextRepository::class)]
-#[Group('context')]
 class LazyContextRepositoryTest extends UnitTestCase {
 
   /**
@@ -36,7 +33,7 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get runtime contexts single.
+   * @covers ::getRuntimeContexts
    */
   public function testGetRuntimeContextsSingle(): void {
     $contexts = $this->setupContextAndProvider('test_provider', ['test_context']);
@@ -47,45 +44,30 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get runtime multiple contexts per service.
-   *
-   * @legacy-covers ::getRuntimeContexts
+   * @covers ::getRuntimeContexts
    */
   public function testGetRuntimeMultipleContextsPerService(): void {
     $contexts = $this->setupContextAndProvider('test_provider', ['test_context0', 'test_context1']);
 
     $lazy_context_repository = new LazyContextRepository($this->container, ['test_provider']);
-    $run_time_contexts = $lazy_context_repository->getRuntimeContexts([
-      '@test_provider:test_context0',
-      '@test_provider:test_context1',
-    ]);
+    $run_time_contexts = $lazy_context_repository->getRuntimeContexts(['@test_provider:test_context0', '@test_provider:test_context1']);
     $this->assertEquals(['@test_provider:test_context0' => $contexts[0], '@test_provider:test_context1' => $contexts[1]], $run_time_contexts);
   }
 
   /**
-   * Tests get runtime multiple context providers.
-   *
-   * @legacy-covers ::getRuntimeContexts
+   * @covers ::getRuntimeContexts
    */
   public function testGetRuntimeMultipleContextProviders(): void {
     $contexts0 = $this->setupContextAndProvider('test_provider', ['test_context0', 'test_context1'], ['test_context0']);
     $contexts1 = $this->setupContextAndProvider('test_provider2', ['test1_context0', 'test1_context1'], ['test1_context0']);
 
     $lazy_context_repository = new LazyContextRepository($this->container, ['test_provider']);
-    $run_time_contexts = $lazy_context_repository->getRuntimeContexts([
-      '@test_provider:test_context0',
-      '@test_provider2:test1_context0',
-    ]);
-    $this->assertEquals([
-      '@test_provider:test_context0' => $contexts0[0],
-      '@test_provider2:test1_context0' => $contexts1[1],
-    ], $run_time_contexts);
+    $run_time_contexts = $lazy_context_repository->getRuntimeContexts(['@test_provider:test_context0', '@test_provider2:test1_context0']);
+    $this->assertEquals(['@test_provider:test_context0' => $contexts0[0], '@test_provider2:test1_context0' => $contexts1[1]], $run_time_contexts);
   }
 
   /**
-   * Tests invalid context id.
-   *
-   * @legacy-covers ::getRuntimeContexts
+   * @covers ::getRuntimeContexts
    */
   public function testInvalidContextId(): void {
     $lazy_context_repository = new LazyContextRepository($this->container, ['test_provider']);
@@ -95,9 +77,7 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get runtime static cache.
-   *
-   * @legacy-covers ::getRuntimeContexts
+   * @covers ::getRuntimeContexts
    */
   public function testGetRuntimeStaticCache(): void {
     $context0 = new Context(new ContextDefinition('example'));
@@ -116,7 +96,7 @@ class LazyContextRepositoryTest extends UnitTestCase {
   }
 
   /**
-   * Tests get available contexts.
+   * @covers ::getAvailableContexts
    */
   public function testGetAvailableContexts(): void {
     $contexts0 = $this->setupContextAndProvider('test_provider0', ['test0_context0', 'test0_context1']);
@@ -147,7 +127,7 @@ class LazyContextRepositoryTest extends UnitTestCase {
    * @return array
    *   An array of set up contexts.
    */
-  protected function setupContextAndProvider($service_id, array $unqualified_context_ids, array $expected_unqualified_context_ids = []): array {
+  protected function setupContextAndProvider($service_id, array $unqualified_context_ids, array $expected_unqualified_context_ids = []) {
     $contexts = [];
     for ($i = 0; $i < count($unqualified_context_ids); $i++) {
       $contexts[] = new Context(new ContextDefinition('example'));

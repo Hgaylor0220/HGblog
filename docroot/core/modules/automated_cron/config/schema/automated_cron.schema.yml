@@ -10,4 +10,5 @@ automated_cron.settings:
       type: integer
       label: 'Run cron every'
       constraints:
-        PositiveOrZero: ~
+        Range:
+          min: 0

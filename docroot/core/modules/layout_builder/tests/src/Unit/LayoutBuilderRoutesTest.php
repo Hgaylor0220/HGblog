@@ -10,17 +10,15 @@ use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\layout_builder\Routing\LayoutBuilderRoutes.
+ * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutBuilderRoutes
+ *
+ * @group layout_builder
  */
-#[CoversClass(LayoutBuilderRoutes::class)]
-#[Group('layout_builder')]
 class LayoutBuilderRoutesTest extends UnitTestCase {
 
   /**
@@ -48,7 +46,7 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
   }
 
   /**
-   * Tests on alter routes.
+   * @covers ::onAlterRoutes
    */
   public function testOnAlterRoutes(): void {
     $expected = [

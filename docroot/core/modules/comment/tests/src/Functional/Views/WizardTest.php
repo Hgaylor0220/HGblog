@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional\Views;
 
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 
 /**
  * Tests the comment module integration into the wizard.
  *
+ * @group comment
  * @see \Drupal\comment\Plugin\views\wizard\Comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class WizardTest extends WizardTestBase {
 
   use CommentTestTrait;

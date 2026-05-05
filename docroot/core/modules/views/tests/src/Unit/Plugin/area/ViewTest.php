@@ -6,14 +6,11 @@ namespace Drupal\Tests\views\Unit\Plugin\area;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\area\View as ViewAreaPlugin;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\views\Plugin\views\area\View.
+ * @coversDefaultClass \Drupal\views\Plugin\views\area\View
+ * @group views
  */
-#[CoversClass(ViewAreaPlugin::class)]
-#[Group('views')]
 class ViewTest extends UnitTestCase {
 
   /**
@@ -43,10 +40,11 @@ class ViewTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies.
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     /** @var \Drupal\views\Entity\View $view_this */
+    /** @var \Drupal\views\Entity\View $view_other */
     $view_this = $this->createMock('Drupal\views\ViewEntityInterface');
     $view_this->expects($this->any())->method('getConfigDependencyKey')->willReturn('config');
     $view_this->expects($this->any())->method('getConfigDependencyName')->willReturn('view.this');

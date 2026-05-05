@@ -9,7 +9,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
@@ -37,12 +36,12 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
 
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
-    EntityTestHelper::createBundle('bar', NULL, 'entity_test');
+    entity_test_create_bundle('bar', NULL, 'entity_test');
     $this->createEntityReferenceField(
       'entity_test',
       'bar',
       'spotlight',
-      'Spotlight',
+      NULL,
       static::$entityTypeId,
       'default',
       [

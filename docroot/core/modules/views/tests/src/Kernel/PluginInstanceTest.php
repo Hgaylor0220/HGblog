@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel;
 
-use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * Tests that an instance of all views plugins can be created.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class PluginInstanceTest extends ViewsKernelTestBase {
 
   /**

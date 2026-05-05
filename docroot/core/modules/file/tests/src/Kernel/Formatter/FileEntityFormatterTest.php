@@ -7,14 +7,12 @@ namespace Drupal\Tests\file\Kernel\Formatter;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the default file formatter.
+ *
+ * @group field
  */
-#[Group('field')]
-#[RunTestsInSeparateProcesses]
 class FileEntityFormatterTest extends KernelTestBase {
 
   /**
@@ -110,13 +108,7 @@ class FileEntityFormatterTest extends KernelTestBase {
     $build = $entity_display->buildMultiple($this->files)[0]['uri'][0];
     $this->assertEquals($this->fileUrlGenerator->generateAbsoluteString('public://file.png'), $build['#markup']);
 
-    $entity_display->setComponent(
-      'uri',
-      [
-        'type' => 'file_uri',
-        'settings' => ['file_download_path' => TRUE, 'link_to_file' => TRUE],
-      ]
-    );
+    $entity_display->setComponent('uri', ['type' => 'file_uri', 'settings' => ['file_download_path' => TRUE, 'link_to_file' => TRUE]]);
     $build = $entity_display->buildMultiple($this->files)[0]['uri'][0];
     $this->assertEquals($this->fileUrlGenerator->generateAbsoluteString('public://file.png'), $build['#title']);
     $this->assertEquals($this->fileUrlGenerator->generate('public://file.png'), $build['#url']);
@@ -138,12 +130,7 @@ class FileEntityFormatterTest extends KernelTestBase {
       $this->assertEquals($expected[$i], $build['filename'][0]['#markup']);
     }
 
-    $entity_display->setComponent(
-      'filename',
-      [
-        'type' => 'file_extension',
-        'settings' => ['extension_detect_tar' => TRUE],
-      ]);
+    $entity_display->setComponent('filename', ['type' => 'file_extension', 'settings' => ['extension_detect_tar' => TRUE]]);
 
     $expected = ['png', 'tar', 'tar.gz', ''];
     foreach (array_values($this->files) as $i => $file) {
@@ -162,7 +149,7 @@ class FileEntityFormatterTest extends KernelTestBase {
     ]);
     $entity_display->setComponent('filemime', ['type' => 'file_filemime', 'settings' => ['filemime_image' => TRUE]]);
 
-    foreach (array_values($this->files) as $file) {
+    foreach (array_values($this->files) as $i => $file) {
       $build = $entity_display->build($file);
       $this->assertEquals('image__file_icon', $build['filemime'][0]['#theme']);
       $this->assertEquals(spl_object_hash($file), spl_object_hash($build['filemime'][0]['#file']));

@@ -5,23 +5,18 @@ declare(strict_types=1);
 namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
-use Drupal\sqlite\Driver\Database\sqlite\Schema;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests schema API for the SQLite driver.
+ *
+ * @group Database
  */
-#[Group('Database')]
-#[RunTestsInSeparateProcesses]
-#[CoversClass(Schema::class)]
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
    * {@inheritdoc}
    */
-  public function checkSchemaComment(string|false $description, string $table, ?string $column = NULL): void {
+  public function checkSchemaComment(string $description, string $table, ?string $column = NULL): void {
     // The sqlite driver schema does not support fetching table/column
     // comments.
   }
@@ -52,9 +47,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
-   * Tests introspect index schema.
-   *
-   * @legacy-covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
+   * @covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [

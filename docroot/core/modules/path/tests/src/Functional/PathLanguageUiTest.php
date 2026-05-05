@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Confirm that the Path module user interface works with languages.
+ *
+ * @group path
  */
-#[Group('path')]
-#[RunTestsInSeparateProcesses]
 class PathLanguageUiTest extends PathTestBase {
 
   /**

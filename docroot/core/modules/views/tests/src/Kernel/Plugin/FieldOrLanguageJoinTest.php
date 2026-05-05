@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Plugin\views\join\FieldOrLanguageJoin;
-use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\views\ViewExecutable;
 
 /**
  * Tests the "field OR language" join plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\join\FieldOrLanguageJoin
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
 
   /**
@@ -127,10 +124,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $this->assertStringContainsString('views_test_data.uid = users4.uid', $join_info['condition']);
     $this->assertStringContainsString('users4.name = :views_join_condition_0', $join_info['condition']);
     $this->assertStringContainsString('users4.name IN ( :views_join_condition_1[] )', $join_info['condition']);
-    $this->assertSame(
-      $join_info['arguments'][':views_join_condition_1[]'],
-      [$random_name_2, $random_name_3, $random_name_4]
-    );
+    $this->assertSame($join_info['arguments'][':views_join_condition_1[]'], [$random_name_2, $random_name_3, $random_name_4]);
   }
 
   /**
@@ -190,9 +184,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The view used in this test.
-   * @param array $configuration
+   * @param $configuration
    *   The join plugin configuration.
-   * @param string $table_alias
+   * @param $table_alias
    *   The table alias to use for the join.
    *
    * @return array

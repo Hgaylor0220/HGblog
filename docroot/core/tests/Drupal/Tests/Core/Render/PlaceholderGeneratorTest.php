@@ -6,16 +6,11 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Render\PlaceholderGenerator;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Render\PlaceholderGenerator.
+ * @coversDefaultClass \Drupal\Core\Render\PlaceholderGenerator
+ * @group Render
  */
-#[CoversClass(PlaceholderGenerator::class)]
-#[Group('Render')]
 class PlaceholderGeneratorTest extends RendererTestBase {
 
   /**
@@ -26,15 +21,15 @@ class PlaceholderGeneratorTest extends RendererTestBase {
   protected $placeholderGenerator;
 
   /**
-   * Ensure that the generated placeholder markup is valid.
+   * @covers ::createPlaceholder
+   * @dataProvider providerCreatePlaceholderGeneratesValidHtmlMarkup
    *
-   * If it is not, then simply using DOMDocument on HTML that contains
-   * placeholders may modify the placeholders' markup, which would make it
-   * impossible to replace the placeholders: the placeholder markup in
-   * #attached versus that in the HTML processed by DOMDocument would no longer
-   * match.
+   * Ensure that the generated placeholder markup is valid. If it is not, then
+   * simply using DOMDocument on HTML that contains placeholders may modify the
+   * placeholders' markup, which would make it impossible to replace the
+   * placeholders: the placeholder markup in #attached versus that in the HTML
+   * processed by DOMDocument would no longer match.
    */
-  #[DataProvider('providerCreatePlaceholderGeneratesValidHtmlMarkup')]
   public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element): void {
     $build = $this->placeholderGenerator->createPlaceholder($element);
 
@@ -50,7 +45,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
    * Between two renders neither the cache contexts nor tags sort should change.
    * A placeholder should generate the same hash, so it is not rendered twice.
    *
-   * @legacy-covers ::createPlaceholder
+   * @covers ::createPlaceholder
    */
   public function testRenderPlaceholdersDifferentSortedContextsTags(): void {
     $contexts_1 = ['user', 'foo'];
@@ -89,50 +84,14 @@ class PlaceholderGeneratorTest extends RendererTestBase {
 
   /**
    * @return array
-   *   An array of test cases with different placeholder inputs.
    */
-  public static function providerCreatePlaceholderGeneratesValidHtmlMarkup(): array {
+  public static function providerCreatePlaceholderGeneratesValidHtmlMarkup() {
     return [
-      'multiple-arguments' => [
-        [
-          '#lazy_builder' => [
-            'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
-            ['foo', 'bar'],
-          ],
-        ],
-      ],
-      'special-character-&' => [
-        [
-          '#lazy_builder' => [
-            'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
-            ['foo&bar'],
-          ],
-        ],
-      ],
-      'special-character-"' => [
-        [
-          '#lazy_builder' => [
-            'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
-            ['foo"bar'],
-          ],
-        ],
-      ],
-      'special-character-<' => [
-        [
-          '#lazy_builder' => [
-            'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
-            ['foo<bar'],
-          ],
-        ],
-      ],
-      'special-character->' => [
-        [
-          '#lazy_builder' => [
-            'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
-            ['foo>bar'],
-          ],
-        ],
-      ],
+      'multiple-arguments' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo', 'bar']]]],
+      'special-character-&' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo&bar']]]],
+      'special-character-"' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo"bar']]]],
+      'special-character-<' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo<bar']]]],
+      'special-character->' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo>bar']]]],
     ];
 
   }

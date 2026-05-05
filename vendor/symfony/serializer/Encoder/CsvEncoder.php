@@ -25,9 +25,6 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
     public const FORMAT = 'csv';
     public const DELIMITER_KEY = 'csv_delimiter';
     public const ENCLOSURE_KEY = 'csv_enclosure';
-    /**
-     * @deprecated since Symfony 7.2, to be removed in 8.0
-     */
     public const ESCAPE_CHAR_KEY = 'csv_escape_char';
     public const KEY_SEPARATOR_KEY = 'csv_key_separator';
     public const HEADERS_KEY = 'csv_headers';
@@ -39,7 +36,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
     private const UTF8_BOM = "\xEF\xBB\xBF";
 
-    private const FORMULAS_START_CHARACTERS = ['=', '-', '+', '@', "\t", "\r", "\n"];
+    private const FORMULAS_START_CHARACTERS = ['=', '-', '+', '@', "\t", "\r"];
 
     private array $defaultContext = [
         self::DELIMITER_KEY => ',',
@@ -56,10 +53,6 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
     public function __construct(array $defaultContext = [])
     {
-        if (\array_key_exists(self::ESCAPE_CHAR_KEY, $defaultContext)) {
-            trigger_deprecation('symfony/serializer', '7.2', 'Setting the "csv_escape_char" option is deprecated. The option will be removed in 8.0.');
-        }
-
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
     }
 
@@ -69,7 +62,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
         if (!is_iterable($data)) {
             $data = [[$data]];
-        } elseif (!$data) {
+        } elseif (empty($data)) {
             $data = [[]];
         } else {
             if ($data instanceof \Traversable) {
@@ -208,7 +201,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
             return $result;
         }
 
-        if (!$result || isset($result[1])) {
+        if (empty($result) || isset($result[1])) {
             return $result;
         }
 

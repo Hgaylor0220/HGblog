@@ -14,7 +14,7 @@ class TestController {
   /**
    * Returns test content for unit tests.
    */
-  public function content(): Response {
+  public function content() {
     return new Response('');
   }
 

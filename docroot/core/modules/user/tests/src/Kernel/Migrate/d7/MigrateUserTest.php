@@ -9,14 +9,12 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Users migration.
+ *
+ * @group user
  */
-#[Group('user')]
-#[RunTestsInSeparateProcesses]
 class MigrateUserTest extends MigrateDrupal7TestBase {
 
   /**

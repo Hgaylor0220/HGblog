@@ -4,7 +4,6 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraints\Range;
 
 /**
@@ -24,7 +23,6 @@ class RangeConstraint extends Range {
   /**
    * {@inheritdoc}
    */
-  #[HasNamedArguments]
   public function __construct(...$args) {
     $this->notInRangeMessage = 'This value should be between %min and %max.';
     $this->minMessage = 'This value should be %limit or more.';

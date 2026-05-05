@@ -6,14 +6,11 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\ArrayBuild;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Plugin\migrate\process\ArrayBuild.
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\ArrayBuild
+ * @group migrate
  */
-#[CoversClass(ArrayBuild::class)]
-#[Group('migrate')]
 class ArrayBuildTest extends MigrateProcessTestCase {
 
   /**

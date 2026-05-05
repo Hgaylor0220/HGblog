@@ -8,17 +8,15 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\views\Entity\View;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\views\Entity\View;
 
 /**
  * Tests the general integration between views and the render cache.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class RenderCacheIntegrationTest extends ViewsKernelTestBase {
 
   use AssertViewsCacheTagsTrait;
@@ -144,7 +142,6 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     $build = $this->assertViewsCacheTags($view, $tags_page_2, $do_assert_views_caches, $tags_page_2);
     // @todo Static render arrays don't support different pages yet, see
     //   https://www.drupal.org/node/2500701.
-    // phpcs:ignore
     // $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_page_2, $do_assert_views_caches);
     $this->assertStringContainsString($random_name, (string) $build['#markup']);
     $view->destroy();
@@ -294,16 +291,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     $view = View::load('test_display');
     $view->save();
 
-    $this->assertEqualsCanonicalizing(
-      [
-        'languages:' . LanguageInterface::TYPE_CONTENT,
-        'languages:' . LanguageInterface::TYPE_INTERFACE,
-        'url.query_args',
-        'user.node_grants:view',
-        'user.permissions',
-      ],
-      $view->getDisplay('default')['cache_metadata']['contexts']
-    );
+    $this->assertEqualsCanonicalizing(['languages:' . LanguageInterface::TYPE_CONTENT, 'languages:' . LanguageInterface::TYPE_INTERFACE, 'url.query_args', 'user.node_grants:view', 'user.permissions'], $view->getDisplay('default')['cache_metadata']['contexts']);
   }
 
 }

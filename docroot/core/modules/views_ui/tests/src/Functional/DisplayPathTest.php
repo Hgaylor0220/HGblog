@@ -8,16 +8,13 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the UI of generic display path plugin.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
-#[Group('views_ui')]
-#[RunTestsInSeparateProcesses]
 class DisplayPathTest extends UITestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
@@ -56,7 +53,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests basic functionality in configuring a view.
    */
-  protected function doBasicPathUITest(): void {
+  protected function doBasicPathUITest() {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
@@ -80,7 +77,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests that View paths are properly filtered for XSS.
    */
-  public function doPathXssFilterTest(): void {
+  public function doPathXssFilterTest() {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->submitForm([], 'Add Page');
     $this->drupalGet('admin/structure/views/nojs/display/test_view/page_2/path');
@@ -106,7 +103,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests a couple of invalid path patterns.
    */
-  protected function doAdvancedPathsValidationTest(): void {
+  protected function doAdvancedPathsValidationTest() {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
     $this->drupalGet($url);

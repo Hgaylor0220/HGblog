@@ -7,14 +7,12 @@ namespace Drupal\Tests\field_ui\Unit;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\field_ui\FieldUI;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\field_ui\FieldUI.
+ * @coversDefaultClass \Drupal\field_ui\FieldUI
+ *
+ * @group field_ui
  */
-#[CoversClass(FieldUI::class)]
-#[Group('field_ui')]
 class FieldUiTest extends UnitTestCase {
 
   /**
@@ -37,7 +35,7 @@ class FieldUiTest extends UnitTestCase {
   }
 
   /**
-   * Tests get next destination.
+   * @covers ::getNextDestination
    */
   public function testGetNextDestination(): void {
     $destinations = ['admin', 'admin/content'];
@@ -51,7 +49,7 @@ class FieldUiTest extends UnitTestCase {
   }
 
   /**
-   * Tests get next destination empty.
+   * @covers ::getNextDestination
    */
   public function testGetNextDestinationEmpty(): void {
     $destinations = [];
@@ -60,7 +58,7 @@ class FieldUiTest extends UnitTestCase {
   }
 
   /**
-   * Tests get next destination route name.
+   * @covers ::getNextDestination
    */
   public function testGetNextDestinationRouteName(): void {
     $destinations = [['route_name' => 'system.admin'], ['route_name' => 'system.admin_content']];

@@ -6,16 +6,14 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Core\Link;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the term_name field handler.
  *
+ * @group taxonomy
+ *
  * @see \Drupal\taxonomy\Plugin\views\field\TermName
  */
-#[Group('taxonomy')]
-#[RunTestsInSeparateProcesses]
 class TermNameFieldTest extends TaxonomyTestBase {
 
   /**

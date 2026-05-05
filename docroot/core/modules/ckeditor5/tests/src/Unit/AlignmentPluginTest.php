@@ -7,18 +7,13 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment.
- *
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment
+ * @group ckeditor5
  * @internal
  */
-#[CoversClass(Alignment::class)]
-#[Group('ckeditor5')]
 class AlignmentPluginTest extends UnitTestCase {
 
   /**
@@ -104,9 +99,9 @@ class AlignmentPluginTest extends UnitTestCase {
   }
 
   /**
-   * Tests get dynamic plugin config.
+   * @covers ::getDynamicPluginConfig
+   * @dataProvider providerGetDynamicPluginConfig
    */
-  #[DataProvider('providerGetDynamicPluginConfig')]
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     // Read the CKEditor 5 plugin's static configuration from YAML.
     $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');

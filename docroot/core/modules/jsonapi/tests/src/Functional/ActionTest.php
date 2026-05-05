@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Action" config entity type.
+ *
+ * @group Action
  */
-#[Group('Action')]
-#[RunTestsInSeparateProcesses]
 class ActionTest extends ConfigEntityResourceTestBase {
 
   /**
@@ -48,7 +45,7 @@ class ActionTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer actions']);
   }
 
@@ -73,16 +70,16 @@ class ActionTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/action/action/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -115,7 +112,7 @@ class ActionTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

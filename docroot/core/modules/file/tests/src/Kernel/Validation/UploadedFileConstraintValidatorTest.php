@@ -6,21 +6,16 @@ namespace Drupal\Tests\file\Kernel\Validation;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Upload\FormUploadedFile;
-use Drupal\file\Validation\Constraint\UploadedFileConstraintValidator;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Tests the uploaded file validator.
+ *
+ * @coversDefaultClass \Drupal\file\Validation\Constraint\UploadedFileConstraintValidator
+ * @group file
  */
-#[CoversClass(UploadedFileConstraintValidator::class)]
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class UploadedFileConstraintValidatorTest extends KernelTestBase {
 
   /**
@@ -70,7 +65,7 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests validate success.
+   * @covers ::validate
    */
   public function testValidateSuccess(): void {
     $uploadedFile = new FormUploadedFile(new UploadedFile(
@@ -83,9 +78,9 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests validate fail.
+   * @covers ::validate
+   * @dataProvider validateProvider
    */
-  #[DataProvider('validateProvider')]
   public function testValidateFail(int $errorCode, string $message): void {
     $uploadedFile = new FormUploadedFile(new UploadedFile(
       path: $this->path,

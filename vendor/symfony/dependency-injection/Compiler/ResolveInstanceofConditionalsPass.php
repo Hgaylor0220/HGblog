@@ -24,7 +24,10 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  */
 class ResolveInstanceofConditionalsPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         foreach ($container->getAutoconfiguredInstanceof() as $interface => $definition) {
             if ($definition->getArguments()) {
@@ -82,7 +85,7 @@ class ResolveInstanceofConditionalsPass implements CompilerPassInterface
                 /** @var ChildDefinition $instanceofDef */
                 $instanceofDef = clone $instanceofDef;
                 $instanceofDef->setAbstract(true)->setParent($parent ?: '.abstract.instanceof.'.$id);
-                $parent = '.instanceof.'.$interface.'.'.$key.'.'.$id;
+                $parent = '.instanceof.'.strtr($interface, "\0\r\n", '---').'.'.$key.'.'.$id;
                 $container->setDefinition($parent, $instanceofDef);
                 $instanceofTags[] = [$interface, $instanceofDef->getTags()];
                 $instanceofBindings = $instanceofDef->getBindings() + $instanceofBindings;
@@ -127,7 +130,7 @@ class ResolveInstanceofConditionalsPass implements CompilerPassInterface
                 foreach ($tags as $k => $v) {
                     if (null === $definition->getDecoratedService() || $interface === $definition->getClass() || \in_array($k, $tagsToKeep, true)) {
                         foreach ($v as $v) {
-                            if ($definition->hasTag($k) && \in_array($v, $definition->getTag($k), true)) {
+                            if ($definition->hasTag($k) && \in_array($v, $definition->getTag($k))) {
                                 continue;
                             }
                             $definition->addTag($k, $v);
@@ -149,18 +152,13 @@ class ResolveInstanceofConditionalsPass implements CompilerPassInterface
                 ->setAbstract(true);
         }
 
-        if ($definition->isSynthetic()) {
-            // Ignore container.excluded tag on synthetic services
-            $definition->clearTag('container.excluded');
-        }
-
         return $definition;
     }
 
     private function mergeConditionals(array $autoconfiguredInstanceof, array $instanceofConditionals, ContainerBuilder $container): array
     {
         // make each value an array of ChildDefinition
-        $conditionals = array_map(fn ($childDef) => [$childDef], $autoconfiguredInstanceof);
+        $conditionals = array_map(static fn ($childDef) => [$childDef], $autoconfiguredInstanceof);
 
         foreach ($instanceofConditionals as $interface => $instanceofDef) {
             // make sure the interface/class exists (but don't validate automaticInstanceofConditionals)

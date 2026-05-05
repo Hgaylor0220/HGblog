@@ -10,15 +10,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\contact\MailHandler.
+ * @coversDefaultClass \Drupal\contact\MailHandler
+ * @group contact
  */
-#[CoversClass(MailHandler::class)]
-#[Group('contact')]
 class MailHandlerTest extends UnitTestCase {
 
   /**
@@ -101,7 +97,7 @@ class MailHandlerTest extends UnitTestCase {
   /**
    * Tests the children() method with an invalid key.
    *
-   * @legacy-covers ::sendMailMessages
+   * @covers ::sendMailMessages
    */
   public function testInvalidRecipient(): void {
     $message = $this->createMock('\Drupal\contact\MessageInterface');
@@ -132,8 +128,11 @@ class MailHandlerTest extends UnitTestCase {
 
   /**
    * Tests the sendMailMessages method.
+   *
+   * @dataProvider getSendMailMessages
+   *
+   * @covers ::sendMailMessages
    */
-  #[DataProvider('getSendMailMessages')]
   public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results): void {
     if ($anonymous) {
       $message = $this->getAnonymousMockMessage(explode(', ', $results[0]['to']), $auto_reply, $copy_sender);

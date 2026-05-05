@@ -6,20 +6,17 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\KernelTests\AssertContentTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\KernelTests\AssertContentTrait.
+ * @coversDefaultClass \Drupal\KernelTests\AssertContentTrait
+ * @group Test
  */
-#[CoversClass(AssertContentTrait::class)]
-#[Group('Test')]
 class AssertContentTraitTest extends UnitTestCase {
 
   use AssertContentTrait;
 
   /**
-   * Tests get text content.
+   * @covers ::getTextContent
    */
   public function testGetTextContent(): void {
 

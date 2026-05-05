@@ -79,11 +79,13 @@ final class ControllerEvent extends KernelEvent
     }
 
     /**
-     * @template T of object
+     * @template T of class-string|null
      *
-     * @param class-string<T>|null $className
+     * @param T $className
      *
-     * @return ($className is null ? array<class-string, list<object>> : list<T>)
+     * @return array<class-string, list<object>>|list<object>
+     *
+     * @psalm-return (T is null ? array<class-string, list<object>> : list<object>)
      */
     public function getAttributes(?string $className = null): array
     {
@@ -96,7 +98,7 @@ final class ControllerEvent extends KernelEvent
         } elseif (\is_string($this->controller) && false !== $i = strpos($this->controller, '::')) {
             $class = new \ReflectionClass(substr($this->controller, 0, $i));
         } else {
-            $class = $this->controllerReflector instanceof \ReflectionFunction && $this->controllerReflector->isAnonymous() ? null : $this->controllerReflector->getClosureCalledClass();
+            $class = str_contains($this->controllerReflector->name, '{closure') ? null : (\PHP_VERSION_ID >= 80111 ? $this->controllerReflector->getClosureCalledClass() : $this->controllerReflector->getClosureScopeClass());
         }
         $this->attributes = [];
 

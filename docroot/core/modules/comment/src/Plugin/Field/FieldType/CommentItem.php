@@ -5,7 +5,6 @@ namespace Drupal\comment\Plugin\Field\FieldType;
 use Drupal\comment\CommentFieldItemList;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
-use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -49,7 +48,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       'per_page' => 50,
       'form_location' => CommentItemInterface::FORM_BELOW,
       'anonymous' => CommentInterface::ANONYMOUS_MAYNOT_CONTACT,
-      'preview' => CommentPreviewMode::Optional->value,
+      'preview' => DRUPAL_OPTIONAL,
     ] + parent::defaultFieldSettings();
   }
 
@@ -144,7 +143,11 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#type' => 'radios',
       '#title' => $this->t('Preview comment'),
       '#default_value' => $settings['preview'],
-      '#options' => CommentPreviewMode::asOptions(),
+      '#options' => [
+        DRUPAL_DISABLED => $this->t('Disabled'),
+        DRUPAL_OPTIONAL => $this->t('Optional'),
+        DRUPAL_REQUIRED => $this->t('Required'),
+      ],
     ];
 
     return $element;

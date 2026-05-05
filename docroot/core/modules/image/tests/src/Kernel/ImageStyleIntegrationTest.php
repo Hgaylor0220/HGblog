@@ -11,14 +11,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the integration of ImageStyle with the core.
+ *
+ * @group image
  */
-#[Group('image')]
-#[RunTestsInSeparateProcesses]
 class ImageStyleIntegrationTest extends KernelTestBase {
 
   /**
@@ -28,6 +26,7 @@ class ImageStyleIntegrationTest extends KernelTestBase {
     'image',
     'file',
     'field',
+    'system',
     'user',
     'node',
   ];

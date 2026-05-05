@@ -7,18 +7,15 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\node\NodeViewBuilder;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the node view builder.
+ *
+ * @group node
+ *
+ * @coversDefaultClass \Drupal\node\NodeViewBuilder
  */
-#[CoversClass(NodeViewBuilder::class)]
-#[Group('node')]
-#[RunTestsInSeparateProcesses]
 class NodeViewBuilderTest extends EntityKernelTestBase {
 
   /**
@@ -70,9 +67,9 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests that node links are displayed correctly in pending revisions.
    *
-   * @legacy-covers ::buildComponents
-   * @legacy-covers ::renderLinks
-   * @legacy-covers ::buildLinks
+   * @covers ::buildComponents
+   * @covers ::renderLinks
+   * @covers ::buildLinks
    */
   public function testPendingRevisionLinks(): void {
     $account = User::create([

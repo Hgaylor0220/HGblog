@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Test;
 
-use Behat\Mink\Driver\BrowserKitDriver;
-use Behat\Mink\Session;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Component\Utility\Random;
 use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Tests\BrowserTestBase;
+use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Session;
 
 /**
- * Tests Drupal\Tests\BrowserTestBase.
+ * @coversDefaultClass \Drupal\Tests\BrowserTestBase
+ * @group Test
  */
-#[CoversClass(BrowserTestBase::class)]
-#[Group('Test')]
 class BrowserTestBaseTest extends UnitTestCase {
 
   protected function mockBrowserTestBaseWithDriver($driver) {
@@ -28,7 +26,7 @@ class BrowserTestBaseTest extends UnitTestCase {
       ->method('getDriver')
       ->willReturn($driver);
 
-    $btb = $this->getMockBuilder(BrowserTestBaseMockableClassTest::class)
+    $btb = $this->getMockBuilder(BrowserTestBaseMockableClass::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getSession'])
       ->getMock();
@@ -40,7 +38,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests get http client.
+   * @covers ::getHttpClient
    */
   public function testGetHttpClient(): void {
     // Our stand-in for the Guzzle client object.
@@ -63,7 +61,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests get http client exception.
+   * @covers ::getHttpClient
    */
   public function testGetHttpClientException(): void {
     // A driver type that isn't BrowserKitDriver. This should cause a
@@ -79,11 +77,13 @@ class BrowserTestBaseTest extends UnitTestCase {
 
   /**
    * Tests that tearDown doesn't call cleanupEnvironment if setUp is not called.
+   *
+   * @covers ::tearDown
    */
   public function testTearDownWithoutSetUp(): void {
     $method = 'cleanupEnvironment';
     $this->assertTrue(method_exists(BrowserTestBase::class, $method));
-    $btb = $this->getMockBuilder(BrowserTestBaseMockableClassTest::class)
+    $btb = $this->getMockBuilder(BrowserTestBaseMockableClass::class)
       ->disableOriginalConstructor()
       ->onlyMethods([$method])
       ->getMock();
@@ -92,13 +92,24 @@ class BrowserTestBaseTest extends UnitTestCase {
     $ref_tearDown->invoke($btb);
   }
 
+  /**
+   * Tests the deprecation of accessing the randomGenerator property directly.
+   *
+   * @group legacy
+   */
+  public function testGetRandomGeneratorPropertyDeprecation(): void {
+    $this->expectDeprecation('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445');
+    // We purposely test accessing an undefined property here. We need to tell
+    // PHPStan to ignore that.
+    // @phpstan-ignore-next-line
+    $this->assertInstanceOf(Random::class, $this->randomGenerator);
+  }
+
 }
 
 /**
  * A class extending BrowserTestBase for testing purposes.
- *
- * @phpstan-ignore testClass.missingAttribute.Group, testClass.missingAttribute.RunInSeparateProcesses
  */
-class BrowserTestBaseMockableClassTest extends BrowserTestBase {
+class BrowserTestBaseMockableClass extends BrowserTestBase {
 
 }

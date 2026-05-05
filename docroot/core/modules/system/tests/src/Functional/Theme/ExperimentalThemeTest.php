@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the installation of experimental themes.
+ *
+ * @group Theme
  */
-#[Group('Theme')]
-#[RunTestsInSeparateProcesses]
 class ExperimentalThemeTest extends BrowserTestBase {
 
   /**
@@ -108,7 +106,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The following themes are experimental: Experimental dependency test');
 
     // There should be a message about enabling dependencies.
-    $this->assertSession()->pageTextContains('You must install the following theme to install Experimental dependency test:Experimental test');
+    $this->assertSession()->pageTextContains('You must install the Experimental test theme to install Experimental dependency test');
 
     // Enable the theme and confirm that it worked.
     $this->submitForm([], 'Continue');

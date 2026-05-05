@@ -13,16 +13,12 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\views\Unit\Plugin\HandlerTestTrait;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\ResultRow;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests Drupal\views\Plugin\views\field\EntityField.
+ * @coversDefaultClass \Drupal\views\Plugin\views\field\EntityField
+ * @group views
  */
-#[CoversClass(EntityField::class)]
-#[Group('views')]
 class FieldTest extends UnitTestCase {
 
   use HandlerTestTrait;
@@ -127,9 +123,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests construct.
-   *
-   * @legacy-covers ::__construct
+   * @covers ::__construct
    */
   public function testConstruct(): void {
     $definition = [
@@ -144,7 +138,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests define options with no options.
+   * @covers ::defineOptions
    */
   public function testDefineOptionsWithNoOptions(): void {
     $definition = [
@@ -171,7 +165,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests define options with default formatter on field definition.
+   * @covers ::defineOptions
    */
   public function testDefineOptionsWithDefaultFormatterOnFieldDefinition(): void {
     $definition = [
@@ -199,7 +193,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests define options with default formatter on field type.
+   * @covers ::defineOptions
    */
   public function testDefineOptionsWithDefaultFormatterOnFieldType(): void {
     $definition = [
@@ -226,7 +220,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies with base field.
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithBaseField(): void {
     $definition = [
@@ -248,7 +242,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies with configured field.
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithConfiguredField(): void {
     $definition = [
@@ -274,7 +268,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests access.
+   * @covers ::access
    */
   public function testAccess(): void {
     $definition = [
@@ -322,12 +316,11 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests the click sort order.
+   * @dataProvider providerSortOrders
    *
    * @param string $order
    *   The sort order.
    */
-  #[DataProvider('providerSortOrders')]
   public function testClickSortWithOutConfiguredColumn($order): void {
     $definition = [
       'entity_type' => 'test_entity',
@@ -343,12 +336,13 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests click sort with base field.
+   * @dataProvider providerSortOrders
    *
    * @param string $order
    *   The sort order.
+   *
+   * @covers ::clickSort
    */
-  #[DataProvider('providerSortOrders')]
   public function testClickSortWithBaseField($order): void {
     $definition = [
       'entity_type' => 'test_entity',
@@ -402,12 +396,13 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests click sort with configured field.
+   * @dataProvider providerSortOrders
    *
    * @param string $order
    *   The sort order.
+   *
+   * @covers ::clickSort
    */
-  #[DataProvider('providerSortOrders')]
   public function testClickSortWithConfiguredField($order): void {
     $definition = [
       'entity_type' => 'test_entity',
@@ -461,7 +456,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests query with group by for base field.
+   * @covers ::query
    */
   public function testQueryWithGroupByForBaseField(): void {
     $definition = [
@@ -523,7 +518,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests query with group by for config field.
+   * @covers ::query
    */
   public function testQueryWithGroupByForConfigField(): void {
     $definition = [
@@ -585,9 +580,10 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * Tests prepare items by delta.
+   * @covers ::prepareItemsByDelta
+   *
+   * @dataProvider providerTestPrepareItemsByDelta
    */
-  #[DataProvider('providerTestPrepareItemsByDelta')]
   public function testPrepareItemsByDelta(array $options, array $expected_values): void {
     $definition = [
       'entity_type' => 'test_entity',
@@ -671,7 +667,6 @@ class FieldTest extends UnitTestCase {
    * Returns a mocked base field storage object.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
-   *   The mocked field storage object.
    */
   protected function getBaseFieldStorage() {
     $title_storage = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
@@ -691,7 +686,6 @@ class FieldTest extends UnitTestCase {
    * Returns a mocked configurable field storage object.
    *
    * @return \Drupal\field\FieldStorageConfigInterface|\PHPUnit\Framework\MockObject\MockObject
-   *   The mocked field storage object.
    */
   protected function getConfigFieldStorage() {
     $title_storage = $this->createMock('Drupal\field\FieldStorageConfigInterface');
@@ -711,7 +705,6 @@ class FieldTest extends UnitTestCase {
    * Provides sort orders for clickSort() test methods.
    *
    * @return array
-   *   An array of sort orders.
    */
   public static function providerSortOrders() {
     return [
@@ -727,10 +720,10 @@ class FieldTest extends UnitTestCase {
    *
    * @param \Drupal\views\Plugin\views\field\EntityField $handler
    *   The field handler.
-   * @param array $definition
+   * @param $definition
    *   An array with entity type definition data.
    */
-  protected function setupLanguageRenderer(EntityField $handler, $definition): void {
+  protected function setupLanguageRenderer(EntityField $handler, $definition) {
     $display_handler = $this->getMockBuilder('\Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()
       ->getMock();
@@ -761,14 +754,8 @@ class FieldTest extends UnitTestCase {
 
 }
 
-/**
- * Stub class for testing EntityField methods.
- */
 class FieldTestEntityField extends EntityField {
 
-  /**
-   * {@inheritdoc}
-   */
   public function executePrepareItemsByDelta(array $all_values) {
     return $this->prepareItemsByDelta($all_values);
   }

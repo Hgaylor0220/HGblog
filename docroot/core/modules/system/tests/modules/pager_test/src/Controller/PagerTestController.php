@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\pager_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -9,6 +7,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routine for testing the pager.
@@ -21,6 +20,13 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
    * @var \Drupal\Core\Pager\PagerParametersInterface
    */
   protected $pagerParams;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('pager.parameters'));
+  }
 
   /**
    * Construct a new PagerTestController object.
@@ -80,7 +86,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
 
     // Counter of calls to the current pager.
     $query_params = $this->pagerParams->getQueryParameters();
-    $pager_calls = isset($query_params['pager_calls']) ? ($query_params['pager_calls'] ?: 0) : 0;
+    $pager_calls = isset($query_params['pager_calls']) ? ($query_params['pager_calls'] ? $query_params['pager_calls'] : 0) : 0;
     $build['l_pager_pager_0'] = ['#markup' => $this->t('Pager calls: @pager_calls', ['@pager_calls' => $pager_calls])];
 
     // Pager.
@@ -110,7 +116,6 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
       '#attributes' => ['class' => ['test-pager-0']],
       'pager' => [
         '#type' => 'pager',
-        '#route_name' => '<current>',
         '#element' => 0,
       ],
     ];
@@ -121,7 +126,6 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
       '#attributes' => ['class' => ['test-pager-1']],
       'pager' => [
         '#type' => 'pager',
-        '#route_name' => '<current>',
         '#element' => 1,
       ],
     ];
@@ -132,7 +136,6 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
       '#attributes' => ['class' => ['test-pager-4']],
       'pager' => [
         '#type' => 'pager',
-        '#route_name' => '<current>',
         '#element' => 4,
       ],
     ];
@@ -141,9 +144,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
   }
 
   /**
-   * Render API callback: Shows the pager cache context for type pager.
-   *
-   * This function is assigned as a #pre_render callback.
+   * #pre_render callback for #type => pager that shows the pager cache context.
    */
   public static function showPagerCacheContext(array $pager) {
     \Drupal::messenger()->addStatus(\Drupal::service('cache_contexts_manager')->convertTokensToKeys(['url.query_args.pagers:' . $pager['#element']])->getKeys()[0]);

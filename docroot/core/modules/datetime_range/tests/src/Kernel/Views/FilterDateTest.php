@@ -9,14 +9,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\datetime\Kernel\Views\DateTimeHandlerTestBase;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests date-only fields.
+ *
+ * @group datetime
  */
-#[Group('datetime')]
-#[RunTestsInSeparateProcesses]
 class FilterDateTest extends DateTimeHandlerTestBase {
 
   /**
@@ -24,7 +22,9 @@ class FilterDateTest extends DateTimeHandlerTestBase {
    */
   protected static $modules = [
     'datetime_test',
+    'node',
     'datetime_range',
+    'field',
   ];
 
   /**

@@ -9,14 +9,12 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Plugin\Derivative\BlockContent as DerivativeBlockContent;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests block content plugin deriver.
+ *
+ * @group block_content
  */
-#[Group('block_content')]
-#[RunTestsInSeparateProcesses]
 class BlockContentDeriverTest extends KernelTestBase {
 
   /**
@@ -69,8 +67,8 @@ class BlockContentDeriverTest extends KernelTestBase {
     // Create a block content type.
     $block_content_type = BlockContentType::create([
       'id' => 'spiffy',
-      'label' => 'Very spiffy',
-      'description' => "Provides a block type that increases your site's spiffy rating by up to 11%",
+      'label' => 'Mucho spiffy',
+      'description' => "Provides a block type that increases your site's spiffiness by up to 11%",
     ]);
     $block_content_type->save();
     // And a block content entity.

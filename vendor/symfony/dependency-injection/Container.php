@@ -50,16 +50,16 @@ class_exists(ArgumentServiceLocator::class);
  */
 class Container implements ContainerInterface, ResetInterface
 {
-    protected ParameterBagInterface $parameterBag;
-    protected array $services = [];
-    protected array $privates = [];
-    protected array $fileMap = [];
-    protected array $methodMap = [];
-    protected array $factories = [];
-    protected array $aliases = [];
-    protected array $loading = [];
-    protected array $resolving = [];
-    protected array $syntheticIds = [];
+    protected $parameterBag;
+    protected $services = [];
+    protected $privates = [];
+    protected $fileMap = [];
+    protected $methodMap = [];
+    protected $factories = [];
+    protected $aliases = [];
+    protected $loading = [];
+    protected $resolving = [];
+    protected $syntheticIds = [];
 
     private array $envCache = [];
     private bool $compiled = false;
@@ -79,15 +79,16 @@ class Container implements ContainerInterface, ResetInterface
      *
      *  * Parameter values are resolved;
      *  * The parameter bag is frozen.
+     *
+     * @return void
      */
-    public function compile(): void
+    public function compile()
     {
         $this->parameterBag->resolve();
 
         $this->parameterBag = new FrozenParameterBag(
             $this->parameterBag->all(),
-            $this->parameterBag instanceof ParameterBag ? $this->parameterBag->allDeprecated() : [],
-            $this->parameterBag instanceof ParameterBag ? $this->parameterBag->allNonEmpty() : [],
+            $this->parameterBag instanceof ParameterBag ? $this->parameterBag->allDeprecated() : []
         );
 
         $this->compiled = true;
@@ -112,9 +113,11 @@ class Container implements ContainerInterface, ResetInterface
     /**
      * Gets a parameter.
      *
+     * @return array|bool|string|int|float|\UnitEnum|null
+     *
      * @throws ParameterNotFoundException if the parameter is not defined
      */
-    public function getParameter(string $name): array|bool|string|int|float|\UnitEnum|null
+    public function getParameter(string $name)
     {
         return $this->parameterBag->get($name);
     }
@@ -124,7 +127,10 @@ class Container implements ContainerInterface, ResetInterface
         return $this->parameterBag->has($name);
     }
 
-    public function setParameter(string $name, array|bool|string|int|float|\UnitEnum|null $value): void
+    /**
+     * @return void
+     */
+    public function setParameter(string $name, array|bool|string|int|float|\UnitEnum|null $value)
     {
         $this->parameterBag->set($name, $value);
     }
@@ -134,8 +140,10 @@ class Container implements ContainerInterface, ResetInterface
      *
      * Setting a synthetic service to null resets it: has() returns false and get()
      * behaves in the same way as if the service was never created.
+     *
+     * @return void
      */
-    public function set(string $id, ?object $service): void
+    public function set(string $id, ?object $service)
     {
         // Runs the internal initializer; used by the dumped container to include always-needed files
         if (isset($this->privates['service_container']) && $this->privates['service_container'] instanceof \Closure) {
@@ -274,7 +282,10 @@ class Container implements ContainerInterface, ResetInterface
         return isset($this->services[$id]);
     }
 
-    public function reset(): void
+    /**
+     * @return void
+     */
+    public function reset()
     {
         $services = $this->services + $this->privates;
 
@@ -288,15 +299,7 @@ class Container implements ContainerInterface, ResetInterface
             }
         }
 
-        $this->envCache = $this->services = $this->factories = $this->privates = [];
-    }
-
-    /**
-     * @internal
-     */
-    public function resetEnvCache(): void
-    {
-        $this->envCache = [];
+        $this->services = $this->factories = $this->privates = [];
     }
 
     /**
@@ -335,8 +338,10 @@ class Container implements ContainerInterface, ResetInterface
 
     /**
      * Creates a service by requiring its factory file.
+     *
+     * @return mixed
      */
-    protected function load(string $file): mixed
+    protected function load(string $file)
     {
         return require $file;
     }

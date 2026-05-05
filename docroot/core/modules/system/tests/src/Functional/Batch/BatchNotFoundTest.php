@@ -6,14 +6,12 @@ namespace Drupal\Tests\system\Functional\Batch;
 
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests if a page not found error is returned when a batch ID does not exist.
+ *
+ * @group Batch
  */
-#[Group('Batch')]
-#[RunTestsInSeparateProcesses]
 class BatchNotFoundTest extends BrowserTestBase {
 
   /**
@@ -31,7 +29,7 @@ class BatchNotFoundTest extends BrowserTestBase {
    */
   public function testBatchNotFound(): void {
 
-    $edit = ['batch' => 'batch0'];
+    $edit = ['batch' => 'batch_0'];
     $this->drupalGet('batch-test');
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);

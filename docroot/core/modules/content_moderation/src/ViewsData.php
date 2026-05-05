@@ -59,7 +59,7 @@ class ViewsData {
       $table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
 
       $data[$table]['moderation_state'] = [
-        'title' => $this->t('Moderation state'),
+        'title' => t('Moderation state'),
         'field' => [
           'id' => 'moderation_state_field',
           'default_formatter' => 'content_moderation_state',
@@ -70,18 +70,16 @@ class ViewsData {
       ];
 
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
-      if ($revision_table !== NULL) {
-        $data[$revision_table]['moderation_state'] = [
-          'title' => $this->t('Moderation state'),
-          'field' => [
-            'id' => 'moderation_state_field',
-            'default_formatter' => 'content_moderation_state',
-            'field_name' => 'moderation_state',
-          ],
-          'filter' => ['id' => 'moderation_state_filter', 'allow empty' => TRUE],
-          'sort' => ['id' => 'moderation_state_sort'],
-        ];
-      }
+      $data[$revision_table]['moderation_state'] = [
+        'title' => t('Moderation state'),
+        'field' => [
+          'id' => 'moderation_state_field',
+          'default_formatter' => 'content_moderation_state',
+          'field_name' => 'moderation_state',
+        ],
+        'filter' => ['id' => 'moderation_state_filter', 'allow empty' => TRUE],
+        'sort' => ['id' => 'moderation_state_sort'],
+      ];
     }
 
     return $data;

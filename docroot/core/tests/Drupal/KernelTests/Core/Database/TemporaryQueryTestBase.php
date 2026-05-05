@@ -8,6 +8,8 @@ use Drupal\Core\Database\Database;
 
 /**
  * Tests the temporary query functionality.
+ *
+ * @group Database
  */
 abstract class TemporaryQueryTestBase extends DriverSpecificDatabaseTestBase {
 

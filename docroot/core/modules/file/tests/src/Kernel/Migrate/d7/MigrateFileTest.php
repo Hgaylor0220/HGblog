@@ -6,14 +6,12 @@ namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
 use Drupal\file\Entity\File;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Migrates all files in the file_managed table.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class MigrateFileTest extends MigrateDrupal7TestBase {
 
   use FileMigrationSetupTrait;
@@ -34,7 +32,7 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFileMigrationInfo(): array {
+  protected function getFileMigrationInfo() {
     return [
       'path' => 'public://sites/default/files/cube.jpeg',
       'size' => 3620,

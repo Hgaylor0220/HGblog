@@ -9,24 +9,19 @@ use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\RoleInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Tests Drupal\Core\Session\AccountProxy.
+ * @coversDefaultClass \Drupal\Core\Session\AccountProxy
+ * @group Session
  */
-#[CoversClass(AccountProxy::class)]
-#[Group('Session')]
 class AccountProxyTest extends UnitTestCase {
 
   /**
-   * Tests id.
-   *
-   * @legacy-covers ::id
-   * @legacy-covers ::setInitialAccountId
+   * @covers ::id
+   * @covers ::setInitialAccountId
    */
   public function testId(): void {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -46,7 +41,7 @@ class AccountProxyTest extends UnitTestCase {
   }
 
   /**
-   * Tests set initial account id exception.
+   * @covers ::setInitialAccountId
    */
   public function testSetInitialAccountIdException(): void {
     $this->expectException(\LogicException::class);
@@ -59,7 +54,7 @@ class AccountProxyTest extends UnitTestCase {
   }
 
   /**
-   * Tests has role.
+   * @covers ::hasRole
    */
   public function testHasRole(): void {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);

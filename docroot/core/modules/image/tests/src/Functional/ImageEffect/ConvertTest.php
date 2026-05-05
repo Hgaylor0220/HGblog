@@ -7,14 +7,12 @@ namespace Drupal\Tests\image\Functional\ImageEffect;
 use Drupal\Core\File\FileExists;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the Convert image effect.
+ *
+ * @group image
  */
-#[Group('image')]
-#[RunTestsInSeparateProcesses]
 class ConvertTest extends BrowserTestBase {
 
   /**
@@ -39,7 +37,6 @@ class ConvertTest extends BrowserTestBase {
     $this->assertEquals(SAVED_NEW, $image_style->save());
     $image_style->addImageEffect([
       'id' => 'image_convert',
-      'weight' => 0,
       'data' => [
         'extension' => 'jpeg',
       ],

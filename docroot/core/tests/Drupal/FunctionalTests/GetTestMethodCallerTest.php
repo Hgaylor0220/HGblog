@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Explicit test for BrowserTestBase::getTestMethodCaller().
+ *
+ * @group browsertestbase
  */
-#[Group('browsertestbase')]
-#[RunTestsInSeparateProcesses]
 class GetTestMethodCallerTest extends BrowserTestBase {
 
   /**
@@ -27,7 +25,7 @@ class GetTestMethodCallerTest extends BrowserTestBase {
     $method_caller = $this->getTestMethodCaller();
     $expected = [
       'file' => __FILE__,
-      'line' => 27,
+      'line' => 25,
       'function' => __CLASS__ . '->' . __FUNCTION__ . '()',
       'class' => BrowserTestBase::class,
       'object' => $this,

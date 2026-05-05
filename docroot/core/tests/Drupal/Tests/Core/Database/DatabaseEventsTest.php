@@ -14,14 +14,12 @@ use Drupal\Core\Database\Exception\EventException;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Database\Connection.
+ * @coversDefaultClass \Drupal\Core\Database\Connection
+ *
+ * @group Database
  */
-#[CoversClass(Connection::class)]
-#[Group('Database')]
 class DatabaseEventsTest extends UnitTestCase {
 
   /**
@@ -39,11 +37,9 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * Tests event enabling and disabling.
-   *
-   * @legacy-covers ::isEventEnabled
-   * @legacy-covers ::enableEvents
-   * @legacy-covers ::disableEvents
+   * @covers ::isEventEnabled
+   * @covers ::enableEvents
+   * @covers ::disableEvents
    */
   public function testEventEnablingAndDisabling(): void {
     $this->connection->enableEvents(StatementEvent::all());
@@ -63,9 +59,7 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * Tests enable invalid event.
-   *
-   * @legacy-covers ::enableEvents
+   * @covers ::enableEvents
    */
   public function testEnableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
@@ -74,9 +68,7 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * Tests disable invalid event.
-   *
-   * @legacy-covers ::disableEvents
+   * @covers ::disableEvents
    */
   public function testDisableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
@@ -85,9 +77,7 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * Tests event dispatching when no container available.
-   *
-   * @legacy-covers ::dispatchEvent
+   * @covers ::dispatchEvent
    */
   public function testEventDispatchingWhenNoContainerAvailable(): void {
     $this->expectException(EventException::class);

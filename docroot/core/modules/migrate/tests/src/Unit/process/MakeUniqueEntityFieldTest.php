@@ -8,15 +8,11 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField.
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField
+ * @group migrate
  */
-#[CoversClass(MakeUniqueEntityField::class)]
-#[Group('migrate')]
 class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
 
   /**
@@ -67,8 +63,9 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
 
   /**
    * Tests making an entity field value unique.
+   *
+   * @dataProvider providerTestMakeUniqueEntityField
    */
-  #[DataProvider('providerTestMakeUniqueEntityField')]
   public function testMakeUniqueEntityField($count, $postfix = '', $start = NULL, $length = NULL): void {
     $configuration = [
       'entity_type' => 'test_entity_type',
@@ -164,7 +161,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
    * @param int $count
    *   The number of unique values to be set up.
    */
-  protected function entityQueryExpects($count): void {
+  protected function entityQueryExpects($count) {
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('condition')
       ->willReturn($this->entityQuery);

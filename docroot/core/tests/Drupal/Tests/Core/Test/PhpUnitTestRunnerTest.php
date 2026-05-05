@@ -9,23 +9,19 @@ use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestStatus;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Test\PhpUnitTestRunner.
+ * @coversDefaultClass \Drupal\Core\Test\PhpUnitTestRunner
+ * @group Test
  *
  * @see Drupal\Tests\simpletest\Unit\SimpletestPhpunitRunCommandTest
  */
-#[CoversClass(PhpUnitTestRunner::class)]
-#[Group('Test')]
 class PhpUnitTestRunnerTest extends UnitTestCase {
 
   /**
    * Tests an error in the test running phase.
    *
-   * @legacy-covers ::execute
+   * @covers ::execute
    */
   public function testRunTestsError(): void {
     $test_id = 23;
@@ -57,9 +53,9 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $runner->expects($this->once())
       ->method('runCommand')
       ->willReturnCallback(
-        function (string $test_class_name, string $log_junit_file_path, int &$status, array &$output): void {
-          $status = TestStatus::SYSTEM;
-          $output = ['A most serious error occurred.'];
+        function ($unescaped_test_classnames, $phpunit_file, &$status) {
+          $status = TestStatus::EXCEPTION;
+          return ' ';
         }
       );
 
@@ -67,30 +63,28 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     // to some value we don't expect back.
     $status = -1;
     $test_run = TestRun::createNew($storage);
-    $results = $runner->execute($test_run, 'SomeTest', $status);
+    $results = $runner->execute($test_run, ['SomeTest'], $status);
 
     // Make sure our status code made the round trip.
-    $this->assertEquals(TestStatus::SYSTEM, $status);
+    $this->assertEquals(TestStatus::EXCEPTION, $status);
 
     // A serious error in runCommand() should give us a fixed set of results.
     $row = reset($results);
-    unset($row['time']);
     $fail_row = [
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
-      'status' => TestStatus::label(TestStatus::SYSTEM),
-      'message' => 'A most serious error occurred.',
+      'status' => TestStatus::label(TestStatus::EXCEPTION),
+      'message' => 'PHPUnit Test failed to complete; Error: ',
       'message_group' => 'Other',
-      'function' => '*** Process execution output ***',
+      'function' => 'SomeTest',
       'line' => '0',
       'file' => $log_path,
-      'exit_code' => 3,
     ];
     $this->assertEquals($fail_row, $row);
   }
 
   /**
-   * Tests php unit command.
+   * @covers ::phpUnitCommand
    */
   public function testPhpUnitCommand(): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
@@ -98,21 +92,20 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
   }
 
   /**
-   * Tests xml log file path.
+   * @covers ::xmlLogFilePath
    */
   public function testXmlLogFilePath(): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
-  public static function providerTestSummarizeResults(): array {
+  public static function providerTestSummarizeResults() {
     return [
       [
         [
           [
             'test_class' => static::class,
             'status' => 'pass',
-            'time' => 0.010001,
           ],
         ],
         '#pass',
@@ -122,7 +115,6 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'fail',
-            'time' => 0.010002,
           ],
         ],
         '#fail',
@@ -132,7 +124,6 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'exception',
-            'time' => 0.010003,
           ],
         ],
         '#exception',
@@ -142,7 +133,6 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
           [
             'test_class' => static::class,
             'status' => 'debug',
-            'time' => 0.010004,
           ],
         ],
         '#debug',
@@ -151,9 +141,9 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
   }
 
   /**
-   * Tests summarize results.
+   * @dataProvider providerTestSummarizeResults
+   * @covers ::summarizeResults
    */
-  #[DataProvider('providerTestSummarizeResults')]
   public function testSummarizeResults($results, $has_status): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $summary = $runner->summarizeResults($results);

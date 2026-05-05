@@ -10,14 +10,11 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\Core\Breadcrumb\BreadcrumbManager.
+ * @coversDefaultClass \Drupal\Core\Breadcrumb\BreadcrumbManager
+ * @group Breadcrumb
  */
-#[CoversClass(BreadcrumbManager::class)]
-#[Group('Breadcrumb')]
 class BreadcrumbManagerTest extends UnitTestCase {
 
   /**

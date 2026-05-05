@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Annotation;
 
 use Drupal\Component\Annotation\AnnotationBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Drupal\Component\Annotation\AnnotationBase.
+ * @coversDefaultClass \Drupal\Component\Annotation\AnnotationBase
+ * @group Annotation
  */
-#[CoversClass(AnnotationBase::class)]
-#[Group('Annotation')]
 class AnnotationBaseTest extends TestCase {
 
   /**
-   * @legacy-covers ::getProvider
-   * @legacy-covers ::setProvider
+   * @covers ::getProvider
+   * @covers ::setProvider
    */
   public function testSetProvider(): void {
     $plugin = new AnnotationBaseStub();
@@ -27,7 +24,7 @@ class AnnotationBaseTest extends TestCase {
   }
 
   /**
-   * Tests get id.
+   * @covers ::getId
    */
   public function testGetId(): void {
     $plugin = new AnnotationBaseStub();
@@ -37,8 +34,8 @@ class AnnotationBaseTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getClass
-   * @legacy-covers ::setClass
+   * @covers ::getClass
+   * @covers ::setClass
    */
   public function testSetClass(): void {
     $plugin = new AnnotationBaseStub();

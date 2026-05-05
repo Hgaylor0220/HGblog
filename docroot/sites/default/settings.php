@@ -902,7 +902,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $config['search_api.server.searchstax']['backend_config']['read_only'] = FALSE;
       
       // Override the Key value with the Admin/Write token
-      $config['key.key.searchstax_solr_connector_credentials']['key_provider_settings']['key_value'] = 'd1fcd2e8aaa4c6cc580ea28242a5c60a87ddbfb3';
+      $config['key.key.searchstax_solr_connector_credentials']['key_provider_settings']['key_value'] = 'YOUR_PRODUCTION_ADMIN_TOKEN';
       break;
   }
 } else {
@@ -929,9 +929,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-// if (file_exists('/var/www/site-php')) {
-//   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
-// }
 // $settings['trusted_host_patterns'] = [
 //   '^www\.HaileyGaylorBlog\.com$',
 //   '^.*\eehaileygaylordev.prod.acquia-sites\.com$',
@@ -942,5 +939,5 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 //   require('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc');
 // }
 if (file_exists('/var/www/site-php')) {
-  require('/var/www/site-php/eehaileygaylordev/eehaileygaylordev-settings.inc');
+  require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
 }

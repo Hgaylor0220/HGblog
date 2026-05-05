@@ -11,18 +11,17 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\comment\CommentManager.
+ * @coversDefaultClass \Drupal\comment\CommentManager
+ * @group comment
  */
-#[CoversClass(CommentManager::class)]
-#[Group('comment')]
 class CommentManagerTest extends UnitTestCase {
 
   /**
    * Tests the getFields method.
+   *
+   * @covers ::getFields
    */
   public function testGetFields(): void {
     // Set up a content entity type.

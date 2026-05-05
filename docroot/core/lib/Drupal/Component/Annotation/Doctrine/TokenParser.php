@@ -6,7 +6,7 @@
  *
  * This class is a near-copy of Doctrine\Common\Annotations\TokenParser, which
  * is part of the Doctrine project: <http://www.doctrine-project.org>. It was
- * copied from version 2.0.2.
+ * copied from version 1.14.4.
  *
  * Original copyright:
  *
@@ -69,7 +69,8 @@ class TokenParser
      */
     private $pointer = 0;
 
-    public function __construct(string $contents)
+    /** @param string $contents */
+    public function __construct($contents)
     {
         $this->tokens = token_get_all($contents);
 
@@ -93,7 +94,7 @@ class TokenParser
      *
      * @return mixed[]|string|null The token if exists, null otherwise.
      */
-    public function next(bool $docCommentIsComment = true)
+    public function next($docCommentIsComment = true)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
@@ -171,7 +172,7 @@ class TokenParser
      *
      * @return array<string, string> A list with all found use statements.
      */
-    public function parseUseStatements(string $namespaceName)
+    public function parseUseStatements($namespaceName)
     {
         $statements = [];
         while (($token = $this->next())) {

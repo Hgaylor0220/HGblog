@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional\Views;
 
 use Drupal\Tests\comment\Functional\CommentTestBase as CommentBrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests comment edit functionality.
+ *
+ * @group comment
  */
-#[Group('comment')]
-#[RunTestsInSeparateProcesses]
 class CommentEditTest extends CommentBrowserTestBase {
 
   /**

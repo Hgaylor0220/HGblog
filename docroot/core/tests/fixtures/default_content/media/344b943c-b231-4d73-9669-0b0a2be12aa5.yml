@@ -19,12 +19,15 @@ default:
   name:
     -
       value: druplicon.png
+  created:
+    -
+      value: 1711121695
   revision_translation_affected:
     -
       value: true
   path:
     -
-      alias: null
+      alias: ''
       langcode: en
   field_media_image:
     -

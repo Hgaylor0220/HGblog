@@ -3,7 +3,6 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Template\Attribute\TwigAllowed;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicyInterface;
 
@@ -100,12 +99,6 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       if (str_starts_with($method, $prefix)) {
         return;
       }
-    }
-
-    // Allow the method if it has a TwigAllowed attribute.
-    $reflectionMethod = new \ReflectionMethod($obj, $method);
-    if ($reflectionMethod->getAttributes(TwigAllowed::class)) {
-      return;
     }
 
     throw new SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, get_class($obj)));

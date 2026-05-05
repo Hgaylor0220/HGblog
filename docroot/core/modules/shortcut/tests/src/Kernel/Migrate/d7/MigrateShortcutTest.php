@@ -7,14 +7,12 @@ namespace Drupal\Tests\shortcut\Kernel\Migrate\d7;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\ShortcutInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test shortcut menu links migration to Shortcut entities.
+ *
+ * @group shortcut
  */
-#[Group('shortcut')]
-#[RunTestsInSeparateProcesses]
 class MigrateShortcutTest extends MigrateDrupal7TestBase {
 
   /**
@@ -22,6 +20,7 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
    */
   protected static $modules = [
     'link',
+    'field',
     'shortcut',
     'menu_link_content',
   ];

@@ -76,9 +76,6 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
    */
   protected const SKIP_HEADERS = ['content-type', 'content-transfer-encoding'];
 
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $container->get('logger.channel.mail')
@@ -100,9 +97,6 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
   ) {
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function format(array $message) {
     foreach ($message['body'] as &$part) {
       // If the message contains HTML, convert it to plain text (which also
@@ -123,9 +117,6 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
     return $message;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function mail(array $message) {
     try {
       $email = new Email();
@@ -142,11 +133,8 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
         }
       }
 
-      // Parse the recipients into an array of addresses.
-      $recipients = array_map(trim(...), str_getcsv($message['to'], escape: "\\"));
-
       $email
-        ->to(...$recipients)
+        ->to($message['to'])
         ->subject($message['subject'])
         ->text($message['body']);
 
@@ -178,7 +166,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
       // mails into the code path (i.e., event subscribers) of the new API.
       // Therefore, this plugin deliberately refrains from injecting the event
       // dispatcher.
-      $factories = Transport::getDefaultFactories();
+      $factories = Transport::getDefaultFactories(logger: $this->logger);
       $transportFactory = new Transport($factories);
       $transport = $transportFactory->fromDsnObject($dsnObject);
       $this->mailer = new Mailer($transport);

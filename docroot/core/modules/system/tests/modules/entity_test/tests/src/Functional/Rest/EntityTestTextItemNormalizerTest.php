@@ -8,18 +8,13 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore cádiz
 
 /**
- * Tests EntityTest Text Item Normalizer.
+ * @group rest
+ * @group #slow
  */
-#[Group('rest')]
-#[Group('#slow')]
-#[RunTestsInSeparateProcesses]
 class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
 
   use AnonResourceTestTrait;
@@ -159,8 +154,9 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
 
   /**
    * Tests GETting an entity with the test text field set to a specific format.
+   *
+   * @dataProvider providerTestGetWithFormat
    */
-  #[DataProvider('providerTestGetWithFormat')]
   public function testGetWithFormat($text_format_id, array $expected_cache_tags): void {
     FilterFormat::create([
       'name' => 'Pablo Picasso',
@@ -189,9 +185,6 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
     $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
   }
 
-  /**
-   * Provides test cases for text format retrieval with expected cache tags.
-   */
   public static function providerTestGetWithFormat() {
     return [
       'format specified (different from fallback format)' => [

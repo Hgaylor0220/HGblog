@@ -14,15 +14,14 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\EntityTestAccessControlHandler;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests entity access control handler custom internal cache ID.
+ *
+ * @coversDefaultClass \Drupal\Core\Entity\EntityAccessControlHandler
+ *
+ * @group Entity
  */
-#[CoversClass(EntityAccessControlHandler::class)]
-#[Group('Entity')]
 class EntityCreateAccessCustomCidTest extends UnitTestCase {
 
   /**
@@ -98,6 +97,7 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
    */
   protected function setUpAccessCache(EntityAccessControlHandler $handler, bool $in_cache, string $cid): \ReflectionProperty {
     $access_cache = new \ReflectionProperty($handler, 'accessCache');
+    $access_cache->setAccessible(TRUE);
 
     $cache = [];
     if ($in_cache) {
@@ -126,9 +126,9 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
    * @param bool $cacheable
    *   If the test createAccess() check should be cacheable.
    *
-   * @legacy-covers ::buildCreateAccessCid
+   * @covers ::buildCreateAccessCid
+   * @dataProvider providerTestDefaultCid
    */
-  #[DataProvider('providerTestDefaultCid')]
   public function testDefaultCid(array $context, bool $in_cache, bool $cacheable): void {
     $bundle = $this->randomMachineName();
     $cid = "create:{$bundle}";
@@ -214,9 +214,9 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
    * @param bool $in_cache
    *   Whether there is already a cached createAccess() check for the cache ID.
    *
-   * @legacy-covers ::buildCreateAccessCid
+   * @covers ::buildCreateAccessCid
+   * @dataProvider providerTestCustomCid
    */
-  #[DataProvider('providerTestCustomCid')]
   public function testCustomCid(string $bundle, array $context, string $cid, bool $in_cache): void {
     $context['langcode'] = $this->langcode;
 

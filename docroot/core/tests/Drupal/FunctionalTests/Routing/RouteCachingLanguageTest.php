@@ -8,18 +8,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\link\LinkItemInterface;
-use Drupal\link\LinkTitleVisibility;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that route lookup is cached by the current language.
+ *
+ * @group routing
  */
-#[Group('routing')]
-#[RunTestsInSeparateProcesses]
 class RouteCachingLanguageTest extends BrowserTestBase {
 
   use ContentTranslationTestTrait;
@@ -91,7 +87,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'settings' => [
-        'title' => LinkTitleVisibility::Optional->value,
+        'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ]);
@@ -128,8 +124,9 @@ class RouteCachingLanguageTest extends BrowserTestBase {
 
   /**
    * Creates content with a link field pointing to an alias of another language.
+   *
+   * @dataProvider providerLanguage
    */
-  #[DataProvider('providerLanguage')]
   public function testLinkTranslationWithAlias($source_langcode): void {
     $source_url_options = [
       'language' => ConfigurableLanguage::load($source_langcode),
@@ -193,7 +190,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
   /**
    * Data provider for testFromUri().
    */
-  public static function providerLanguage(): array {
+  public static function providerLanguage() {
     return [
       ['en'],
       ['fr'],

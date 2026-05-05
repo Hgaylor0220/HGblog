@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render\Plugin\DisplayVariant;
 
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Display\Attribute\PageDisplayVariant;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Display\VariantBase;
@@ -66,11 +65,6 @@ class SimplePageVariant extends VariantBase implements PageVariantInterface {
         'main_content' => ['#weight' => -800] + $this->mainContent,
       ],
     ];
-
-    $cache = new CacheableMetadata();
-    $cache->addCacheableDependency($this);
-    $cache->applyTo($build);
-
     return $build;
   }
 

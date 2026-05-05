@@ -15,7 +15,7 @@ class BlockContentTypeListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity/* , ?CacheableMetadata $cacheability = NULL */) {
+  public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
     // Place the edit operation after the operations added by field_ui.module
     // which have the weights 15, 20, 25.

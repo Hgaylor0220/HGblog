@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentPreviewMode;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Entity\Comment;
@@ -29,6 +28,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     'block',
     'comment',
     'node',
+    'history',
     'field_ui',
     'datetime',
   ];
@@ -64,7 +64,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     // child classes may specify the standard profile.
     $types = NodeType::loadMultiple();
     if (empty($types['article'])) {
-      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+      $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
     }
 
     // Create two test users.
@@ -108,7 +108,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment body.
    * @param string $subject
    *   Comment subject.
-   * @param null|true|array $contact
+   * @param string $contact
    *   Set to NULL for no contact info, TRUE to ignore success checking, and
    *   array of values to set contact info.
    * @param string $field_name
@@ -148,28 +148,27 @@ abstract class CommentTestBase extends BrowserTestBase {
     if ($contact !== NULL && is_array($contact)) {
       $edit += $contact;
     }
-    $preview_mode = CommentPreviewMode::from($preview_mode);
     switch ($preview_mode) {
-      case CommentPreviewMode::Required:
+      case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
         $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
-      case CommentPreviewMode::Optional:
+      case DRUPAL_OPTIONAL:
         $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
-      case CommentPreviewMode::Disabled:
+      case DRUPAL_DISABLED:
         $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
     }
     $match = [];
-    // Get comment ID.
+    // Get comment ID
     preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.
@@ -184,6 +183,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     }
 
     if (isset($match[1])) {
+      \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$match[1]]);
       return Comment::load($match[1]);
     }
   }
@@ -199,7 +199,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return bool
    *   Boolean indicating whether the comment was found.
    */
-  protected function commentExists(?CommentInterface $comment = NULL, $reply = FALSE): bool {
+  protected function commentExists(?CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $comment_element = $this->cssSelect(($reply ? '.indented ' : '') . 'article#comment-' . $comment->id());
       if (empty($comment_element)) {
@@ -259,18 +259,27 @@ abstract class CommentTestBase extends BrowserTestBase {
   /**
    * Sets the value governing the previewing mode for the comment form.
    *
-   * @param \Drupal\comment\CommentPreviewMode|int $mode
-   *   The preview mode, a case of the CommentPreviewMode enum.
+   * @param int $mode
+   *   The preview mode: DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
    * @param string $field_name
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  protected function setCommentPreview(CommentPreviewMode|int $mode, $field_name = 'comment') {
-    if (!$mode instanceof CommentPreviewMode) {
-      @trigger_error('Calling ' . __METHOD__ . ' with an integer $mode parameter is deprecated in drupal:11.3.0 and it will be removed in drupal:13.0.0. Use the \Drupal\comment\CommentPreviewMode enum instead. See https://www.drupal.org/node/3538678', E_USER_DEPRECATED);
-      $mode = CommentPreviewMode::from($mode);
+  protected function setCommentPreview($mode, $field_name = 'comment') {
+    switch ($mode) {
+      case DRUPAL_DISABLED:
+        $mode_text = 'disabled';
+        break;
+
+      case DRUPAL_OPTIONAL:
+        $mode_text = 'optional';
+        break;
+
+      case DRUPAL_REQUIRED:
+        $mode_text = 'required';
+        break;
     }
-    $this->setCommentSettings('preview', $mode->value, '', $field_name);
+    $this->setCommentSettings('preview', $mode, new FormattableMarkup('Comment preview @mode_text.', ['@mode_text' => $mode_text]), $field_name);
   }
 
   /**
@@ -318,9 +327,9 @@ abstract class CommentTestBase extends BrowserTestBase {
    *
    * @param string $name
    *   Name of variable.
-   * @param string|int $value
+   * @param string $value
    *   Value of variable.
-   * @param string|\Stringable $message
+   * @param string $message
    *   Status message to display.
    * @param string $field_name
    *   (optional) Field name through which the comment should be posted.
@@ -338,7 +347,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return bool
    *   Contact info is available.
    */
-  protected function commentContactInfoAvailable(): bool {
+  protected function commentContactInfoAvailable() {
     return (bool) preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
   }
 

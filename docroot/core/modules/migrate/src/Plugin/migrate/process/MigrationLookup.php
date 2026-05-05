@@ -250,10 +250,10 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       try {
         $destination_ids = $this->migrateStub->createStub($stub_migration, $source_id_values[$stub_migration], [], FALSE);
       }
-      catch (\LogicException) {
+      catch (\LogicException $e) {
         // For BC reasons, we must allow attempting to stub a derived migration.
       }
-      catch (PluginNotFoundException) {
+      catch (PluginNotFoundException $e) {
         // For BC reasons, we must allow attempting to stub a non-existent
         // migration.
       }
@@ -264,15 +264,13 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         // Build a new message.
         $skip_row_exception_message = $e->getMessage();
         if (empty($skip_row_exception_message)) {
-          $new_message = sprintf("Migration lookup for value '%s' and destination '%s' attempted to create a stub using migration %s, which resulted in a row skip",
-            $value,
+          $new_message = sprintf("Migration lookup for destination '%s' attempted to create a stub using migration %s, which resulted in a row skip",
             $destination_property,
             $stub_migration,
           );
         }
         else {
-          $new_message = sprintf("Migration lookup for value '%s' and destination '%s' attempted to create a stub using migration %s, which resulted in a row skip, with message '%s'",
-            $value,
+          $new_message = sprintf("Migration lookup for destination '%s' attempted to create a stub using migration %s, which resulted in a row skip, with message '%s'",
             $destination_property,
             $stub_migration,
             $skip_row_exception_message,

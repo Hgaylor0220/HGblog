@@ -7,18 +7,17 @@ namespace Drupal\Tests\views_ui\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\SourceString;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 // cSpell:ignore Blokk hozzáadása
+
 /**
  * Tests the display UI.
+ *
+ * @group views_ui
  */
-#[Group('views_ui')]
-#[RunTestsInSeparateProcesses]
 class DisplayTest extends WebDriverTestBase {
 
   use NodeCreationTrait;
@@ -42,11 +41,6 @@ class DisplayTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * The views used for testing.
-   *
-   * @var array
-   */
   public static $testViews = ['test_content_ajax', 'test_display'];
 
   /**
@@ -157,7 +151,7 @@ class DisplayTest extends WebDriverTestBase {
    * @param string $selector
    *   The selector for the element that contains the contextual Rink.
    */
-  protected function toggleContextualTriggerVisibility($selector): void {
+  protected function toggleContextualTriggerVisibility($selector) {
     // Hovering over the element itself with should be enough, but does not
     // work. Manually remove the visually-hidden class.
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");
@@ -196,7 +190,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * Helper function for adding interface text translations.
    */
-  private function addTranslation($langcode, $source_string, $translation_string): void {
+  private function addTranslation($langcode, $source_string, $translation_string) {
     $storage = \Drupal::service('locale.storage');
     $string = $storage->findString(['source' => $source_string]);
     if (is_null($string)) {

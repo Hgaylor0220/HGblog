@@ -7,14 +7,12 @@ namespace Drupal\Tests\datetime\Kernel\Views;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\node\Entity\Node;
 use Drupal\views\Views;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the Drupal\datetime\Plugin\views\filter\Date handler.
+ *
+ * @group datetime
  */
-#[Group('datetime')]
-#[RunTestsInSeparateProcesses]
 class FilterDateTimeTest extends DateTimeHandlerTestBase {
 
   /**
@@ -84,7 +82,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests offset operations.
    */
-  protected function _testOffset(): void {
+  protected function _testOffset() {
     $view = Views::getView('test_filter_datetime');
     $field = static::$fieldName . '_value';
 
@@ -119,7 +117,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests between operations.
    */
-  protected function _testBetween(): void {
+  protected function _testBetween() {
     $view = Views::getView('test_filter_datetime');
     $field = static::$fieldName . '_value';
 
@@ -182,7 +180,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests exact date matching.
    */
-  protected function _testExact(): void {
+  protected function _testExact() {
     $view = Views::getView('test_filter_datetime');
     $field = static::$fieldName . '_value';
 

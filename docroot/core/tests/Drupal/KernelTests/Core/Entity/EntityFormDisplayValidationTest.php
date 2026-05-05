@@ -12,16 +12,13 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests validation of entity_form_display entities.
+ *
+ * @group Entity
+ * @group Validation
  */
-#[Group('Entity')]
-#[Group('Validation')]
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;
@@ -42,8 +39,6 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('user');
     $this->installConfig('node');
     $this->createContentType(['type' => 'one']);
     $this->createContentType(['type' => 'two']);
@@ -65,10 +60,10 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
   /**
    * Tests validation of entity form display component's widget settings.
    */
-  public function testMultilineTextFieldWidgetTextAreaPlaceholder(): void {
+  public function testMultilineTextFieldWidgetPlaceholder(): void {
     // First, create a field for which widget settings exist.
     $text_field_storage_config = FieldStorageConfig::create([
-      'type' => 'text_long',
+      'type' => 'text_with_summary',
       'field_name' => 'novel',
       'entity_type' => 'user',
     ]);
@@ -88,51 +83,13 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
     // Then, configure a form display widget for this field.
     assert($this->entity instanceof EntityFormDisplayInterface);
     $this->entity->setComponent('novel', [
-      'type' => 'text_textarea',
+      'type' => 'text_textarea_with_summary',
       'region' => 'content',
       'settings' => [
-        'rows' => 5,
+        'rows' => 9,
+        'summary_rows' => 3,
         'placeholder' => "Multi\nLine",
-      ],
-      'third_party_settings' => [],
-    ]);
-
-    $this->assertValidationErrors([]);
-  }
-
-  /**
-   * Tests validation of entity form display component's widget settings.
-   *
-   * @todo move in https://www.drupal.org/project/drupal/issues/3551650.
-   */
-  public function testMultilineTextFieldWidgetTextAreaSummaryPlaceholder(): void {
-    // First, create a field for which widget settings exist.
-    $text_field_storage_config = FieldStorageConfig::create([
-      'type' => 'text_long',
-      'field_name' => 'novel',
-      'entity_type' => 'user',
-    ]);
-    $text_field_storage_config->save();
-
-    $text_field_config = FieldConfig::create([
-      'field_storage' => $text_field_storage_config,
-      'bundle' => 'user',
-      'dependencies' => [
-        'config' => [
-          $text_field_storage_config->getConfigDependencyName(),
-        ],
-      ],
-    ]);
-    $text_field_config->save();
-
-    // Then, configure a form display widget for this field.
-    assert($this->entity instanceof EntityFormDisplayInterface);
-    $this->entity->setComponent('novel', [
-      'type' => 'text_textarea',
-      'region' => 'content',
-      'settings' => [
-        'rows' => 5,
-        'placeholder' => "Multi\nLine",
+        'show_summary' => FALSE,
       ],
       'third_party_settings' => [],
     ]);

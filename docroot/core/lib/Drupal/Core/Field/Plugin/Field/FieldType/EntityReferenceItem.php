@@ -139,7 +139,8 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
 
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_bundle_information */
     $entity_bundle_information = \Drupal::service('entity_type.bundle.info');
-    $bundles = array_intersect_key($entity_bundle_information->getBundleLabels($target_type), $handler_settings['target_bundles']);
+    $bundle_info = $entity_bundle_information->getBundleInfo($target_type);
+    $bundles = array_map(fn($bundle) => $bundle_info[$bundle]['label'], $handler_settings['target_bundles']);
     $bundle_label = \Drupal::entityTypeManager()->getDefinition($target_type)->getBundleLabel();
 
     if (!empty($bundles)) {
@@ -167,7 +168,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     try {
       $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
     }
-    catch (PluginNotFoundException) {
+    catch (PluginNotFoundException $e) {
       throw new FieldException(sprintf("Field '%s' on entity type '%s' references a target entity type '%s' which does not exist.",
         $field_definition->getName(),
         $field_definition->getTargetEntityTypeId(),

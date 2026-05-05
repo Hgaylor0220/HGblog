@@ -11,15 +11,12 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\field\Entity\FieldStorageConfig.
+ * @coversDefaultClass \Drupal\field\Entity\FieldStorageConfig
+ *
+ * @group field
  */
-#[CoversClass(FieldStorageConfig::class)]
-#[Group('field')]
 class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
@@ -68,7 +65,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests calculate dependencies.
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
     // Create a mock entity type for FieldStorageConfig.
@@ -117,7 +114,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests stored cardinality.
    *
-   * @legacy-covers ::getCardinality
+   * @covers ::getCardinality
    */
   public function testStoredCardinality(): void {
     $this->fieldTypeManager->expects($this->any())
@@ -144,7 +141,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests enforced cardinality.
    *
-   * @legacy-covers ::getCardinality
+   * @covers ::getCardinality
    */
   public function testEnforcedCardinality(): void {
     $this->fieldTypeManager->expects($this->any())
@@ -172,12 +169,12 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests invalid enforced cardinality.
    *
-   * @param mixed $enforced_cardinality
-   *   Enforced cardinality.
+   * @covers ::getCardinality
+   * @dataProvider providerInvalidEnforcedCardinality
    *
-   * @legacy-covers ::getCardinality
+   * @param mixed $enforced_cardinality
+   *   Enforced cardinality
    */
-  #[DataProvider('providerInvalidEnforcedCardinality')]
   public function testInvalidEnforcedCardinality($enforced_cardinality): void {
     $this->fieldTypeManager->expects($this->any())
       ->method('getDefinition')

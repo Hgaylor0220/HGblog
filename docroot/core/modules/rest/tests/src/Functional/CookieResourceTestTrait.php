@@ -27,34 +27,34 @@ trait CookieResourceTestTrait {
   /**
    * The session cookie.
    *
-   * @var string
-   *
    * @see ::initAuthentication
+   *
+   * @var string
    */
   protected $sessionCookie;
 
   /**
    * The CSRF token.
    *
-   * @var string
-   *
    * @see ::initAuthentication
+   *
+   * @var string
    */
   protected $csrfToken;
 
   /**
    * The logout token.
    *
-   * @var string
-   *
    * @see ::initAuthentication
+   *
+   * @var string
    */
   protected $logoutToken;
 
   /**
    * {@inheritdoc}
    */
-  protected function initAuthentication(): void {
+  protected function initAuthentication() {
     $user_login_url = Url::fromRoute('user.login.http')
       ->setRouteParameter('_format', static::$format);
 
@@ -93,7 +93,7 @@ trait CookieResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response): void {
+  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
     // Requests needing cookie authentication but missing it results in a 403
     // response. The cookie authentication mechanism sets no response message.
     // Hence, effectively, this is just the 403 response that one gets as the
@@ -121,7 +121,7 @@ trait CookieResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options): void {
+  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {
     // X-CSRF-Token request header is unnecessary for safe and side effect-free
     // HTTP methods. No need for additional assertions.
     // @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html

@@ -7,14 +7,12 @@ namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the add filter handler UI.
+ *
+ * @group views
  */
-#[Group('views')]
-#[RunTestsInSeparateProcesses]
 class FilterTest extends WebDriverTestBase {
 
   /**
@@ -105,7 +103,7 @@ class FilterTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement[]
    *   The filtered elements.
    */
-  protected function filterVisibleElements($elements): array {
+  protected function filterVisibleElements($elements) {
     $elements = array_filter($elements, function ($element) {
       return $element->isVisible();
     });
@@ -125,7 +123,7 @@ class FilterTest extends WebDriverTestBase {
    * @return bool
    *   TRUE if the required number was matched, FALSE otherwise.
    */
-  protected function waitForVisibleElementCount($count, $locator, $timeout = 10000): bool {
+  protected function waitForVisibleElementCount($count, $locator, $timeout = 10000) {
     $page = $this->getSession()->getPage();
 
     return $page->waitFor($timeout / 1000, function () use ($count, $page, $locator) {
@@ -147,7 +145,7 @@ class FilterTest extends WebDriverTestBase {
    * @return bool
    *   TRUE if the required number was matched, FALSE otherwise.
    */
-  protected function waitForOnlyContentRows($timeout = 10000): bool {
+  protected function waitForOnlyContentRows($timeout = 10000) {
     $page = $this->getSession()->getPage();
 
     return $page->waitFor($timeout / 1000, function () use ($page) {

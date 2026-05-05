@@ -12,8 +12,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -21,10 +19,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Tests Drupal\Core\EventSubscriber\FinishResponseSubscriber.
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\FinishResponseSubscriber
+ * @group EventSubscriber
  */
-#[CoversClass(FinishResponseSubscriber::class)]
-#[Group('EventSubscriber')]
 class FinishResponseSubscriberTest extends UnitTestCase {
 
   /**
@@ -83,7 +80,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * Finish subscriber should set some default header values.
    *
-   * @legacy-covers ::onRespond
+   * @covers ::onRespond
    */
   public function testDefaultHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(
@@ -114,7 +111,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * Finish subscriber should not overwrite existing header values.
    *
-   * @legacy-covers ::onRespond
+   * @covers ::onRespond
    */
   public function testExistingHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(

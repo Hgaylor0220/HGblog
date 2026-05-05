@@ -6,14 +6,12 @@ namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workspaces\Entity\Workspace;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests permission controls on workspaces.
+ *
+ * @group workspaces
  */
-#[Group('workspaces')]
-#[RunTestsInSeparateProcesses]
 class WorkspaceViewTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;
@@ -21,7 +19,7 @@ class WorkspaceViewTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'workspaces_ui'];
+  protected static $modules = ['workspaces'];
 
   /**
    * {@inheritdoc}

@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\PostCondition;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that Drupal.throwError will cause a test failure.
+ *
+ * @group javascript
  */
-#[Group('javascript')]
-#[RunTestsInSeparateProcesses]
 class JavascriptErrorsTest extends WebDriverTestBase {
 
   /**
@@ -63,9 +60,10 @@ class JavascriptErrorsTest extends WebDriverTestBase {
 
   /**
    * Clear the JavaScript error log to prevent this test failing for real.
+   *
+   * @postCondition
    */
-  #[PostCondition]
-  public function clearErrorLog(): void {
+  public function clearErrorLog() {
     $this->getSession()->executeScript("sessionStorage.removeItem('js_testing_log_test.errors')");
   }
 

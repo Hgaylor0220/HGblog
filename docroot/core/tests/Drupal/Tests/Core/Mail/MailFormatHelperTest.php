@@ -6,19 +6,17 @@ namespace Drupal\Tests\Core\Mail;
 
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore officedocument openxmlformats wordprocessingml
+
 /**
- * Tests Drupal\Core\Mail\MailFormatHelper.
+ * @coversDefaultClass \Drupal\Core\Mail\MailFormatHelper
+ * @group Mail
  */
-#[CoversClass(MailFormatHelper::class)]
-#[Group('Mail')]
 class MailFormatHelperTest extends UnitTestCase {
 
   /**
-   * Tests wrap mail.
+   * @covers ::wrapMail
    */
   public function testWrapMail(): void {
     $delimiter = "End of header\n";

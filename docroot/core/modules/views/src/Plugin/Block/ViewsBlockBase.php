@@ -192,14 +192,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     ];
 
     if ($this->view->storage->access('edit') && \Drupal::moduleHandler()->moduleExists('views_ui')) {
-      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href=":url">@name</a>.)',
-        [
-          ':url' => Url::fromRoute('entity.view.edit_display_form', [
-            'view' => $this->view->storage->id(),
-            'display_id' => $this->displayID,
-          ])->toString(),
-          '@name' => $this->view->storage->label(),
-        ]);
+      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href=":url">@name</a>.)', [':url' => Url::fromRoute('entity.view.edit_display_form', ['view' => $this->view->storage->id(), 'display_id' => $this->displayID])->toString(), '@name' => $this->view->storage->label()]);
     }
     else {
       $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore.');
@@ -226,8 +219,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *
    * @param string|array $output
    *   A string|array representing the block. This will be modified to be a
-   *   renderable array, containing the optional '#contextual_links' property
-   *   (if there are any contextual links associated with the block).
+   *   renderable array, containing the optional '#contextual_links' property (if
+   *   there are any contextual links associated with the block).
    * @param string $block_type
    *   The type of the block. If it's 'block' it's a regular views display,
    *   but 'exposed_filter' exist as well.
@@ -263,13 +256,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    */
   public function getViewExecutable() {
     return $this->view;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createPlaceholder(): bool {
-    return TRUE;
   }
 
 }

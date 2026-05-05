@@ -17,10 +17,6 @@ use Drupal\Core\TypedData\Plugin\DataType\ItemList;
  * properties. Note that even single-valued entity fields are represented as
  * list of field items, however for easy access to the contained item the entity
  * field delegates __get() and __set() calls directly to the first item.
- *
- * @template T of \Drupal\Core\Field\FieldItemInterface
- * @extends \Drupal\Core\TypedData\Plugin\DataType\ItemList<T>
- * @implements \Drupal\Core\Field\FieldItemListInterface<T>
  */
 class FieldItemList extends ItemList implements FieldItemListInterface {
 
@@ -269,16 +265,12 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // widgets.
     $cardinality = $this->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
     if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $options['max'] = $cardinality;
-      if ($label = $this->getFieldDefinition()->getLabel()) {
-        $options['maxMessage'] = $this->t('%name: this field cannot hold more than @count values.', [
-          '%name' => $label,
-          '@count' => $cardinality,
-        ]);
-      }
       $constraints[] = $this->getTypedDataManager()
         ->getValidationConstraintManager()
-        ->create('Count', $options);
+        ->create('Count', [
+          'max' => $cardinality,
+          'maxMessage' => t('%name: this field cannot hold more than @count values.', ['%name' => $this->getFieldDefinition()->getLabel(), '@count' => $cardinality]),
+        ]);
     }
 
     return $constraints;

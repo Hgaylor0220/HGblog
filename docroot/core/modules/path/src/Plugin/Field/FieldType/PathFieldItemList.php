@@ -4,7 +4,6 @@ namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 
@@ -56,19 +55,12 @@ class PathFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function delete() {
-    // Delete all aliases associated with this entity.
+    // Delete all aliases associated with this entity in the current language.
     $entity = $this->getEntity();
-    $langcode_list = [$entity->language()->getId()];
-
-    // The default translation may also have language-neutral aliases.
-    if ($entity->isDefaultTranslation()) {
-      $langcode_list[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
-    }
-
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
     $entities = $path_alias_storage->loadByProperties([
       'path' => '/' . $entity->toUrl()->getInternalPath(),
-      'langcode' => $langcode_list,
+      'langcode' => $entity->language()->getId(),
     ]);
     $path_alias_storage->delete($entities);
   }

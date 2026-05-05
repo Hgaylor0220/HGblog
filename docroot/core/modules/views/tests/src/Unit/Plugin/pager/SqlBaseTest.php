@@ -6,17 +6,13 @@ namespace Drupal\Tests\views\Unit\Plugin\pager;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\views\pager\SqlBase;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\views\Plugin\views\pager\SqlBase.
+ * @coversDefaultClass \Drupal\views\Plugin\views\pager\SqlBase
+ * @group views
  */
-#[CoversClass(SqlBase::class)]
-#[Group('views')]
 class SqlBaseTest extends UnitTestCase {
 
   /**
@@ -40,17 +36,14 @@ class SqlBaseTest extends UnitTestCase {
    */
   protected $display;
 
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->pager = $this->getMockBuilder(StubSqlBase::class)
+    $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\SqlBase')
       ->disableOriginalConstructor()
-      ->onlyMethods([])
-      ->getMock();
+      ->getMockForAbstractClass();
 
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     $this->view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();

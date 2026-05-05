@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\announcements_feed\Unit;
 
-use Drupal\announcements_feed\AnnounceFetcher;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\announcements_feed\AnnounceFetcher;
 
 /**
  * Simple test to ensure that asserts pass.
+ *
+ * @group announcements_feed
  */
-#[Group('announcements_feed')]
 class AnnounceFetcherUnitTest extends UnitTestCase {
 
   /**
@@ -47,9 +46,10 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
   /**
    * Test the ValidateUrl() method.
    *
-   * @legacy-covers \Drupal\announcements_feed\AnnounceFetcher::validateUrl
+   * @covers \Drupal\announcements_feed\AnnounceFetcher::validateUrl
+   *
+   * @dataProvider urlProvider
    */
-  #[DataProvider('urlProvider')]
   public function testValidateUrl($url, $isValid): void {
     $this->assertEquals($isValid, $this->fetcher->validateUrl($url));
   }

@@ -7,17 +7,13 @@ namespace Drupal\Tests\Core\Routing;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\RedirectDestination;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests Drupal\Core\Routing\RedirectDestination.
+ * @coversDefaultClass \Drupal\Core\Routing\RedirectDestination
+ * @group Routing
  */
-#[CoversClass(RedirectDestination::class)]
-#[Group('Routing')]
 class RedirectDestinationTest extends UnitTestCase {
 
   /**
@@ -52,7 +48,7 @@ class RedirectDestinationTest extends UnitTestCase {
     $this->redirectDestination = new RedirectDestination($this->requestStack, $this->urlGenerator);
   }
 
-  protected function setupUrlGenerator(): void {
+  protected function setupUrlGenerator() {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->willReturnCallback(function ($route, $parameters, $options) {
@@ -72,8 +68,11 @@ class RedirectDestinationTest extends UnitTestCase {
    *   The request to test.
    * @param string $expected_destination
    *   The expected destination.
+   *
+   * @dataProvider providerGet
+   *
+   * @covers ::get
    */
-  #[DataProvider('providerGet')]
   public function testGet(Request $request, $expected_destination): void {
     $this->requestStack->push($request);
     $this->setupUrlGenerator();
@@ -84,9 +83,10 @@ class RedirectDestinationTest extends UnitTestCase {
   }
 
   /**
-   * Tests get as array.
+   * @dataProvider providerGet
+   *
+   * @covers ::getAsArray
    */
-  #[DataProvider('providerGet')]
   public function testGetAsArray(Request $request, $expected_destination): void {
     $this->requestStack->push($request);
     $this->setupUrlGenerator();
@@ -96,7 +96,7 @@ class RedirectDestinationTest extends UnitTestCase {
     $this->assertEquals(['destination' => $expected_destination], $this->redirectDestination->getAsArray());
   }
 
-  public static function providerGet(): array {
+  public static function providerGet() {
     $data = [];
 
     $request = Request::create('/');
@@ -104,7 +104,7 @@ class RedirectDestinationTest extends UnitTestCase {
     // A request with a destination query.
     $data[] = [$request, '/example'];
 
-    // A request without a destination query.
+    // A request without a destination query,
     $request = Request::create('/');
     $data[] = [$request, '/current-path'];
 
@@ -122,10 +122,8 @@ class RedirectDestinationTest extends UnitTestCase {
   }
 
   /**
-   * Tests set before get call.
-   *
-   * @legacy-covers ::set
-   * @legacy-covers ::get
+   * @covers ::set
+   * @covers ::get
    */
   public function testSetBeforeGetCall(): void {
     $this->redirectDestination->set('/example');
@@ -133,10 +131,8 @@ class RedirectDestinationTest extends UnitTestCase {
   }
 
   /**
-   * Tests set after get call.
-   *
-   * @legacy-covers ::set
-   * @legacy-covers ::get
+   * @covers ::set
+   * @covers ::get
    */
   public function testSetAfterGetCall(): void {
     $request = Request::create('/');

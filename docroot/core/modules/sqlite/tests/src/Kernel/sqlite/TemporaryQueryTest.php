@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
 use Drupal\KernelTests\Core\Database\TemporaryQueryTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the temporary query functionality.
+ *
+ * @group Database
  */
-#[Group('Database')]
-#[RunTestsInSeparateProcesses]
 class TemporaryQueryTest extends TemporaryQueryTestBase {
 
   /**

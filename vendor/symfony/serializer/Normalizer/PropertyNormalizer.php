@@ -14,6 +14,7 @@ namespace Symfony\Component\Serializer\Normalizer;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\Serializer\Exception\LogicException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
@@ -34,8 +35,10 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  * @author Kévin Dunglas <dunglas@gmail.com>
+ *
+ * @final since Symfony 6.3
  */
-final class PropertyNormalizer extends AbstractObjectNormalizer
+class PropertyNormalizer extends AbstractObjectNormalizer
 {
     public const NORMALIZE_PUBLIC = 1;
     public const NORMALIZE_PROTECTED = 2;
@@ -57,17 +60,33 @@ final class PropertyNormalizer extends AbstractObjectNormalizer
 
     public function getSupportedTypes(?string $format): array
     {
-        return ['object' => true];
+        return ['object' => __CLASS__ === static::class || $this->hasCacheableSupportsMethod()];
     }
 
-    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    /**
+     * @param array $context
+     */
+    public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
     {
         return parent::supportsNormalization($data, $format) && $this->supports($data::class);
     }
 
-    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
+    /**
+     * @param array $context
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null /* , array $context = [] */): bool
     {
         return parent::supportsDenormalization($data, $type, $format) && $this->supports($type);
+    }
+
+    /**
+     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
+     */
+    public function hasCacheableSupportsMethod(): bool
+    {
+        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, implement "%s::getSupportedTypes()" instead.', __METHOD__, get_debug_type($this));
+
+        return __CLASS__ === static::class;
     }
 
     /**
@@ -157,6 +176,10 @@ final class PropertyNormalizer extends AbstractObjectNormalizer
         }
 
         if ($reflectionProperty->hasType()) {
+            if (!$reflectionProperty->isInitialized($object)) {
+                throw new UninitializedPropertyException(\sprintf('The property "%s::$%s" is not initialized.', $object::class, $reflectionProperty->name));
+            }
+
             return $reflectionProperty->getValue($object);
         }
 
@@ -174,7 +197,10 @@ final class PropertyNormalizer extends AbstractObjectNormalizer
         return $reflectionProperty->getValue($object);
     }
 
-    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = []): void
+    /**
+     * @return void
+     */
+    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = [])
     {
         try {
             $reflectionProperty = $this->getReflectionProperty($object, $attribute);
@@ -186,17 +212,21 @@ final class PropertyNormalizer extends AbstractObjectNormalizer
             return;
         }
 
-        if (!$reflectionProperty->isReadOnly()) {
-            $reflectionProperty->setValue($object, $value);
+        try {
+            if (!$reflectionProperty->isReadOnly()) {
+                $reflectionProperty->setValue($object, $value);
 
-            return;
-        }
+                return;
+            }
 
-        if (!$reflectionProperty->isInitialized($object)) {
-            $declaringClass = $reflectionProperty->getDeclaringClass();
-            $declaringClass->getProperty($reflectionProperty->getName())->setValue($object, $value);
+            if (!$reflectionProperty->isInitialized($object)) {
+                $declaringClass = $reflectionProperty->getDeclaringClass();
+                $declaringClass->getProperty($reflectionProperty->getName())->setValue($object, $value);
 
-            return;
+                return;
+            }
+        } catch (\TypeError $e) {
+            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('Failed to denormalize attribute "%s" value for class "%s": %s', $attribute, $object::class, $e->getMessage()), $value, ['unknown'], $context['deserialization_path'] ?? null, false, $e->getCode(), $e);
         }
 
         if ($reflectionProperty->getValue($object) !== $value) {

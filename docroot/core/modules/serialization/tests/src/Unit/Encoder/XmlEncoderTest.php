@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Drupal\Tests\serialization\Unit\Encoder;
 
 use Drupal\serialization\Encoder\XmlEncoder;
-use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests Drupal\serialization\Encoder\XmlEncoder.
+ * @coversDefaultClass \Drupal\serialization\Encoder\XmlEncoder
+ * @group serialization
  */
-#[CoversClass(XmlEncoder::class)]
-#[Group('serialization')]
 class XmlEncoderTest extends UnitTestCase {
 
   /**
@@ -27,8 +24,6 @@ class XmlEncoderTest extends UnitTestCase {
   protected $encoder;
 
   /**
-   * The Symfony XML encoder.
-   *
    * @var \Symfony\Component\Serializer\Encoder\XmlEncoder|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $baseEncoder;
@@ -92,9 +87,7 @@ class XmlEncoderTest extends UnitTestCase {
   }
 
   /**
-   * Tests default encoder has serializer.
-   *
-   * @legacy-covers ::getBaseEncoder
+   * @covers ::getBaseEncoder
    */
   public function testDefaultEncoderHasSerializer(): void {
     // The serializer should be set on the Drupal encoder, which should then
@@ -110,14 +103,8 @@ class XmlEncoderTest extends UnitTestCase {
 
 }
 
-/**
- * Test class used for the encoding test.
- */
 class TestObject {
 
-  /**
-   * Return the characters "A".
-   */
   public function getA() {
     return 'A';
   }

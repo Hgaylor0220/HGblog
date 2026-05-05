@@ -6,21 +6,18 @@ namespace Drupal\Tests\Core\TempStore;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TempStore\Lock;
-use Drupal\Core\TempStore\SharedTempStore;
-use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
+use Drupal\Core\TempStore\SharedTempStore;
+use Drupal\Core\TempStore\TempStoreException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Tests Drupal\Core\TempStore\SharedTempStore.
+ * @coversDefaultClass \Drupal\Core\TempStore\SharedTempStore
+ * @group TempStore
  */
-#[CoversClass(SharedTempStore::class)]
-#[Group('TempStore')]
 class SharedTempStoreTest extends UnitTestCase {
 
   /**
@@ -101,7 +98,7 @@ class SharedTempStoreTest extends UnitTestCase {
   }
 
   /**
-   * Tests get.
+   * @covers ::get
    */
   public function testGet(): void {
     $calls = ['test_2', 'test'];
@@ -121,6 +118,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the getIfOwner() method.
+   *
+   * @covers ::getIfOwner
    */
   public function testGetIfOwner(): void {
     $calls = ['test_2', 'test', 'test'];
@@ -142,6 +141,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the set() method with no lock available.
+   *
+   * @covers ::set
    */
   public function testSetWithNoLockAvailable(): void {
     $this->lock->expects($this->exactly(2))
@@ -161,6 +162,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests a successful set() call.
+   *
+   * @covers ::set
    */
   public function testSet(): void {
     $this->lock->expects($this->once())
@@ -182,6 +185,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfNotExists() methods.
+   *
+   * @covers ::setIfNotExists
    */
   public function testSetIfNotExists(): void {
     $this->keyValue->expects($this->once())
@@ -194,6 +199,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfOwner() method when no key exists.
+   *
+   * @covers ::setIfOwner
    */
   public function testSetIfOwnerWhenNotExists(): void {
     $this->keyValue->expects($this->once())
@@ -205,6 +212,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfOwner() method when a key already exists but no object.
+   *
+   * @covers ::setIfOwner
    */
   public function testSetIfOwnerNoObject(): void {
     $this->keyValue->expects($this->once())
@@ -221,6 +230,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the setIfOwner() method with matching and non matching owners.
+   *
+   * @covers ::setIfOwner
    */
   public function testSetIfOwner(): void {
     $this->lock->expects($this->once())
@@ -243,6 +254,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the getMetadata() method.
+   *
+   * @covers ::getMetadata
    */
   public function testGetMetadata(): void {
     $this->keyValue->expects($this->exactly(2))
@@ -261,6 +274,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the delete() method.
+   *
+   * @covers ::delete
    */
   public function testDelete(): void {
     $this->lock->expects($this->once())
@@ -282,6 +297,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the delete() method with no lock available.
+   *
+   * @covers ::delete
    */
   public function testDeleteWithNoLockAvailable(): void {
     $this->lock->expects($this->exactly(2))
@@ -301,6 +318,8 @@ class SharedTempStoreTest extends UnitTestCase {
 
   /**
    * Tests the deleteIfOwner() method.
+   *
+   * @covers ::deleteIfOwner
    */
   public function testDeleteIfOwner(): void {
     $this->lock->expects($this->once())

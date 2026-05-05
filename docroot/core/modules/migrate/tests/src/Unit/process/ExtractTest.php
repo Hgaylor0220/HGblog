@@ -6,15 +6,11 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Extract;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests Drupal\migrate\Plugin\migrate\process\Extract.
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\Extract
+ * @group migrate
  */
-#[CoversClass(Extract::class)]
-#[Group('migrate')]
 class ExtractTest extends MigrateProcessTestCase {
 
   /**
@@ -36,8 +32,9 @@ class ExtractTest extends MigrateProcessTestCase {
 
   /**
    * Tests invalid input.
+   *
+   * @dataProvider providerTestExtractInvalid
    */
-  #[DataProvider('providerTestExtractInvalid')]
   public function testExtractInvalid($value): void {
     $this->expectException(MigrateException::class);
     $type = gettype($value);
@@ -50,7 +47,7 @@ class ExtractTest extends MigrateProcessTestCase {
    */
   public function testExtractFail(): void {
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage("Array index missing, extraction failed for '[\n  'bar' => 'foo',\n]'. Consider adding a `default` key to the configuration.");
+    $this->expectExceptionMessage("Array index missing, extraction failed for 'array(\n  'bar' => 'foo',\n)'. Consider adding a `default` key to the configuration.");
     $this->plugin->transform(['bar' => 'foo'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
@@ -74,8 +71,9 @@ class ExtractTest extends MigrateProcessTestCase {
    *   The expected transformed value.
    *
    * @throws \Drupal\migrate\MigrateException
+   *
+   * @dataProvider providerExtractDefault
    */
-  #[DataProvider('providerExtractDefault')]
   public function testExtractDefault(array $value, array $configuration, $expected): void {
     $this->plugin = new Extract($configuration, 'map', []);
 

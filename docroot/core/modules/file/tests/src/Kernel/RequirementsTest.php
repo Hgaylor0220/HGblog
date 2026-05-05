@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -14,9 +12,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the file requirements.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class RequirementsTest extends KernelTestBase {
 
   /**
@@ -34,10 +32,11 @@ class RequirementsTest extends KernelTestBase {
 
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler */
     $moduleHandler = $this->container->get('module_handler');
+    $moduleHandler->loadInclude('file', 'install');
 
     // Test unspecified server software.
     $this->setServerSoftware(NULL);
-    $requirements = $moduleHandler->invoke('file', 'runtime_requirements');
+    $requirements = \file_requirements('runtime');
     $this->assertNotEmpty($requirements);
 
     $this->assertEquals('Upload progress', (string) $requirements['file_progress']['title']);
@@ -46,24 +45,24 @@ class RequirementsTest extends KernelTestBase {
 
     // Test Apache + mod_php.
     $this->setServerSoftware('Apache mod_php');
-    $requirements = $moduleHandler->invoke('file', 'runtime_requirements');
+    $requirements = \file_requirements('runtime');
     $this->assertNotEmpty($requirements);
     $this->assertEquals('Not enabled', (string) $requirements['file_progress']['value']);
-    $this->assertEquals('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="https://github.com/php/pecl-php-uploadprogress#installation">PECL uploadprogress library</a>.', (string) $requirements['file_progress']['description']);
+    $this->assertEquals('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.', (string) $requirements['file_progress']['description']);
 
     // Test Apache + mod_fastcgi.
     $this->setServerSoftware('Apache mod_fastcgi');
-    $requirements = $moduleHandler->invoke('file', 'runtime_requirements');
+    $requirements = \file_requirements('runtime');
     $this->assertNotEmpty($requirements);
     $this->assertEquals('Not enabled', (string) $requirements['file_progress']['value']);
     $this->assertEquals('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.', (string) $requirements['file_progress']['description']);
 
     // Test Nginx.
     $this->setServerSoftware('Nginx');
-    $requirements = $moduleHandler->invoke('file', 'runtime_requirements');
+    $requirements = \file_requirements('runtime');
     $this->assertNotEmpty($requirements);
     $this->assertEquals('Not enabled', (string) $requirements['file_progress']['value']);
-    $this->assertEquals('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="https://github.com/php/pecl-php-uploadprogress#installation">PECL uploadprogress library</a>.', (string) $requirements['file_progress']['description']);
+    $this->assertEquals('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.', (string) $requirements['file_progress']['description']);
 
   }
 

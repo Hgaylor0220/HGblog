@@ -12,21 +12,17 @@ use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\VariationCache;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Depends;
-use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests Drupal\Core\Cache\VariationCache.
+ * @coversDefaultClass \Drupal\Core\Cache\VariationCache
+ * @group Cache
  */
-#[CoversClass(VariationCache::class)]
-#[Group('Cache')]
 class VariationCacheTest extends UnitTestCase {
 
   /**
-   * The mock request stack.
+   * The prophesized request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack|\Prophecy\Prophecy\ProphecyInterface
    */
@@ -40,7 +36,7 @@ class VariationCacheTest extends UnitTestCase {
   protected $memoryBackend;
 
   /**
-   * The mock cache contexts manager.
+   * The prophesized cache contexts manager.
    *
    * @var \Drupal\Core\Cache\Context\CacheContextsManager|\Prophecy\Prophecy\ProphecyInterface
    */
@@ -185,8 +181,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that has no variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testNoVariations(): void {
     $data = 'You have a nice house!';
@@ -199,8 +195,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that only ever varies by one context.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testSingleVariation(): void {
     $cacheability = $this->housingTypeCacheability;
@@ -222,8 +218,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that has nested variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testNestedVariations(): void {
     // We are running this scenario in the best possible outcome: The redirects
@@ -272,10 +268,11 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that has nested variations that trigger self-healing.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
+   *
+   * @depends testNestedVariations
    */
-  #[Depends('testNestedVariations')]
   public function testNestedVariationsSelfHealing(): void {
     // This is the worst possible scenario: A very specific item was stored
     // first, followed by a less specific one. This means an overly specific
@@ -330,8 +327,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests self-healing for a cache item that has split variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testSplitVariationsSelfHealing(): void {
     // This is an edge case. Something varies by AB where some values of B
@@ -402,8 +399,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests exception for a cache item that has incomplete variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testIncompleteVariationsException(): void {
     // This should never happen. When someone first stores something in the
@@ -428,8 +425,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests exception for a cache item that has an incomplete redirect.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testIncompleteRedirectException(): void {
     // @todo Remove in Drupal 12.0.0. For more information, see:
@@ -471,8 +468,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests exception for a cache item that has incompatible cache redirects.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
    */
   public function testIncompatibleRedirectsException(): void {
     // @todo Remove in Drupal 12.0.0. For more information, see:
@@ -513,10 +510,11 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests the same as above, but with more redirects.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
+   *
+   * @depends testIncompatibleRedirectsException
    */
-  #[Depends('testIncompatibleRedirectsException')]
   public function testIncompatibleChainedRedirectsException(): void {
     // @todo Remove in Drupal 12.0.0. For more information, see:
     //   https://www.drupal.org/project/drupal/issues/3468921
@@ -561,10 +559,11 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests the same as above, but even more complex.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @covers ::get
+   * @covers ::set
+   *
+   * @depends testIncompatibleChainedRedirectsException
    */
-  #[Depends('testIncompatibleChainedRedirectsException')]
   public function testIncompatibleChainedRedirectsComplexException(): void {
     // @todo Remove in Drupal 12.0.0. For more information, see:
     //   https://www.drupal.org/project/drupal/issues/3468921
@@ -636,7 +635,7 @@ class VariationCacheTest extends UnitTestCase {
    * @param \Drupal\Core\Cache\CacheableMetadata $initial_cacheability
    *   The initial cacheability that should be used.
    */
-  protected function setVariationCacheItem($data, CacheableMetadata $cacheability, CacheableMetadata $initial_cacheability): void {
+  protected function setVariationCacheItem($data, CacheableMetadata $cacheability, CacheableMetadata $initial_cacheability) {
     $this->variationCache->set($this->cacheKeys, $data, $cacheability, $initial_cacheability);
   }
 
@@ -650,7 +649,7 @@ class VariationCacheTest extends UnitTestCase {
    * @param \Drupal\Core\Cache\CacheableMetadata $initial_cacheability
    *   The initial cacheability that should be used.
    */
-  protected function assertVariationCacheItem($data, CacheableMetadata $cacheability, CacheableMetadata $initial_cacheability): void {
+  protected function assertVariationCacheItem($data, CacheableMetadata $cacheability, CacheableMetadata $initial_cacheability) {
     $cache_item = $this->variationCache->get($this->cacheKeys, $initial_cacheability);
     $this->assertNotFalse($cache_item, 'Variable data was stored and retrieved successfully.');
     $this->assertEquals($data, $cache_item->data, 'Variable cache item contains the right data.');
@@ -663,7 +662,7 @@ class VariationCacheTest extends UnitTestCase {
    * @param \Drupal\Core\Cache\CacheableMetadata $initial_cacheability
    *   The initial cacheability that should be used.
    */
-  protected function assertVariationCacheMiss(CacheableMetadata $initial_cacheability): void {
+  protected function assertVariationCacheMiss(CacheableMetadata $initial_cacheability) {
     $this->assertFalse($this->variationCache->get($this->cacheKeys, $initial_cacheability), 'Nothing could be retrieved for the active cache contexts.');
   }
 
@@ -678,7 +677,7 @@ class VariationCacheTest extends UnitTestCase {
    *   (optional) The cacheability that should have been used. Does not apply
    *   when checking for cache redirects.
    */
-  protected function assertCacheBackendItem(string $cid, $data, ?CacheableMetadata $cacheability = NULL): void {
+  protected function assertCacheBackendItem(string $cid, $data, ?CacheableMetadata $cacheability = NULL) {
     $cache_backend_item = $this->memoryBackend->get($cid);
     $this->assertNotFalse($cache_backend_item, 'The data was stored and retrieved successfully.');
     $this->assertEquals($data, $cache_backend_item->data, 'Cache item contains the right data.');

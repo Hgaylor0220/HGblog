@@ -7,15 +7,12 @@ namespace Drupal\Tests\Core\Controller;
 use Drupal\Core\Render\MainContent\AjaxRenderer;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests Drupal\Core\Render\MainContent\AjaxRenderer.
+ * @coversDefaultClass \Drupal\Core\Render\MainContent\AjaxRenderer
+ * @group Ajax
  */
-#[CoversClass(AjaxRenderer::class)]
-#[Group('Ajax')]
 class AjaxRendererTest extends UnitTestCase {
 
   /**
@@ -69,7 +66,7 @@ class AjaxRendererTest extends UnitTestCase {
   /**
    * Tests the content method.
    *
-   * @legacy-covers ::renderResponse
+   * @covers ::renderResponse
    */
   public function testRenderWithFragmentObject(): void {
     $main_content = ['#markup' => 'example content'];

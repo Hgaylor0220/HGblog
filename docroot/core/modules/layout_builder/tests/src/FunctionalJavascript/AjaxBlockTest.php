@@ -7,14 +7,12 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Ajax blocks tests.
+ *
+ * @group layout_builder
  */
-#[Group('layout_builder')]
-#[RunTestsInSeparateProcesses]
 class AjaxBlockTest extends WebDriverTestBase {
 
   use OffCanvasTestTrait;
@@ -62,6 +60,7 @@ class AjaxBlockTest extends WebDriverTestBase {
    */
   public function testAddAjaxBlock(): void {
     $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
 
     // Start by creating a node.
     $this->createNode([
@@ -96,7 +95,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     /** @var \Behat\Mink\Element\NodeElement[] $radios */
     $radios = $this->assertSession()->fieldExists($name);
     // Click them both a couple of times.
-    for ($i = 1; $i < 3; ++$i) {
+    foreach ([1, 2] as $rounds) {
       foreach ($radios as $radio) {
         $radio->click();
         $assert_session->assertWaitOnAjaxRequest();

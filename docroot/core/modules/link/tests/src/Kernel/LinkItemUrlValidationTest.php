@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests link field validation.
+ *
+ * @group link
  */
-#[Group('link')]
-#[RunTestsInSeparateProcesses]
 class LinkItemUrlValidationTest extends FieldKernelTestBase {
 
   /**
@@ -55,7 +53,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
    *   The first element of the array is the link value to test. The second
    *   value is an array of expected violation messages.
    */
-  protected function getTestLinks(): array {
+  protected function getTestLinks() {
     $violation_0 = "The path '%s' is invalid.";
     $violation_1 = 'This value should be of the correct primitive type.';
     return [

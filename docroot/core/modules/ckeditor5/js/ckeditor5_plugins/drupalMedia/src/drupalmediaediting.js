@@ -1,7 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupalmediaediting drupalmediametadatarepository */
-/* cspell:ignore imagetextalternative insertdrupalmedia */
-/* cspell:ignore insertdrupalmediacommand mediaimagetextalternative */
+/* cspell:ignore insertdrupalmedia drupalmediaediting insertdrupalmediacommand drupalmediametadatarepository */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
@@ -36,9 +34,6 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
-      drupalLinkEntityUuid: 'data-link-entity-uuid',
-      drupalLinkEntityType: 'data-link-entity-type',
-      drupalLinkEntityMetadata: 'data-link-entity-metadata',
     };
     this.converterAttributes = [
       'drupalMediaEntityUuid',
@@ -332,9 +327,8 @@ export default class DrupalMediaEditing extends Plugin {
 
             // Preview was ready meaning that a new preview can be loaded.
             // "Change the attribute to loading to prepare for the loading of
-            // the updated preview. Preview is kept intact so that it can still
-            // be interacted with via the UI until the new preview has been
-            // rendered.
+            // the updated preview. Preview is kept intact so that it remains
+            // interactable in the UI until the new preview has been rendered.
             viewWriter.setAttribute(
               'data-drupal-media-preview',
               'loading',

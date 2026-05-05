@@ -10,7 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface FilterFormatInterface extends ConfigEntityInterface {
 
   /**
-   * Returns a sorted collection of filter plugins or an individual instance.
+   * Returns the ordered collection of filter plugin instances or an individual plugin instance.
    *
    * @param string $instance_id
    *   (optional) The ID of a filter plugin instance to return.
@@ -47,7 +47,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
   /**
    * Returns the machine-readable permission name for the text format.
    *
-   * @return string|false
+   * @return string|bool
    *   The machine-readable permission name, or FALSE if the text format is
    *   malformed or is the fallback format (which is available to all users).
    */

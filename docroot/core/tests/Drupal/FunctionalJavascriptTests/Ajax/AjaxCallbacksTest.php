@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Ajax callbacks on FAPI elements.
+ *
+ * @group Ajax
  */
-#[Group('Ajax')]
-#[RunTestsInSeparateProcesses]
 class AjaxCallbacksTest extends WebDriverTestBase {
 
   /**

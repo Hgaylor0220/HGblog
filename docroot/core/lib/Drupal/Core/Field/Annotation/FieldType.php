@@ -33,27 +33,27 @@ class FieldType extends DataType {
   /**
    * The human-readable name of the field type.
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $label;
 
   /**
    * A short human readable description for the field type.
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $description;
 
   /**
    * The category under which the field type should be listed in the UI.
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $category = '';
 
@@ -89,7 +89,7 @@ class FieldType extends DataType {
   public $default_formatter;
 
   /**
-   * Indicates that fields of this type cannot be created through the UI.
+   * A boolean stating that fields of this type cannot be created through the UI.
    *
    * @var bool
    */

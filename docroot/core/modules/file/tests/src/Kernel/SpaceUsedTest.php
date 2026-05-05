@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the spaceUsed() function.
+ *
+ * @group file
  */
-#[Group('file')]
-#[RunTestsInSeparateProcesses]
 class SpaceUsedTest extends FileManagedUnitTestBase {
 
   /**
@@ -49,7 +46,7 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The file entity.
    */
-  protected function createFileWithSize($uri, $size, $uid, $status = FileInterface::STATUS_PERMANENT): EntityInterface {
+  protected function createFileWithSize($uri, $size, $uid, $status = FileInterface::STATUS_PERMANENT) {
     file_put_contents($uri, $this->randomMachineName($size));
     $file = File::create([
       'uri' => $uri,
@@ -70,7 +67,7 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
     $this->assertEquals(300, $file->spaceUsed(3));
     $this->assertEquals(370, $file->spaceUsed());
 
-    // Test the status fields.
+    // Test the status fields
     $this->assertEquals(4, $file->spaceUsed(NULL, 0));
     $this->assertEquals(370, $file->spaceUsed());
 

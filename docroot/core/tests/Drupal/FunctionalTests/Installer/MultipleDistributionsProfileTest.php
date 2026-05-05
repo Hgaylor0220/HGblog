@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests multiple distribution profile support.
+ *
+ * @group Installer
  */
-#[Group('Installer')]
-#[RunTestsInSeparateProcesses]
 class MultipleDistributionsProfileTest extends InstallerTestBase {
 
   /**
@@ -30,7 +28,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Create two distributions.
     foreach (['distribution_one', 'distribution_two'] as $name) {
@@ -57,7 +55,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // Verify that the distribution name appears.
     $this->assertSession()->pageTextContains('distribution_one');
     // Verify that the requested theme is used.
@@ -71,7 +69,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
+  protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.
   }
 

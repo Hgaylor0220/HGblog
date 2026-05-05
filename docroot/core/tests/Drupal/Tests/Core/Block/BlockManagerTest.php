@@ -8,20 +8,21 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Block\BlockManager;
 use Drupal\Core\Block\Plugin\Block\Broken;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Tests Drupal\Core\Block\BlockManager.
+ * @coversDefaultClass \Drupal\Core\Block\BlockManager
+ *
+ * @group block
  */
-#[CoversClass(BlockManager::class)]
-#[Group('block')]
 class BlockManagerTest extends UnitTestCase {
+
+  use StringTranslationTrait;
 
   /**
    * The block manager under test.
@@ -60,22 +61,22 @@ class BlockManagerTest extends UnitTestCase {
     // that are purposefully not in alphabetical order.
     $discovery->getDefinitions()->willReturn([
       'broken' => [
-        'admin_label' => 'Broken/Missing',
-        'category' => 'Block',
+        'admin_label' => $this->t('Broken/Missing'),
+        'category' => $this->t('Block'),
         'class' => Broken::class,
         'provider' => 'core',
       ],
       'block1' => [
-        'admin_label' => 'Coconut',
-        'category' => 'Group 2',
+        'admin_label' => $this->t('Coconut'),
+        'category' => $this->t('Group 2'),
       ],
       'block2' => [
-        'admin_label' => 'Apple',
-        'category' => 'Group 1',
+        'admin_label' => $this->t('Apple'),
+        'category' => $this->t('Group 1'),
       ],
       'block3' => [
-        'admin_label' => 'Banana',
-        'category' => 'Group 2',
+        'admin_label' => $this->t('Banana'),
+        'category' => $this->t('Group 2'),
       ],
     ]);
     // Force the discovery object onto the block manager.
@@ -84,9 +85,7 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests definitions.
-   *
-   * @legacy-covers ::getDefinitions
+   * @covers ::getDefinitions
    */
   public function testDefinitions(): void {
     $definitions = $this->blockManager->getDefinitions();
@@ -94,9 +93,7 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests sorted definitions.
-   *
-   * @legacy-covers ::getSortedDefinitions
+   * @covers ::getSortedDefinitions
    */
   public function testSortedDefinitions(): void {
     $definitions = $this->blockManager->getSortedDefinitions();
@@ -104,9 +101,7 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests grouped definitions.
-   *
-   * @legacy-covers ::getGroupedDefinitions
+   * @covers ::getGroupedDefinitions
    */
   public function testGroupedDefinitions(): void {
     $definitions = $this->blockManager->getGroupedDefinitions();
@@ -116,7 +111,7 @@ class BlockManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests handle plugin not found.
+   * @covers ::handlePluginNotFound
    */
   public function testHandlePluginNotFound(): void {
     $this->logger->warning('The "%plugin_id" block plugin was not found', ['%plugin_id' => 'invalid'])->shouldBeCalled();

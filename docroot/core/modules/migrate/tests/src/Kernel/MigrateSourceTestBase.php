@@ -8,7 +8,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Base class for tests of Migrate source plugins.
@@ -80,26 +79,18 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   }
 
   /**
-   * Determines the plugin to be tested.
-   *
-   * This is identified by the first #[CoverClass] attribute set on the
-   * concrete test class.
+   * Determines the plugin to be tested by reading the class @covers annotation.
    *
    * @return string
-   *   The fully qualified class name of the plugin to be tested.
    */
   protected function getPluginClass() {
-    $coversClass = $this->valueObjectForEvents()->metadata()->isCoversClass()->isClassLevel()->asArray();
-    if (isset($coversClass[0])) {
-      return $coversClass[0]->className();
+    $covers = $this->getTestClassCovers();
+    if (!empty($covers)) {
+      return $covers[0];
     }
-
-    $covers = $this->valueObjectForEvents()->metadata()->isCovers()->isClassLevel()->asArray();
-    if (isset($covers[0])) {
-      return $covers[0]->target();
+    else {
+      $this->fail('No plugin class was specified');
     }
-
-    $this->fail('No plugin class was specified');
   }
 
   /**
@@ -152,8 +143,9 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *   (optional) Configuration for the source plugin.
    * @param mixed $high_water
    *   (optional) The value of the high water field.
+   *
+   * @dataProvider providerSource
    */
-  #[DataProvider('providerSource')]
   public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL): void {
     $plugin = $this->getPlugin($configuration);
     $clone_plugin = clone $plugin;
@@ -213,13 +205,5 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
       }
     }
   }
-
-  /**
-   * Provides source data for ::testSource.
-   *
-   * @return iterable
-   *   The source data.
-   */
-  abstract public static function providerSource();
 
 }

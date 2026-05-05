@@ -10,8 +10,6 @@ use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the behavior of the linkset controller.
@@ -19,10 +17,10 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * The purpose of this test is to validate that the a typical menu can be
  * correctly serialized as using the application/linkset+json media type.
  *
+ * @group decoupled_menus
+ *
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
-#[Group('decoupled_menus')]
-#[RunTestsInSeparateProcesses]
 final class LinksetControllerTest extends LinksetControllerTestBase {
 
   /**

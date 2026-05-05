@@ -8,7 +8,7 @@ dependencies:
 id: call_to_action
 theme: stark
 region: content
-weight: 0
+weight: null
 provider: null
 plugin: 'block_content:d7c9d8ba-663f-41b4-8756-86bc55c44653'
 settings:
@@ -16,7 +16,9 @@ settings:
   label: 'Shop for cheap now!'
   label_display: visible
   provider: block_content
-  view_mode: full
+  status: true
+  info: ''
+  view_mode: default
 visibility:
   request_path:
     id: request_path

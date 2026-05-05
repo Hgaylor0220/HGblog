@@ -7,15 +7,12 @@ namespace Drupal\KernelTests\Core\Asset;
 use Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException;
 use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the library discovery and library discovery parser.
+ *
+ * @group Render
  */
-#[Group('Render')]
-#[RunTestsInSeparateProcesses]
 class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
   /**
@@ -105,7 +102,6 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Assert that drupalSettings cannot be overridden and throws an exception.
     try {
-      $this->libraryDiscovery = $this->container->get('library.discovery');
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.ajax');
       $this->fail('Throw Exception when trying to override drupalSettings');
     }
@@ -124,7 +120,6 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Assert that improperly formed asset "specs" throw an exception.
     try {
-      $this->libraryDiscovery = $this->container->get('library.discovery');
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.dialog');
       $this->fail('Throw Exception when specifying invalid override');
     }
@@ -140,7 +135,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   public function testLibrariesOverridesMultiple(): void {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
-    $theme_installer->install(['test_base_theme']);
+    $theme_installer->install(['test_basetheme']);
     $theme_installer->install(['test_subtheme']);
     $theme_installer->install(['test_subsubtheme']);
 
@@ -150,7 +145,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     $libraries_override = $active_theme->getLibrariesOverride();
     $expected_order = [
-      'core/modules/system/tests/themes/test_base_theme',
+      'core/modules/system/tests/themes/test_basetheme',
       'core/modules/system/tests/themes/test_subtheme',
       'core/modules/system/tests/themes/test_subsubtheme',
     ];
@@ -188,7 +183,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     // Assert that libraries-override specified in the base theme still applies
     // in the sub theme.
     $this->assertNoAssetInLibrary('core/misc/dialog/dialog.js', 'core', 'drupal.dialog', 'js');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_base_theme/js/loadjs.min.js', 'core', 'loadjs', 'js');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/js/loadjs.min.js', 'core', 'loadjs', 'js');
   }
 
   /**
@@ -223,17 +218,16 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Activate a sub theme and confirm that it inherits the library assets
     // extended in the base theme as well as its own.
-    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->activateTheme('test_subtheme');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->assertAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
 
     // Activate test theme that extends with a non-existent library. An
     // exception should be thrown.
     $this->activateTheme('test_theme_libraries_extend');
     try {
-      $this->libraryDiscovery = $this->container->get('library.discovery');
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.dialog');
       $this->fail('Throw Exception when specifying non-existent libraries-extend.');
     }
@@ -256,8 +250,9 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
   /**
    * Test library deprecation support.
+   *
+   * @group legacy
    */
-  #[IgnoreDeprecations]
   public function testDeprecatedLibrary(): void {
     $this->expectDeprecation('Targeting theme_test/moved_from css/foo.css from test_theme_with_deprecated_libraries library_overrides is deprecated in drupal:X.0.0 and will be removed in drupal:Y.0.0. Target theme_test/moved_to css/base-remove.css instead. See https://example.com');
     $this->expectDeprecation('Targeting theme_test/moved_from js/bar.js from test_theme_with_deprecated_libraries library_overrides is deprecated in drupal:X.0.0 and will be removed in drupal:Y.0.0. Target theme_test/moved_to js/foo.js instead. See https://example.com');
@@ -266,7 +261,6 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->expectDeprecation('The "theme_test/deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('The "theme_test/another_deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->activateTheme('test_theme_with_deprecated_libraries');
-    $this->libraryDiscovery = $this->container->get('library.discovery');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'moved_to');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'deprecated_library');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'another_deprecated_library');
@@ -280,7 +274,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    * @param string $theme_name
    *   The name of the theme to be activated.
    */
-  protected function activateTheme($theme_name): void {
+  protected function activateTheme($theme_name) {
     $this->container->get('theme_installer')->install([$theme_name]);
 
     /** @var \Drupal\Core\Theme\ThemeInitializationInterface $theme_initializer */
@@ -291,7 +285,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     $theme_manager->setActiveTheme($theme_initializer->getActiveThemeByName($theme_name));
 
-    $this->libraryDiscovery->clear();
+    $this->libraryDiscovery->clearCachedDefinitions();
 
     $this->assertSame($theme_name, $theme_manager->getActiveTheme()->getName());
   }
@@ -316,7 +310,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     if (!isset($message)) {
       $message = sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
     }
-    $library = $this->container->get('library.discovery')->getLibraryByName($extension, $library_name);
+    $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
         return;
@@ -345,7 +339,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     if (!isset($message)) {
       $message = sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
     }
-    $library = $this->container->get('library.discovery')->getLibraryByName($extension, $library_name);
+    $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
         $this->fail($message);

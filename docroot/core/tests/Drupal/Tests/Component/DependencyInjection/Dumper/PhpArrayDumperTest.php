@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\DependencyInjection\Dumper;
 
-use Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper.
+ * @coversDefaultClass \Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper
+ * @group DependencyInjection
  */
-#[CoversClass(PhpArrayDumper::class)]
-#[Group('DependencyInjection')]
 class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
 
   /**
@@ -28,7 +24,7 @@ class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
   /**
    * {@inheritdoc}
    */
-  protected static function serializeDefinition(array $service_definition): string|array {
+  protected static function serializeDefinition(array $service_definition) {
     return $service_definition;
   }
 

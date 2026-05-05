@@ -8,22 +8,19 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
- * Tests Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator.
+ * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator
+ * @group Plugin
  */
-#[CoversClass(AnnotationBridgeDecorator::class)]
-#[Group('Plugin')]
 class AnnotationBridgeDecoratorTest extends TestCase {
 
   use ProphecyTrait;
 
   /**
-   * Tests get definitions.
+   * @covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     $definitions = [];
@@ -51,7 +48,7 @@ class TestAnnotation extends Plugin {
   /**
    * {@inheritdoc}
    */
-  public function get(): ObjectDefinition {
+  public function get() {
     return new ObjectDefinition($this->definition);
   }
 

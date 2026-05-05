@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Configurable Language Json Anon.
+ * @group rest
  */
-#[Group('rest')]
-#[RunTestsInSeparateProcesses]
 class ConfigurableLanguageJsonAnonTest extends ConfigurableLanguageResourceTestBase {
 
   use AnonResourceTestTrait;

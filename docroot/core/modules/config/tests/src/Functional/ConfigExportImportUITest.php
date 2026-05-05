@@ -8,8 +8,6 @@ use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the user interface for importing/exporting configuration.
@@ -17,9 +15,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Each testX method does a complete rebuild of a Drupal site, so values being
  * tested need to be stored in protected properties in order to survive until
  * the next rebuild.
+ *
+ * @group config
  */
-#[Group('config')]
-#[RunTestsInSeparateProcesses]
 class ConfigExportImportUITest extends BrowserTestBase {
 
   /**

@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Entity\EntityRepository;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the entity repository.
+ *
+ * @group Entity
+ *
+ * @coversDefaultClass \Drupal\Core\Entity\EntityRepository
  */
-#[CoversClass(EntityRepository::class)]
-#[Group('Entity')]
-#[RunTestsInSeparateProcesses]
 class EntityRepositoryTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -78,8 +75,8 @@ class EntityRepositoryTest extends KernelTestBase {
   /**
    * Tests retrieving active variants.
    *
-   * @legacy-covers ::getActive
-   * @legacy-covers ::getActiveMultiple
+   * @covers ::getActive
+   * @covers ::getActiveMultiple
    */
   public function testGetActive(): void {
     $en_contexts = $this->getLanguageContexts('en');
@@ -211,8 +208,8 @@ class EntityRepositoryTest extends KernelTestBase {
   /**
    * Tests retrieving canonical variants.
    *
-   * @legacy-covers ::getCanonical
-   * @legacy-covers ::getCanonicalMultiple
+   * @covers ::getCanonical
+   * @covers ::getCanonicalMultiple
    */
   public function testGetCanonical(): void {
     // Check that when the entity does not exist NULL is returned.
@@ -258,7 +255,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @param string $method_name
    *   An entity repository method name.
    */
-  protected function doTestLanguageFallback($method_name): void {
+  protected function doTestLanguageFallback($method_name) {
     $entity_type_id = 'entity_test_mulrev';
     $en_contexts = $this->getLanguageContexts('en');
     $it_contexts = $this->getLanguageContexts('it');
@@ -319,7 +316,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   An array of contexts.
    */
-  protected function getLanguageContexts($langcode): array {
+  protected function getLanguageContexts($langcode) {
     return ['langcode' => $langcode];
   }
 
