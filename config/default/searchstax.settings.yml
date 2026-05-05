@@ -1,0 +1,20 @@
+_core:
+  default_config_hash: vIX7037UoUdExde2svENmyhihnwVmMOFJgkKYCoterY
+analytics_url: 'https://app.searchstax.com'
+discard_parameters:
+  - highlight
+  - keys
+  - sort
+  - spellcheck
+eu_cookie_compliance:
+  enabled: true
+flood_protection:
+  enabled: false
+  search_limit: 15
+  search_window: 10
+  update_limit: 50
+  update_window: 60
+js_version: '3'
+key_id: searchstax_analytics_credentials
+searches_via_searchstudio: false
+untracked_roles: {  }

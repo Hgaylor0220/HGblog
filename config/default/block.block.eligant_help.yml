@@ -1,0 +1,22 @@
+uuid: 82b336a0-8d8f-403f-a12d-4fa9c28018f8
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - eligant
+_core:
+  default_config_hash: VfPFqqxfkomud5CO8DUijw85QIl9GIxh_nIxLOYESxg
+id: eligant_help
+theme: eligant
+region: header
+weight: 0
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  label_display: '0'
+  provider: help
+visibility: {  }

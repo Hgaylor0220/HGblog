@@ -1,0 +1,20 @@
+uuid: 144ab4a3-64c3-4dd4-a7c7-cdb5ba053fce
+langcode: en
+status: true
+dependencies:
+  theme:
+    - eligant
+_core:
+  default_config_hash: Q9_2whdOj1YIomfvsIfopROW4FT_X5pY0DjdOiOaQ5U
+id: eligant_primary_admin_actions
+theme: eligant
+region: header
+weight: -5
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }
