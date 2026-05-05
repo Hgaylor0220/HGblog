@@ -884,6 +884,34 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
   include __DIR__ . '/settings.ddev.php';
 }
 
+
+// Searchstax read/write variables per acquia env.
+if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+    case 'dev':
+    case 'test':
+      // Force Lower Environments to Read-Only
+      $config['search_api.server.searchstax']['backend_config']['read_only'] = TRUE;
+      
+      // Override the Key value with the Search-Only token
+      $config['key.key.searchstax_read_only']['key_provider_settings']['key_value'] = 'db56991607e26650a39ce8ff1b9e77ba6eb968f9';
+      break;
+
+    case 'prod':
+      // Ensure Production is NOT Read-Only
+      $config['search_api.server.searchstax']['backend_config']['read_only'] = FALSE;
+      
+      // Override the Key value with the Admin/Write token
+      $config['key.key.searchstax_solr_connector_credentials']['key_provider_settings']['key_value'] = 'd1fcd2e8aaa4c6cc580ea28242a5c60a87ddbfb3';
+      break;
+  }
+} else {
+  // Local Development (Lando/DDEV/Docksal)
+  // Safety first: Hard-lock local dev to Read-Only
+  $config['search_api.server.searchstax']['backend_config']['read_only'] = TRUE;
+}
+
+
 /**
  * Load local development override configuration, if available.
  *
