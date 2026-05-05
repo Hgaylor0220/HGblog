@@ -260,9 +260,6 @@ $databases = [];
  */
 # $settings['config_sync_directory'] = '/directory/outside/webroot';
 
-
-$settings['config_sync_directory'] = '../config/default';
-
 /**
  * Settings:
  *
@@ -944,3 +941,5 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/eehaileygaylor/HGBlog-settings.inc';
 }
+
+$settings['config_sync_directory'] = '../config/default';
