@@ -1,0 +1,22 @@
+uuid: 90611be0-ff71-4319-a9f2-19b7ab59a386
+langcode: en
+status: true
+dependencies:
+  theme:
+    - eligant
+_core:
+  default_config_hash: ydSxdq7R66I8UMC460rOzlfzvlUL4VRbdwc6z9DWaUI
+id: eligant_secondary_local_tasks
+theme: eligant
+region: header
+weight: -2
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

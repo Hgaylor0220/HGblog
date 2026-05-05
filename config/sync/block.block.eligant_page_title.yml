@@ -1,0 +1,20 @@
+uuid: ac2095a1-f3f4-450c-9415-b82cc2d9d4ca
+langcode: en
+status: true
+dependencies:
+  theme:
+    - eligant
+_core:
+  default_config_hash: 6aOgWsNTXjqrDm98TXSAjP6qd2nCijD1xw45MrnbK-Y
+id: eligant_page_title
+theme: eligant
+region: header
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

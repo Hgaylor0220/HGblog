@@ -1,0 +1,50 @@
+uuid: fb670883-562e-4b4e-bc34-b7914fe921ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.portfolio.field_category
+    - field.field.node.portfolio.field_gallery
+    - field.field.node.portfolio.field_main_image
+    - node.type.portfolio
+  module:
+    - user
+id: node.portfolio.default
+targetEntityType: node
+bundle: portfolio
+mode: default
+content:
+  field_category:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_gallery:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_main_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

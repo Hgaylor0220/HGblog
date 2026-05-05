@@ -1,0 +1,29 @@
+uuid: 0b35c128-9504-40fd-944e-398bdb77569f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category
+    - node.type.portfolio
+    - taxonomy.vocabulary.tags
+id: node.portfolio.field_category
+field_name: field_category
+entity_type: node
+bundle: portfolio
+label: category
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tags: tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,18 @@
+uuid: 6f35292b-33b7-4a05-9726-d80368b890f6
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Portfolio
+type: portfolio
+description: 'Photograpy photos '
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true
