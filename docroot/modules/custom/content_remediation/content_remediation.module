@@ -1,6 +1,89 @@
 <?php
-
 /**
  * @file
- * Primary module hooks for content_remediation module.
+ * Contains content_remediation.module.
  */
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_cron().
+ */
+function content_remediation_cron() {
+  echo "\n🚀 [TERMINAL DEBUG] Starting Content Remediation...\n";
+  $request_time = \Drupal::time()->getRequestTime();
+  
+  // 1. Check Throttling Lock
+  $last_run = \Drupal::state()->get('content_remediation.last_daily_run', 0);
+  if ($request_time - $last_run < 86400) {
+    echo "🛑 [TERMINAL DEBUG] Skipped. The 24-hour lock is active.\n";
+    \Drupal::logger('content_remediation')->notice('DEBUG: Skipped. The 24-hour lock is still active.');
+    return; 
+  }
+
+  // 2. Load settings
+  $config = \Drupal::config('content_remediation.settings');
+  $content_type = $config->get('target_content_type');
+  $field_name = $config->get('target_date_field');
+  $threshold = $config->get('age_threshold');
+  $limit = $config->get('batch_limit') ?: 50;
+
+  if (empty($content_type) || empty($field_name) || empty($threshold)) {
+    echo "⚠️ [TERMINAL DEBUG] Skipped. Configuration is empty. Did you click 'Save' in the UI?\n";
+    \Drupal::logger('content_remediation')->warning('DEBUG: Skipped. Configuration is missing in the UI.');
+    return;
+  }
+
+  echo "✅ [TERMINAL DEBUG] Config loaded: Type=$content_type, Field=$field_name, Threshold=$threshold\n";
+
+  $threshold_time = strtotime($threshold);
+
+  try {
+    // 3. Query the Database
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', $content_type)
+      ->condition('status', 1)
+      ->range(0, $limit)
+      ->accessCheck(FALSE); 
+    
+    // Core fields (created, changed) are integers. Custom fields are strings.
+    if (in_array($field_name, ['created', 'changed'])) {
+      $query->condition($field_name, $threshold_time, '<');
+    } else {
+      $query->condition($field_name, date('Y-m-d\TH:i:s', $threshold_time), '<');
+    }
+    
+    $nids = $query->execute();
+
+    if (empty($nids)) {
+      echo "🤷 [TERMINAL DEBUG] Skipped. Found 0 published nodes matching the criteria.\n";
+      \Drupal::logger('content_remediation')->notice('DEBUG: Skipped. Found 0 published nodes matching the criteria (Type: @type, Field: @field).', ['@type' => $content_type, '@field' => $field_name]);
+      \Drupal::state()->set('content_remediation.last_daily_run', $request_time);
+      return;
+    }
+
+    echo "🎯 [TERMINAL DEBUG] Found " . count($nids) . " nodes to unpublish! Processing...\n";
+
+    // 4. Unpublish Nodes
+    $nodes = Node::loadMultiple($nids);
+    $count = 0;
+    
+    foreach ($nodes as $node) {
+      $node->setUnpublished();
+      $node->setNewRevision(TRUE);
+      $node->revision_log = "Automated unpublish: $field_name is older than $threshold.";
+      $node->setRevisionUserId(1); 
+      $node->save();
+      $count++;
+      echo "   -> Unpublished Node ID: " . $node->id() . "\n";
+    }
+    
+    echo "🎉 [TERMINAL DEBUG] SUCCESS! Unpublished $count nodes.\n";
+    \Drupal::logger('content_remediation')->notice('SUCCESS: Unpublished @count stale nodes.', ['@count' => $count]);
+    \Drupal::state()->set('content_remediation.last_daily_run', $request_time);
+
+  } catch (\Exception $e) {
+    echo "❌ [TERMINAL DEBUG] ERROR: " . $e->getMessage() . "\n";
+    \Drupal::logger('content_remediation')->error('ERROR: Cron failed: @message', ['@message' => $e->getMessage()]);
+  }
+}
