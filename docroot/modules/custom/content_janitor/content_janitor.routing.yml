@@ -1,0 +1,31 @@
+entity.content_janitor_rule.collection:
+  path: '/admin/config/system/content-janitor'
+  defaults:
+    _entity_list: 'content_janitor_rule'
+    _title: 'Content Janitor Rules'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.content_janitor_rule.add_form:
+  path: '/admin/config/system/content-janitor/add'
+  defaults:
+    _entity_form: 'content_janitor_rule.add'
+    _title: 'Add Janitor Rule'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.content_janitor_rule.edit_form:
+  path: '/admin/config/system/content-janitor/{content_janitor_rule}'
+  defaults:
+    _entity_form: 'content_janitor_rule.edit'
+    _title: 'Edit Janitor Rule'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.content_janitor_rule.delete_form:
+  path: '/admin/config/system/content-janitor/{content_janitor_rule}/delete'
+  defaults:
+    _entity_form: 'content_janitor_rule.delete'
+    _title: 'Delete Janitor Rule'
+  requirements:
+    _permission: 'administer site configuration'

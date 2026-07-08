@@ -1,6 +1,0 @@
-content_remediation.content_remediation_config:
-  title: Content Remediation Settings
-  description: config for content remediation
-  parent: system.admin_config_system
-  route_name: content_remediation.content_remediation_config
-  weight: 10

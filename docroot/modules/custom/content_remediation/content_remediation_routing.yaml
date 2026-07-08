@@ -1,7 +1,0 @@
-content_remediation.settings:
-path: '/admin/config/system/content-remediation'
-defaults:
-_form: '\Drupal\content_remediation\Form\ContentRemediationConfigForm'
-_title: 'Content Remediation Settings'
-requirements:
-_permission: 'administer content remediation'

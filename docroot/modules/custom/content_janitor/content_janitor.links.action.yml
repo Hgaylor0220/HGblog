@@ -1,0 +1,5 @@
+entity.content_janitor_rule.add_form:
+  route_name: entity.content_janitor_rule.add_form
+  title: 'Add Rule'
+  appears_on:
+    - entity.content_janitor_rule.collection

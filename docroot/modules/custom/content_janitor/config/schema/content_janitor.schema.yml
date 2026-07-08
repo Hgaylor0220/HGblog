@@ -1,0 +1,22 @@
+content_janitor.content_janitor_rule.*:
+  type: config_entity
+  label: 'Content Janitor Rule'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    target_content_type:
+      type: string
+      label: 'Target Content Type'
+    target_date_field:
+      type: string
+      label: 'Target Date Field'
+    age_threshold:
+      type: string
+      label: 'Age Threshold'
+    batch_limit:
+      type: integer
+      label: 'Batch Limit'

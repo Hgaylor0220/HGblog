@@ -1,0 +1,6 @@
+name: 'Content Janitor'
+type: module
+description: 'Rules engine for automated content remediation and unpublishing.'
+core_version_requirement: ^10 || ^11
+package: Custom
+configure: entity.content_janitor_rule.collection

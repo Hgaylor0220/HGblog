@@ -1,0 +1,6 @@
+content_janitor.admin:
+  title: 'Content Janitor'
+  description: 'Manage rules for automated content unpublishing and remediation.'
+  parent: system.admin_config_system
+  route_name: entity.content_janitor_rule.collection
+  weight: 100
