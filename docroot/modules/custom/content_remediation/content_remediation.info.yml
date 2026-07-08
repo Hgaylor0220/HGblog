@@ -1,0 +1,6 @@
+name: 'Content Remediation'
+type: module
+description: 'Automated remediation tasks for content. Includes a dynamic UI to select content types and date fields for unpublishing.'
+core_version_requirement: ^9 || ^10 || ^11
+package: Custom
+configure: content_remediation.settings

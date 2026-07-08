@@ -1,0 +1,7 @@
+content_remediation.content_remediation_config:
+  path: '/admin/config/system/content-remediation'
+  defaults:
+    _title: 'Content remediation config'
+    _form: 'Drupal\content_remediation\Form\ContentRemediationConfigForm'
+  requirements:
+    _permission: 'administer site configuration'
