@@ -1,0 +1,10 @@
+include:
+  - project: 'project/gitlab_templates'
+    ref: 'main'
+    file:
+      - '/includes/include.drupalci.main.yml'
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+variables:
+  OPT_IN_TEST_PREVIOUS_MAJOR: 1

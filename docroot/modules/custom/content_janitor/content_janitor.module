@@ -1,25 +1,15 @@
 <?php
 
 /**
- * @file
- * Contains content_janitor.module.
- */
-
-use Drupal\node\Entity\Node;
-
-/**
  * Implements hook_cron().
  */
 function content_janitor_cron() {
-  // Load all active Janitor Rules we created in the UI.
   $rules = \Drupal::entityTypeManager()->getStorage('content_janitor_rule')->loadMultiple();
   
   if (empty($rules)) {
-    \Drupal::logger('content_janitor')->notice('DEBUG: No rules found.');
     return;
   }
 
-  // Loop through every rule and execute its logic.
   foreach ($rules as $rule) {
     $content_type = $rule->target_content_type;
     $field_name = $rule->target_date_field;
@@ -28,6 +18,16 @@ function content_janitor_cron() {
 
     $threshold_time = strtotime($threshold);
 
+    if (!$threshold_time) {
+      \Drupal::logger('content_janitor')->error('ERROR: Invalid age threshold format "@threshold" on Rule "@rule".', [
+        '@threshold' => $threshold,
+        '@rule' => $rule->label(),
+      ]);
+      continue;
+    }
+
+    $human_readable_target = date('Y-m-d H:i:s', $threshold_time);
+
     try {
       $query = \Drupal::entityQuery('node')
         ->condition('type', $content_type)
@@ -35,7 +35,6 @@ function content_janitor_cron() {
         ->range(0, $limit)
         ->accessCheck(FALSE); 
       
-      // Core vs Custom Field Type catch.
       if (in_array($field_name, ['created', 'changed'])) {
         $query->condition($field_name, $threshold_time, '<');
       } else {
@@ -45,8 +44,9 @@ function content_janitor_cron() {
       $nids = $query->execute();
 
       if (!empty($nids)) {
-        $nodes = Node::loadMultiple($nids);
+        $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
         $count = 0;
+        $unpublished_details = [];
         
         foreach ($nodes as $node) {
           $node->setUnpublished();
@@ -54,15 +54,28 @@ function content_janitor_cron() {
           $node->revision_log = "Content Janitor Rule ({$rule->label()}): $field_name is older than $threshold.";
           $node->setRevisionUserId(1); 
           $node->save();
+          
+          $unpublished_details[] = $node->label() . ' (ID: ' . $node->id() . ')';
           $count++;
         }
         
-        \Drupal::logger('content_janitor')->notice('SUCCESS: Rule "@rule" unpublished @count nodes.', [
+        $details_string = implode(', ', $unpublished_details);
+        
+        \Drupal::logger('content_janitor')->notice('SUCCESS: Rule "@rule" unpublished @count nodes. <br><strong>Nodes:</strong> @details', [
           '@rule' => $rule->label(),
           '@count' => $count,
+          '@details' => $details_string,
+        ]);
+      } else {
+        // Upgraded from debug() to notice() so it is always visible in the UI.
+        \Drupal::logger('content_janitor')->notice('SKIPPED: Rule "@rule" found 0 nodes. (Looked for @field_name older than @date)', [
+          '@rule' => $rule->label(),
+          '@field_name' => $field_name,
+          '@date' => $human_readable_target,
         ]);
       }
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
+      // Upgraded to \Throwable to catch modern PHP 8 TypeErrors and Fatal Errors.
       \Drupal::logger('content_janitor')->error('ERROR on Rule "@rule": @message', [
         '@rule' => $rule->label(),
         '@message' => $e->getMessage(),

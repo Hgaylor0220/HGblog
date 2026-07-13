@@ -1,0 +1,10 @@
+{
+"name": "drupal/content_janitor",
+"description": "Automated cleanup and remediation tasks for stale content across multiple content types.",
+"type": "drupal-module",
+"license": "GPL-2.0-or-later",
+"homepage": "https://www.drupal.org/project/content_janitor",
+"require": {
+"drupal/core": "^9 || ^10 || ^11"
+}
+}
